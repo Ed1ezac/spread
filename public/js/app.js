@@ -1945,6 +1945,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 //
 //
 //
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   delimiters: ['${', '}'],
   data: function data() {
@@ -38240,15 +38241,16 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
+    { staticClass: "relative", class: _vm.hasSelected ? "h-16" : "" },
     [
       _c(
         "transition",
         {
           attrs: {
-            "enter-active-class": "transform-gpu duration-75",
+            "enter-active-class": "transform-gpu duration-500 delay-75",
             "enter-class": "opacity-0 scale-0",
             "enter-to-class": "opacity-100 scale-100",
-            "leave-active-class": "transform-gpu duration-150",
+            "leave-active-class": "transform-gpu duration-700",
             "leave-class": "opacity-100 scale-100",
             "leave-to-class": "opacity-0 scale-0"
           }
@@ -38259,7 +38261,7 @@ var render = function() {
                 "div",
                 {
                   staticClass:
-                    "mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md",
+                    "mt-1 flex z-0 justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md",
                   on: {
                     dragover: _vm.dragover,
                     dragleave: _vm.dragleave,
@@ -38340,12 +38342,12 @@ var render = function() {
         "transition",
         {
           attrs: {
-            "enter-active-class": "transform-gpu duration-300",
-            "enter-class": "opacity-0 translate-y-2",
+            "enter-active-class": "transform-gpu duration-700 ease-in-out",
+            "enter-class": "opacity-0 translate-y-6",
             "enter-to-class": "opacity-100 translate-y-0",
-            "leave-active-class": "transform-gpu duration-150",
-            "leave-class": "opacity-100",
-            "leave-to-class": "opacity-0 -translate-y-2"
+            "leave-active-class": "transform-gpu duration-1000",
+            "leave-class": "opacity-100 translate-y-0",
+            "leave-to-class": "opacity-0 translate-y-20"
           }
         },
         [
@@ -38354,7 +38356,7 @@ var render = function() {
                 "div",
                 {
                   staticClass:
-                    "p-2 bg-gray-700 hover:bg-gray-600 rounded-md w-full"
+                    "absolute top-0 z-10 p-2 bg-gray-600 hover:bg-gray-500 rounded-md w-full"
                 },
                 [
                   _c(

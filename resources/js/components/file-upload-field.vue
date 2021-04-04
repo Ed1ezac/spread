@@ -1,15 +1,15 @@
 <template>
-<div>
+<div :class="hasSelected ?'h-16':''" class="relative">
     <transition
-      enter-active-class="transform-gpu duration-75"
+      enter-active-class="transform-gpu duration-500 delay-75"
       enter-class="opacity-0 scale-0"
       enter-to-class="opacity-100 scale-100"
-      leave-active-class="transform-gpu duration-150"
+      leave-active-class="transform-gpu duration-700"
       leave-class="opacity-100 scale-100"
       leave-to-class="opacity-0 scale-0"
     >
         <div v-if="!hasSelected" @dragover="dragover" @dragleave="dragleave" @drop="drop"
-        class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+        class="mt-1 flex z-0 justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
             <div class="space-y-1 text-center">
                 <svg class="mx-auto h-12 w-12 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
@@ -28,13 +28,13 @@
         </div>
     </transition>
     <transition 
-      enter-active-class="transform-gpu duration-300"
-      enter-class="opacity-0 translate-y-2"
+      enter-active-class="transform-gpu duration-700 ease-in-out"
+      enter-class="opacity-0 translate-y-6"
       enter-to-class="opacity-100 translate-y-0"
-      leave-active-class="transform-gpu duration-150"
-      leave-class="opacity-100"
-      leave-to-class="opacity-0 -translate-y-2">
-        <div v-if="hasSelected" class="p-2 bg-gray-700 hover:bg-gray-600 rounded-md w-full">
+      leave-active-class="transform-gpu duration-1000"
+      leave-class="opacity-100 translate-y-0"
+      leave-to-class="opacity-0 translate-y-20">
+        <div v-if="hasSelected" class="absolute top-0 z-10 p-2 bg-gray-600 hover:bg-gray-500 rounded-md w-full">
             <div class="flex justify-start items-center">
                 <button @click="remove(filelist.indexOf(file))" type="button" class="bg-gray-800 rounded-full border-2 border-white text-white hover:bg-white">
                     <svg class="h-7 w-7 hover:text-gray-800" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -46,6 +46,7 @@
                     <p class="text-xs text-gray-200">{{ fileSize }}</p>
                 </div>
             </div>    
+        
         </div>
     </transition>
 </div>

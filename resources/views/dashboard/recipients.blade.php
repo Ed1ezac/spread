@@ -69,37 +69,43 @@
     </div>
 
     <p class="mt-4 ml-4 text-gray-500">Upload a new recipient list</p>
-    <div class="shadow-sm mx-4 mt-1 mb-4 max-w-4xl overflow-hidden border border-gray-200 sm:rounded-sm">
-      <form action="{{ route('upload-list') }}" method="POST">
+    <form action="{{ route('upload-list') }}" method="POST" enctype="multipart/form-data">
         @csrf
-        <div class="px-6 py-2 space-y-6 sm:p-6">
-          <div>
-            <label for="list_name" class="my-form-label">
-              Collection Name
-            </label>
-            <input type="text" name="list_name" id="list_name" value="{{ old('list_name') }}" autocomplete="list-name" 
-              class="block w-full rounded border-gray-200 
-              focus:border-gray-200 focus:ring-2 focus:ring-offset-0 focus:ring-accent-800 
-              @error('list_name') bg-red-100 border-red-400 focus:ring-red-400 @enderror"/>
-              @error('list_name')
-              <span class="text-xs p-1 bg-red-100 rounded font-normal text-red-400" role="alert">
-                  <strong>{{ $message }}</strong>
-              </span>
-              @enderror
-          </div>
-          <!--upload-->
-          <div>
-            <file-upload-field></file-upload-field>
-          </div>
-        </div> 
-      </form>
-      <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-        <button type="submit" class="inline-flex justify-center py-2 px-4 border-primary-500 shadow-md my-btn bg-primary-500 hover:bg-primary-700 focus:ring-primary-800">
-          <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-          </svg>
-          SAVE
-        </button>   
+      <div class="shadow-sm mx-4 mt-1 mb-4 max-w-3xl overflow-hidden border border-gray-200 sm:rounded-sm">
+          <div class="px-6 py-2 space-y-6 sm:p-6">
+            <div>
+              <label for="list_name" class="my-form-label">
+                Collection Name
+              </label>
+              <input type="text" name="list_name" id="list_name" value="{{ old('list_name') }}" autocomplete="list-name" 
+                class="block w-full rounded border-gray-200 
+                focus:border-gray-200 focus:ring-2 focus:ring-offset-0 focus:ring-accent-800 
+                @error('list_name') bg-red-100 border-red-400 focus:ring-red-400 @enderror"/>
+                @error('list_name')
+                <span class="text-xs p-1 bg-red-100 rounded font-normal text-red-400" role="alert">
+                    <strong>{{ $message }}</strong>
+                </span>
+                @enderror
+            </div>
+            <!--upload-->
+            <div>
+              <file-upload-field></file-upload-field>
+              @error('data-file')
+                <span class="text-xs p-1 bg-red-100 rounded font-normal text-red-400" role="alert">
+                    <strong>{{ $message }}</strong>
+                </span>
+                @enderror
+            </div>
+          </div> 
+        
+        <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+          <button type="submit" class="inline-flex justify-center py-2 px-4 border-primary-500 shadow-md my-btn bg-primary-500 hover:bg-primary-700 focus:ring-primary-800">
+            <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+            </svg>
+            SAVE
+          </button>   
+        </div>
       </div>
-    </div>
+    </form>
 @endsection
