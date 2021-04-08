@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\RecipientList;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
@@ -13,7 +15,8 @@ class DashboardController extends Controller
 
     public function index()
     {
-        return view('dashboard.create-sms');
+        $recipients = RecipientList::where('user_id', Auth::id())->get();
+        return view('dashboard.create-sms', compact('recipients'));
     }
 
     public function scheduled(){
@@ -22,6 +25,10 @@ class DashboardController extends Controller
 
     public function recipients(){
         return view('dashboard.recipients');
+    }
+
+    public function createRecipients(){
+        return view('dashboard.add-recipients');
     }
 
     public function drafts(){

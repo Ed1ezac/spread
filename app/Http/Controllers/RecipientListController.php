@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\RecipientList;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class RecipientListController extends Controller
@@ -12,23 +14,23 @@ class RecipientListController extends Controller
     public function create(Request $request){
         //validation
         $validator = Validator::make($request->all(),[
-            'name' => ['required', 'max:85'],
-            'data-file' => ['required','mimes:csv,xls,xxls,xlm,xla,xlc,xlt,xlw', 'max:10250'],//less than 10MB
+            'collection_name' => ['required','max:30'],
+            'data-file' => ['required','mimes:csv,xls,xxls','max:10250'],//max:10250 less than 10MB 
         ]);
         //bailOrContinue
         if ($validator->fails()) {
-            return back()->withErrors($validator);
+            return back()->withInput()->withErrors($validator);
         }
         //storage
-        $path = $request->file('file')->store('recipients');
+        $path = $request->file('data-file')->store('shelf');
         //databse
-        $recipientsList = RecipientList::create([
+        RecipientList::create([
             'user_id' => Auth::id(),
-            'name' => $request->name,
+            'name' => $request->input('collection_name'),
             'file_path' => $path,
         ]);
         
-        return back()
+        return redirect('/recipients')
                 ->with('status', 'The recipient list has been uploaded successfully!');
     }
     
