@@ -4,7 +4,7 @@
 <section class="pt-20 pb-10">
     <div class="flex justify-center 2xl:mt-14">
         <div class="bg-white shadow-md overflow-hidden w-full max-w-sm rounded-md">
-            <h3 class="text-gray-700 text-lg flex justify-content-center font-medium mx-6 my-2">Get Started!</h3>
+            <h3 class="text-gray-700 text-lg flex justify-center font-medium mx-6 my-2">Get Started!</h3>
             <form method="POST" action="{{ route('register') }}">
                 @csrf
                 <div class="px-6 py-2 space-y-6 sm:p-6">

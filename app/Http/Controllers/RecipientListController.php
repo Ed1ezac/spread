@@ -14,7 +14,7 @@ class RecipientListController extends Controller
     public function create(Request $request){
         //validation
         $validator = Validator::make($request->all(),[
-            'collection_name' => ['required','max:30'],
+            'collection_name' => ['required','max:20'],
             'data-file' => ['required','mimes:csv,xls,xxls','max:10250'],//max:10250 less than 10MB 
         ]);
         //bailOrContinue

@@ -24,7 +24,8 @@ class DashboardController extends Controller
     }
 
     public function recipients(){
-        return view('dashboard.recipients');
+        $recipients = RecipientList::where('user_id', Auth::id())->get();
+        return view('dashboard.recipients', compact('recipients'));
     }
 
     public function createRecipients(){
