@@ -2,7 +2,8 @@
     <div class="mt-2 mb-4 md:grid md:grid-cols-3 2xl:grid-cols-2 md:gap-4 xl:gap-0 px-4">
         <!--form-->
         <div class="shadow-sm col-span-2 2xl:col-span-1 pt-2 bg-white rounded-md 2xl:max-w-full max-w-3xl md:mr-6">
-            <form ref="smsform" action="#" method="POST">
+            <form ref="smsform" action="/create/verify" method="POST">
+               <input type="hidden" name="_token" :value="csrf">
               <div class="px-6 pb-2 space-y-6 sm:p-6">
                   <!--sender-->
                   <div>
@@ -55,7 +56,7 @@
                                 <ListboxOption
                                   v-for="listItem in recipients"
                                   :key="listItem.id"
-                                  :value="listItem.name"
+                                  :value="listItem"
                                   v-slot="{ selected, active }">
                                   <div :class="active ? 'text-white bg-accent-600' : 'text-gray-800'" 
                                     class="cursor-default select-none relative py-2 pl-8 pr-4'">
@@ -86,6 +87,7 @@
                         </div>
                       </Listbox>
                     </div>
+                    <input type="hidden" ref="listInput" name="recipient-list-id"/>
                     <p class="mt-2 text-xs text-gray-500">
                       Dont have a recipient list yet? <a href="/recipients" class="text-accent-800 underline font-semibold hover:text-accent-500">create one</a>
                     </p>
@@ -129,8 +131,9 @@
               max: 140,
               titleText:'',
               listId: 0,
-              messagingListItem: ref(this.recipients[0]),
               messageText: '',
+              messagingListItem: ref(this.recipients[0]),
+              csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
           }
       },
       props:{
@@ -145,24 +148,23 @@
         },
         submitForm(){
           this.persistData();
-          //append input: name:messaging-list-id
-          //this.$refs.smsform.submit();
+          //append value to: name:messaging-list-id
+          this.$refs.listInput.value = this.messagingListItem.id;
+          this.$refs.smsform.submit();
         },
       },
-      setup(){
-        //const messagingListItem = this.recipients[0];
-        /*if(localStorage.recipientListId){
-            for(var i=0; i<this.recipients.size; i++){
-              if(this.recipients[i].id == messagingListId){
-                messagingListItem = this.recipients[i];
+      computed:{  
+        /*messagingListItem(){
+           if(localStorage.messagingListId){
+            for(var i=0; i< this.recipients.length; i++){
+              if(this.recipients[i].id == localStorage.messagingListId){
+                return ref(this.recipients[i]);
               }
             }
+          }else{
+            return ref(this.recipients[0]);
+          }
         }*/
-        return {
-          //messagingListItem,
-        }
-      },
-      computed:{  
       },
       mounted() {
         if (localStorage.sender) {
@@ -171,18 +173,15 @@
         if(localStorage.message){
           this.messageText = localStorage.message;
         }
-        if(localStorage.recipientListId){
-            for(var i=0; i<this.recipients.size; i++){
-              if(this.recipients[i].id == messagingListId){
-                this.messagingListItem = this.recipients[i];
+        if(localStorage.messagingListId){
+            for(var i=0; i< this.recipients.length; i++){
+              if(this.recipients[i].id == localStorage.messagingListId){
+                this.messagingListItem = ref(this.recipients[i]);
               }
             }
-
-          }else{
-            this.messagingListItem = this.recipients[0];
-            //return messagingListItem;
-          }
-          
+        }else{
+            this.messagingListItem = ref(this.recipients[0]);
+        }
       },
       components: {
         Listbox,

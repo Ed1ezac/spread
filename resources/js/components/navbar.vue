@@ -22,18 +22,37 @@
 
             <!-- dp -->
             <div v-if="isAuth" class="sm:hidden ml-3 relative">
-                <div>
-                    <button @click="isToggled = !isToggled" type="button" class="bg-gray-800 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white" id="user-menu" aria-expanded="false" aria-haspopup="true">
-                    <span class="sr-only">Open user menu</span>
-                    <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
-                    </button>
+                <div class="flex items-center">
+                    <div class="relative inline-block text-left">
+                        <Menu>
+                            <MenuButton type="button" class="bg-gray-800 relative z-10 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white" id="user-menu" aria-expanded="false" aria-haspopup="true">
+                                <span class="sr-only">Open user menu</span>
+                                <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+                            </MenuButton>
+                            <transition
+                            enter-active-class="transition duration-100 ease-out"
+                            enter-from-class="transform scale-95 opacity-0"
+                            enter-to-class="transform scale-100 opacity-100"
+                            leave-active-class="transition duration-75 ease-out"
+                            leave-from-class="transform scale-100 opacity-100"
+                            leave-to-class="transform scale-95 opacity-0"
+                            >
+                                <MenuItems class="absolute right-0 w-48 mt-2 origin-top-right bg-white border border-gray-200 rounded-md rounded-md shadow-lg outline-none">
+                                    <MenuItem v-slot="{ active }">
+                                    <a href="#" :class="active ? 'bg-gray-100 text-gray-900':'text-gray-700'" class="block px-4 py-2 rounded-t-md text-sm text-gray-700 hover:bg-gray-100 hover:no-underline" role="menuitem">Settings</a>
+                                    </MenuItem> 
+                                    <MenuItem v-slot="{ active }">
+                                        <a v-on:click.prevent="logout" href="/logout" :class="active ? 'bg-gray-100 text-gray-900':'text-gray-700'" class="block px-4 py-2 rounded-b-md text-sm text-gray-700 hover:bg-gray-100 hover:no-underline" role="menuitem">Log Out</a>
+                                    </MenuItem>
+                                </MenuItems>
+                            </transition>
+                        </Menu>
+                    </div>                
                 </div>
-                <!--HIDES MENU-->
-                <button v-if="isToggled" @click="isToggled = false" tabindex="-1" class="fixed inset-0 h-full w-full hover:cursor-default"></button>
-                <div v-if="isToggled" class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Settings</a>
-                    <a v-on:click.prevent="logout" :href="logoutRoute" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Log out</a>
-                </div>
+                <!--logout form-->
+                <form ref="mform" action="/logout" method="POST" class="hidden">
+                    <input type="hidden" name="_token" :value="csrf">
+                </form>
             </div>
         </div>
 
@@ -106,7 +125,7 @@
         <!--normal view menu-->
         <div class="sm:flex hidden sm:items-center pt-0 pb-0 px-2">
             <a v-if="!isAuth" :href="loginRoute" class="my-btn block px-2 py-1 hover:no-underline hover:bg-primary-400 border-transparent focus:ring-transparent sm:border-white">LOG IN</a>
-            <a v-if="!isAuth" :href="registerRoute" class="my-btn block px-2 py-1 sm:py-0 border-transparent hover:no-underline hover:bg-primary-400 focus:ring-transparent sm:ml-2">REGISTER</a>
+            <a v-if="!isAuth" :href="registerRoute" class="my-btn block px-2 py-1 border-transparent hover:no-underline hover:bg-primary-400 focus:ring-transparent sm:ml-2">REGISTER</a>
         </div>
         <!--DP normal view-->
         <div v-if="isAuth" class="hidden sm:block self-center relative">
@@ -121,32 +140,46 @@
                         </p>
                     </div>
                 </a>
-                <button @click="isToggled = !isToggled" type="button" class="bg-gray-800 relative z-10 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white" id="user-menu" aria-expanded="false" aria-haspopup="true">
-                <span class="sr-only">Open user menu</span>
-                <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
-                </button>
+                <div class="relative inline-block text-left">
+                    <Menu>
+                        <MenuButton type="button" class="bg-gray-800 relative z-10 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white" id="user-menu" aria-expanded="false" aria-haspopup="true">
+                            <span class="sr-only">Open user menu</span>
+                            <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+                        </MenuButton>
+                        <transition
+                        enter-active-class="transition duration-100 ease-out"
+                        enter-from-class="transform scale-95 opacity-0"
+                        enter-to-class="transform scale-100 opacity-100"
+                        leave-active-class="transition duration-75 ease-out"
+                        leave-from-class="transform scale-100 opacity-100"
+                        leave-to-class="transform scale-95 opacity-0">
+                            <MenuItems class="absolute right-0 w-48 mt-2 origin-top-right bg-white border border-gray-200 rounded-md rounded-md shadow-lg outline-none">
+                                <MenuItem v-slot="{ active }">
+                                    <a href="#" :class="active ? 'bg-gray-100 text-gray-900':'text-gray-700'" class="block px-4 py-2 rounded-t-md text-sm text-gray-700 hover:bg-gray-100 hover:no-underline" role="menuitem">Settings</a>
+                                </MenuItem> 
+                                <MenuItem v-slot="{ active }">
+                                    <a v-on:click.prevent="logout" href="/logout" :class="active ? 'bg-gray-100 text-gray-900':'text-gray-700'" class="block px-4 py-2 rounded-b-md text-sm text-gray-700 hover:bg-gray-100 hover:no-underline" role="menuitem">Log Out</a>
+                                </MenuItem>
+                            </MenuItems>
+                        </transition>
+                    </Menu>
+                </div>                
             </div>
-            <!--HIDES MENU-->
-            <button v-if="isToggled" @click="isToggled = false" tabindex="-1" class="fixed inset-0 h-full w-full hover:cursor-default"></button>
-
-            <div v-if="isToggled" class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
-                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:no-underline" role="menuitem">Settings</a>
-                <a v-on:click.prevent="logout" href="/logout" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:no-underline" role="menuitem">Log Out</a>
-            </div>
+            <!--logout form-->
+            <form ref="mform" action="/logout" method="POST" class="hidden">
+                <input type="hidden" name="_token" :value="csrf">
+            </form>
         </div>
-        <!--logout form-->
-        <form ref="mform" :action="logoutRoute" method="POST" class="hidden">
-            <input type="hidden" name="_token" :value="csrf">
-        </form>
+        
     </header>
 </template>
 
 <script>
+import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
     export default {
         data () {
             return {
                 isOpen: false,
-                isToggled: false,
                 csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             }
         },
@@ -155,27 +188,18 @@
             logoUri: String,
             logoUriSm:String,
             loginRoute: String,
-            logoutRoute: String,
             registerRoute: String,
-            createSmsRoute: String,
-        },
-        created(){
-            const handleEscape = (e)=>{
-                if(e.key == 'Esc' || e.key == 'Escape'){
-                    this.isToggled = false;
-                }
-            }
-            document.addEventListener('keydown', handleEscape);
-
-            this.$once('hook:beforeDestroy', ()=> {
-                document.removeEventListener('keydown', handleEscape)
-            });
         },
         methods:{
             logout: function(){
-                //this.$refs.submitButton.click();
                 this.$refs.mform.submit();
             },
+        },
+        components:{
+            Menu, 
+            MenuItem,
+            MenuItems,
+            MenuButton,
         }
     }
 </script>
