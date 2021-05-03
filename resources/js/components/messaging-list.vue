@@ -17,7 +17,7 @@
                     leave-to-class="transform scale-95 opacity-0">
                     <MenuItems class="absolute right-0 w-28 mr-3 origin-top-right rounded-sm bg-primary-100 border border-primary-300 shadow-lg outline-none">
                         <MenuItem v-slot="{ active }">
-                            <a href="#" :class="active ? 'bg-primary-200 text-gray-900':'text-gray-700'" class="block px-4 py-2 text-xs font-bold font-headings tracking-wider text-gray-700 hover:bg-primary-200 hover:no-underline" role="menuitem">DOWNLOAD</a>
+                            <a :href="'/recipients/'+ list.id +'/download'" :class="active ? 'bg-primary-200 text-gray-900':'text-gray-700'" class="block px-4 py-2 text-xs font-bold font-headings tracking-wider text-gray-700 hover:bg-primary-200 hover:no-underline" role="menuitem">DOWNLOAD</a>
                         </MenuItem> 
                         <MenuItem v-slot="{ active }">
                             <a href="#" :class="active ? 'bg-primary-200 text-gray-900':'text-gray-700'" class="block px-4 py-2 text-xs font-bold font-headings tracking-wider text-gray-700 hover:bg-primary-200 hover:no-underline" role="menuitem">DELETE</a>
@@ -25,12 +25,7 @@
                     </MenuItems>
                 </transition>
             </Menu>
-        </div> 
-        <!---a href="#" class="flex justify-end -mb-2">
-            <svg class="flex-shrink-0 h-4 w-4 text-gray-500 hover:text-gray-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
-            </svg>
-        </!---a -->
+        </div>
         <div class="flex justify-center flex-col">
             <svg class="flex-shrink-0 mx-auto h-16 w-16 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />

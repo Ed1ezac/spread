@@ -1,8 +1,8 @@
 @extends('layouts.dashboard-header')
 
 @section('features')
-    @if (session('status')) 
-    <notification-banner message="{{session('status') }}"></notification-banner>
+    @if(session('status'))
+      <notification-banner message="{{ session('status') }}"></notification-banner>
     @endif
     <!--error-banner error="The quick brown fox saw this error!"></!--error-banner --->
 

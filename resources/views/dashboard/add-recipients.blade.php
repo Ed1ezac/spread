@@ -4,7 +4,7 @@
     <h3 class="text-lg ml-4 font-bold leading-6 text-gray-900">Upload a new recipient list</h3>
     <form action="{{ route('upload-list') }}" method="POST" enctype="multipart/form-data">
         @csrf
-      <div class="shadow-sm mx-4 mt-1 mb-4 max-w-2xl overflow-hidden border border-gray-200 sm:rounded-sm">
+      <div class="shadow-sm mx-4 mt-1 mb-4 max-w-xl overflow-hidden border border-gray-200 sm:rounded-sm">
           <div class="px-6 py-2 space-y-6 sm:p-6">
             <div>
               <label for="collection_name" class="my-form-label">
@@ -27,7 +27,12 @@
                 <span class="text-xs p-1 bg-red-100 rounded font-normal text-red-400" role="alert">
                     <strong>{{ $message }}</strong>
                 </span>
-                @enderror
+              @enderror
+              @error('extension')
+                <span class="text-xs p-1 bg-red-100 rounded font-normal text-red-400" role="alert">
+                    <strong>{{ $message }}</strong>
+                </span>
+              @enderror
             </div>
           </div> 
         

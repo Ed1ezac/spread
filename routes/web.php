@@ -26,9 +26,11 @@ Route::get('/statistics', function() {
 
 Auth::routes();
 //sms
+Route::post('/create/save', [SMSController::class, 'save']);
 Route::get('/create', [DashboardController::class, 'index']);
+Route::get('/create/summary', [SMSController::class, 'summary']);
 Route::post('/create/verify', [SMSController::class, 'verify']);
-Route::get('/create/summary', [DashboardController::class, 'summary']);
+Route::post('/create/confirm', [SMSController::class, 'confirm']);
 
 Route::get('/funds/add', [DashboardController::class, 'pay']);
 Route::get('/funds', [DashboardController::class, 'funds']);
@@ -36,6 +38,7 @@ Route::get('/drafts', [DashboardController::class, 'drafts']);
 Route::get('/scheduled', [DashboardController::class, 'scheduled']);
 Route::get('/recipients', [DashboardController::class, 'recipients']);
 Route::get('/recipients/add', [DashboardController::class, 'createRecipients']);
+Route::get('/recipients/{id?}/download', [RecipientListController::class, 'download']);
 Route::post('/recipients/add', [RecipientListController::class, 'create'])->name('upload-list');
 
 //Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

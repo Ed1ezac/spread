@@ -17,6 +17,7 @@ class CreateRecipientListsTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('file_path');
+            $table->unsignedBigInteger('entries');
             $table->unsignedBigInteger('user_id');
             $table->timestamps();
         });

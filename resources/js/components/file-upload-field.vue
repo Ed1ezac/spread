@@ -1,5 +1,5 @@
 <template>
-    <div :class="hasSelected ?'h-16':''" class="relative">
+    <div :class="hasSelected ?'h-20':''" class="relative">
         <transition
             enter-active-class="transform-gpu duration-500 delay-75"
             enter-class="opacity-0 scale-0"
@@ -21,14 +21,14 @@
                         </label>
                         <p class="pl-1">or drag and drop</p>
                     </div>
-                    <p class="text-xs text-gray-500">csv, xls, xxls up to 10MB</p>
+                    <p class="text-xs text-gray-500">csv, xls, xlsx up to 10MB</p>
                 </div>
             </div>
         </transition>
         <transition 
-            enter-active-class="transform-gpu duration-700 ease-in-out"
-            enter-class="opacity-0 translate-y-6"
-            enter-to-class="opacity-100 translate-y-0"
+            enter-active-class="transform-gpu duration-700"
+            enter-class="opacity-0 scale-x-50 translate-y-10"
+            enter-to-class="opacity-100 scale-x-100 translate-y-0"
             leave-active-class="transform-gpu duration-1000"
             leave-class="opacity-100 translate-y-0"
             leave-to-class="opacity-0 translate-y-20">
