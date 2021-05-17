@@ -13,7 +13,7 @@
    viewBox="0 0 426 835"
    version="1.1"
    id="svg1136"
-   sodipodi:docname="Android-device-1.svg"
+   sodipodi:docname="android-device.svg"
    inkscape:version="0.92.0 r15299">
   <metadata
      id="metadata1140">
@@ -38,22 +38,23 @@
      inkscape:window-width="1366"
      inkscape:window-height="739"
      id="namedview1138"
-     showgrid="false"
-     inkscape:zoom="0.64"
-     inkscape:cx="-222.47655"
-     inkscape:cy="483.84875"
+     showgrid="true"
+     inkscape:zoom="2.56"
+     inkscape:cx="257.41933"
+     inkscape:cy="857.98009"
      inkscape:window-x="-9"
      inkscape:window-y="-9"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg1136"
-     inkscape:snap-center="true"
+     inkscape:snap-center="false"
      inkscape:snap-bbox="true"
-     inkscape:snap-bbox-midpoints="true"
+     inkscape:snap-bbox-midpoints="false"
      inkscape:snap-grids="false"
      inkscape:snap-object-midpoints="false"
      inkscape:snap-bbox-edge-midpoints="true"
      inkscape:snap-intersection-paths="true"
-     inkscape:object-paths="true">
+     inkscape:object-paths="true"
+     inkscape:snap-others="true">
     <inkscape:grid
        type="xygrid"
        id="grid94" />
@@ -62,6 +63,18 @@
      id="desc1031">Created with Lunacy</desc>
   <defs
      id="defs1062">
+    <inkscape:path-effect
+       effect="powerstroke"
+       id="path-effect99"
+       is_visible="true"
+       offset_points="0,0.5"
+       sort_points="true"
+       interpolator_type="CubicBezierJohan"
+       interpolator_beta="0.2"
+       start_linecap_type="zerowidth"
+       linejoin_type="extrp_arc"
+       miter_limit="4"
+       end_linecap_type="zerowidth" />
     <inkscape:path-effect
        effect="powerstroke"
        id="path-effect956"
@@ -417,15 +430,15 @@
      id="path1196"
      inkscape:connector-curvature="0" />
   <rect
-     style="opacity:1;fill:#0000ff;fill-opacity:1;fill-rule:nonzero;stroke:#0000ff;stroke-width:0.37795276;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
+     style="opacity:1;fill:#0000ff;fill-opacity:1;fill-rule:nonzero;stroke:#0000ff;stroke-width:0.4125807;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
      id="rect936"
-     width="360"
-     height="50"
+     width="359.96536"
+     height="59.587418"
      x="32.495239"
      y="129.6395" />
   <g
      id="g934"
-     transform="matrix(0,-0.30883127,0.30883127,0,-41.546788,25.290867)"
+     transform="matrix(0,-0.42341891,0.42341891,0,-71.612889,-21.510924)"
      style="stroke:#ffffff;stroke-width:7.00913;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1">
     <g
        transform="rotate(-45,-420,315)"
@@ -449,23 +462,23 @@
        style="fill:#000000;fill-rule:nonzero;stroke:#ffffff;stroke-width:7.00913;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
   </g>
   <rect
-     style="opacity:1;fill:#808080;fill-opacity:1;fill-rule:nonzero;stroke:#808080;stroke-width:0.22541273;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
+     style="opacity:1;fill:#999999;fill-opacity:1;fill-rule:nonzero;stroke:#999999;stroke-width:0.30874476;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
      id="rect958"
-     width="85.13855"
-     height="18.413376"
-     x="169.91638"
-     y="190.96936"
-     ry="6.2278547" />
+     width="119.17016"
+     height="24.679394"
+     x="160.58142"
+     y="207.49142"
+     ry="8.3471746" />
   <text
      xml:space="preserve"
-     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.76760197px;line-height:16.82437897px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.67297512"
-     x="188.17996"
-     y="189.03374"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15.07522202px;line-height:23.55503464px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.94220138"
+     x="180.10313"
+     y="207.35573"
      id="text962"
      transform="scale(0.9253493,1.080673)"><tspan
        sodipodi:role="line"
        id="tspan960"
-       x="188.17996"
-       y="189.03374"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:9.87030125px;font-family:'Arial Rounded MT Bold';-inkscape-font-specification:'Arial Rounded MT Bold, ';fill:#ffffff;stroke-width:0.67297512">May 31, 12:30 PM</tspan></text>
+       x="180.10313"
+       y="207.35573"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.81895351px;font-family:'Arial Rounded MT Bold';-inkscape-font-specification:'Arial Rounded MT Bold, ';fill:#ffffff;stroke-width:0.94220138">May 31, 12:30 PM</tspan></text>
 </svg>

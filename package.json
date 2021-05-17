@@ -10,21 +10,23 @@
         "production": "mix --production"
     },
     "devDependencies": {
+        "@headlessui/vue": "^1.0.0",
+        "@tailwindcss/forms": "^0.3.2",
+        "@vue/compiler-sfc": "^3.0.11",
         "autoprefixer": "^10.2.5",
         "axios": "^0.21.1",
         "bootstrap": "^4.0.0",
         "jquery": "^3.2",
-        "laravel-mix": "^6.0.13",
+        "laravel-echo": "^1.10.0",
+        "laravel-mix": "^6.0.16",
         "lodash": "^4.17.19",
         "popper.js": "^1.12",
         "postcss": "^8.2.7",
+        "pusher-js": "^7.0.3",
         "resolve-url-loader": "^2.3.1",
-        "sass": "^1.20.1",
-        "sass-loader": "^8.0.0",
         "tailwindcss": "^2.0.3",
-        "vue": "^2.5.17",
-        "vue-loader": "^15.9.5",
-        "vue-template-compiler": "^2.6.10"
+        "vue": "^3.0.11",
+        "vue-loader": "^16.2.0"
     },
     "dependencies": []
 }

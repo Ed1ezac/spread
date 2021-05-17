@@ -9,9 +9,9 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="387.43399mm"
-   height="115.29628mm"
-   viewBox="0 0 387.43399 115.29628"
+   width="396.77179mm"
+   height="136.6447mm"
+   viewBox="0 0 396.77179 136.6447"
    version="1.1"
    id="svg8"
    inkscape:version="0.92.0 r15299"
@@ -122,9 +122,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.12374369"
-     inkscape:cx="1048.1616"
-     inkscape:cy="-207.54885"
+     inkscape:zoom="0.35000001"
+     inkscape:cx="924.73859"
+     inkscape:cy="50.907063"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -142,8 +142,8 @@
     <inkscape:grid
        type="xygrid"
        id="grid10"
-       originx="45.387825"
-       originy="-94.137988" />
+       originx="54.725619"
+       originy="-83.020002" />
   </sodipodi:namedview>
   <metadata
      id="metadata5">
@@ -153,7 +153,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -161,18 +161,10 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(45.387828,-87.565726)">
-    <rect
-       style="opacity:1;fill:#ffffff;fill-opacity:0;fill-rule:nonzero;stroke:#000000;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0;paint-order:fill markers stroke"
-       id="rect1286"
-       width="328.08334"
-       height="105.83333"
-       x="-21.166666"
-       y="95.916695"
-       ry="0.66145831" />
+     transform="translate(54.72562,-77.335303)">
     <g
        id="g1306"
-       transform="matrix(1.5560207,0,0,1.5560207,-27.055112,-87.996794)">
+       transform="matrix(1.8441355,0,0,1.8441355,-32.998394,-130.7346)">
       <path
          sodipodi:nodetypes="ssssssssssssss"
          inkscape:connector-curvature="0"
@@ -481,12 +473,12 @@
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:86.49728394px;line-height:11.2626667px;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, Bold';text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.45050666"
        x="205.8383"
-       y="179.7365"
+       y="178.14902"
        id="text1164"><tspan
          sodipodi:role="line"
          id="tspan1162"
          x="205.8383"
-         y="179.7365"
+         y="178.14902"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:86.49728394px;font-family:Gadugi;-inkscape-font-specification:'Gadugi Bold';text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke-width:0.45050666">Spread</tspan></text>
   </g>
 </svg>

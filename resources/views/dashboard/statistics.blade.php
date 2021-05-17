@@ -2,8 +2,8 @@
 
 
 @section('features')
-<div class="ml-12">
-    <p>{{ Request::segment(1) }}</p>
-</div>
+    @if(session('status'))
+      <notification-banner message="{{ session('status') }}"></notification-banner>
+    @endif
 
 @endsection

@@ -19,14 +19,13 @@
         @stack('page-css')
     </head>
 
-    <body class="font-body">
+    <body class="font-body bg-gray-50">
         <div id="app">
         <my-navbar v-bind:is-auth="{{ json_encode(Auth::check()) }}"
             logo-uri="{{asset('logo.svg')}}" 
             logo-uri-sm="{{asset('logo-small.svg')}}" 
             register-route="{{ route('register') }}" 
-            login-route="{{ route('login') }}"
-            logout-route="{{ route('logout') }}"></my-navbar>
+            login-route="{{ route('login') }}"></my-navbar>
             <!--- Main Page Content ---> 
             @yield('content')
             

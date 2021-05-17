@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Sms;
 use Illuminate\Http\Request;
+use App\Models\RecipientList;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
@@ -13,7 +16,10 @@ class DashboardController extends Controller
 
     public function index()
     {
-        return view('dashboard.create-sms');
+        $recipients = RecipientList::where([
+            ['user_id', '=',Auth::id(),],
+            ['status', '=', 'processed']])->get();
+        return view('dashboard.create-sms', compact('recipients'));
     }
 
     public function scheduled(){
@@ -21,15 +27,21 @@ class DashboardController extends Controller
     }
 
     public function recipients(){
-        return view('dashboard.recipients');
+        
+        $recipients = RecipientList::where('user_id', Auth::id())->get();
+        return view('dashboard.recipients', compact('recipients'));
+    }
+
+    public function createRecipients(){
+        return view('dashboard.add-recipients');
     }
 
     public function drafts(){
-        return view('dashboard.drafts');
-    }
-
-    public function summary(){
-        return view('dashboard.summary');
+        $drafts = Sms::where([
+            ['user_id','=', Auth::id()],
+            ['status', '=','draft'],
+        ])->orderBy('created_at', 'desc')->get();
+        return view('dashboard.drafts', compact('drafts'));
     }
 
     public function funds(){
@@ -37,6 +49,6 @@ class DashboardController extends Controller
     }
 
     public function pay(){
-        return view('dashboard.pay');
+        return view('dashboard.add-funds');
     }
 }

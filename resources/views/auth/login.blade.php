@@ -4,7 +4,7 @@
 <section class="pt-20">
     <div class="flex justify-center sm:mt-14 2xl:mt-20">
         <div class="bg-white shadow-md overflow-hidden w-full max-w-sm rounded-md">
-            <h3 class="text-gray-700 text-lg flex justify-content-center font-headings font-medium mx-6 my-2">Welcome!</h3>
+            <h3 class="text-gray-700 text-lg flex justify-center font-headings font-medium mx-6 my-2">Welcome!</h3>
             <form method="POST" action="{{ route('login') }}">
                 @csrf
                 <div class="px-6 py-2 space-y-6 sm:p-6">
