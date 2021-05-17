@@ -16,9 +16,11 @@ class CreateRecipientListsTable extends Migration
         Schema::create('recipient_lists', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('file_path');
             $table->unsignedBigInteger('entries');
+            $table->enum('status', ['processed', 'pending', 'invalid']);
             $table->unsignedBigInteger('user_id');
+            $table->string('file_extension');
+            $table->string('file_path');
             $table->timestamps();
         });
     }

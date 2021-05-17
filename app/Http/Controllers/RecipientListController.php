@@ -2,46 +2,42 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Jobs\ProcessDataFile;
 use App\Models\RecipientList;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Auth;
+use App\Events\FileProcessingComplete;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-//
-use  \PhpOffice\PhpSpreadsheet\IOFactory;
 
 class RecipientListController extends Controller
 {
-    //
+    //'status', ['processed', 'pending', 'invalid']
     public function create(Request $request){
         $validator =  $this->validateForm($request);
         if ($validator->fails()) {
             return back()->withInput()->withErrors($validator);
         }
-        $numRows = 0;
-        //dd($request);
-        //dd(mime_content_type($request->file('data-file')));
-        //pre-processing
-        try {
-            $numRows = $this->processFile($request);
-        } catch (\Throwable $th) {
-            //an error occured while processing file...
-            return back()->withErrors($validator);
-        }
-        
+
         //storage
-        /*$path = $request->file('data-file')->store('shelf');
+        $path = $request->file('data-file')->store('shelf');
         //databse
-        RecipientList::create([
+        $list = RecipientList::create([
             'user_id' => Auth::id(),
             'name' => $request->input('collection_name'),
-            'entries' => $numRows,
+            'entries' => 0,
+            'status' => 'pending',
+            'file_extension' => $request->file('data-file')->extension(),
             'file_path' => $path,
-        ]);*/
+        ]);
+        //$this->processFile($list);-Test
+        $this->dispatchFileProcessingJob($list);
         
         return redirect('/recipients')
-                ->with('status', 'The recipient list has been uploaded successfully!');
+                ->with('status', 'The file has been uploaded and is being processed!');
     }
 
     private function validateForm(Request $request){
@@ -49,12 +45,12 @@ class RecipientListController extends Controller
         return Validator::make([
                 'collection_name' => $request->collection_name,
                 'data-file' => $request->file('data-file'),
-                'extension' => strtolower($request->file('data-file')->getClientOriginalExtension()),
+                'extension' => $request->file('data-file')->extension(),
             ],
             [
                 'collection_name' => 'required|max:20',
                 'data-file' => 'required|max:10250|min:0.045',//47-bytes
-                'extension' => 'in:csv,xls,xlsx',
+                'extension' => 'in:csv,txt,xls,xlsx',
             ],$messages = [
                 'required' => 'The :attribute field is required.',
                 'string.max' => 'The :attribute may not be greater than :max characters.',
@@ -65,49 +61,44 @@ class RecipientListController extends Controller
         );  
     }
 
-    private function processFile(Request $request){
-        $file = $request->file('data-file');
-        
-        $reader = $this->getFileReaderByExtension(
-            strtolower($request->file('data-file')->getClientOriginalExtension()));
-        $spreadsheet = $reader->load($file->getPathName());
-        return $spreadsheet->getActiveSheet()->getHighestDataRow();//gets number of rows with actual data
-    }
-    
-    private function getFileReaderByExtension($extension){
-        switch ($extension) {
-            case 'csv':
-                return new \PhpOffice\PhpSpreadsheet\Reader\Csv();
-            case 'xls':
-                $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
-                $reader->setReadDataOnly(true);
-                return $reader;
-            case 'xlsx':
-                $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
-                $reader->setReadDataOnly(true);
-                return $reader;
-            default:
-                throw new Exception("Invalid file type.");
-                break;
-        }
-    }
-    public function get(){
-        
+    private function dispatchFileProcessingJob($list){
+        Bus::chain([
+            new ProcessDataFile(Auth::user(), $list),
+            function () use ($list) {
+                $list->status = 'processed';
+                $list->save();
+                FileProcessingComplete::dispatch($list);
+            },
+        ])->onQueue('uploads')->delay(now()->addSeconds(6))->dispatch();
     }
 
-    public function deleteList(){
-        //Todo: implement
-        Storage::delete('path-to-file');
+    public function deleteList(Request $request){
+        $id = $request->id;
+        try{
+            $file = RecipientList::where([
+                ['id','=', $id],
+                ['user_id','=', Auth::id()]
+                ])->firstOrFail();
+            Storage::delete($file->file_path);
+            $file->delete();
+
+            return back()->withErrors('data file deleted!');
+        }catch(Exception $e){
+            return back()->withErrors('Oops! The request file could not be found.');
+        }
     }
 
     public function download($id){
-        //todo - handle fails
-        $file = RecipientList::where([
-            ['id','=', $id],
-            ['user_id','=', Auth::id()]
-            ])->first();
-        
-        return Storage::download($file->file_path, $file->name);
+        try{
+            $file = RecipientList::where([
+                ['id','=', $id],
+                ['user_id','=', Auth::id()]
+                ])->firstOrFail();
+            
+            return Storage::download($file->file_path, $file->name);
+        }catch(Exception $e){
+            return back()->withErrors('Oops! The requested file could not be found.');
+        }
     } 
 
 }

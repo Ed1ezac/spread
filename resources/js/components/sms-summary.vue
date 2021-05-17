@@ -42,13 +42,13 @@
                     <div class="mt-1">
                         <div class="flex items-center">
                             <!--:checked="!checkedData"-->
-                        <input @input="mlog()" id="send_now" value="now" :checked="!sendLater" name="sending_time" type="radio" class="h-4 w-4 text-accent-800 focus:ring-2 focus:ring-accent-800 border-gray-300"/>
+                        <input @input="toggle()" id="send_now" value="now" :checked="!sendLater" name="sending_time" type="radio" class="h-4 w-4 text-accent-800 focus:ring-2 focus:ring-accent-800 border-gray-300"/>
                         <label for="send_immediately" class="ml-3 pt-1 block text-sm font-medium text-gray-700">
                             Send now
                         </label>
                         </div>
                         <div class="flex items-center">
-                            <input @input="mlog()" id="send_later" value="later" :checked="sendLater" name="sending_time" type="radio" class="h-4 w-4 text-accent-800 focus:ring-2 focus:ring-accent-800 border-gray-300">
+                            <input @input="toggle()" id="send_later" value="later" :checked="sendLater" name="sending_time" type="radio" class="h-4 w-4 text-accent-800 focus:ring-2 focus:ring-accent-800 border-gray-300">
                             <label for="send_later" class="ml-3 block mt-1 text-sm font-medium text-gray-700">
                                 Start sending at:
                             </label>
@@ -107,9 +107,8 @@ export default {
           recipients: Array,
       },
     methods:{
-        mlog(){
+        toggle(){
             this.sendLater = !this.sendLater;
-            console.log(this.sendLater);
         }
     },
     mounted() {

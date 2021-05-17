@@ -16,7 +16,9 @@ class DashboardController extends Controller
 
     public function index()
     {
-        $recipients = RecipientList::where('user_id', Auth::id())->get();
+        $recipients = RecipientList::where([
+            ['user_id', '=',Auth::id(),],
+            ['status', '=', 'processed']])->get();
         return view('dashboard.create-sms', compact('recipients'));
     }
 
@@ -25,6 +27,7 @@ class DashboardController extends Controller
     }
 
     public function recipients(){
+        
         $recipients = RecipientList::where('user_id', Auth::id())->get();
         return view('dashboard.recipients', compact('recipients'));
     }

@@ -2,7 +2,8 @@
 
 
 @section('features')
-<div class="ml-12">
-</div>
+    @if(session('status'))
+      <notification-banner message="{{ session('status') }}"></notification-banner>
+    @endif
 
 @endsection

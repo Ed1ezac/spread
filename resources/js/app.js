@@ -4,7 +4,7 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-//require('./bootstrap');
+require('./bootstrap');
 
 //window.Vue = require('vue').default;
 import { createApp } from 'vue';
@@ -12,7 +12,8 @@ import Sidebar from './components/sidebar.vue';
 import MyNavbar from './components/navbar.vue';
 import SmsWizard from './components/sms-wizard.vue';
 import SmsSummary from './components/sms-summary.vue';
-import MessagingList from './components/messaging-list.vue';
+import ErrorBanner from './components/error-banner.vue';
+import RecipientsList from './components/recipients-list.vue';
 import PasswordField from './components/password-field.vue';
 import NotificationBanner from './components/notif-banner.vue';
 import FileUploadField from './components/file-upload-field.vue';
@@ -23,7 +24,8 @@ const app = createApp({
         Sidebar,
         SmsWizard,
         SmsSummary,
-        MessagingList,
+        ErrorBanner,
+        RecipientsList,
         PasswordField,
         FileUploadField,
         NotificationBanner
@@ -31,13 +33,3 @@ const app = createApp({
 })
 
 app.mount("#app");
-/**
- * The following block of code may be used to automatically register your
- * Vue components. It will recursively scan this directory for the Vue
- * components and automatically register them with their "basename".
-   Vue.component('sidebar', require('./components/sidebar.vue').default);
-   Vue.component('sms-wizard', require('./components/sms-wizard.vue').default);
-
-Vue.component('error-banner', require('./components/error-banner.vue').default);
-Vue.component('notification-banner', require('./components/notif-banner.vue').default);
- */

@@ -51,9 +51,15 @@ class SMSController extends Controller
     }
 
     public function confirm(Request $request){
-        dd($request);
-        //date format: DD.MM.YYYY
-        $sms = Sms::create([
+        
+        if($request->input('sending_time') == 'now'){
+            dd($request);
+        }else if($request->input('sending_time') == 'later'){
+            //date format: DD.MM.YYYY
+            dd($request);
+        }
+        
+        /*$sms = Sms::create([
             'sender' => $request->input('sender'),
             'message' => $request->input('message'),
             'status' => 'pending',
@@ -61,8 +67,7 @@ class SMSController extends Controller
             /////////////////////////
             'user_id' => Auth::id(),
         ]);
-
-        $sms->save();
+        $sms->save();*/
 
         return redirect('/statistics')->with('status', 'Sms created...');
     }

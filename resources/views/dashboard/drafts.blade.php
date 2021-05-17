@@ -5,7 +5,7 @@
     show: text, recipient list, capacity, expected cost
 -->
 <!--Empty view-->
-@if (isset($drafts))
+@if (isset($drafts) && count($drafts) > 0)
     <div class="grid grid-cols-1 xl:grid-cols-2">
     @foreach ($drafts as $sms)
     <div class="shadow-sm overflow-hidden rounded max-w-md mb-4 border-t-4 border-gray-500">

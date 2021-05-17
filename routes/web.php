@@ -39,6 +39,7 @@ Route::get('/scheduled', [DashboardController::class, 'scheduled']);
 Route::get('/recipients', [DashboardController::class, 'recipients']);
 Route::get('/recipients/add', [DashboardController::class, 'createRecipients']);
 Route::get('/recipients/{id?}/download', [RecipientListController::class, 'download']);
+Route::post('/recipients/item/delete', [RecipientListController::class, 'deleteList']);
 Route::post('/recipients/add', [RecipientListController::class, 'create'])->name('upload-list');
 
 //Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

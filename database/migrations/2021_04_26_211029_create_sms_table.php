@@ -18,8 +18,8 @@ class CreateSmsTable extends Migration
             $table->string('sender', 20);
             $table->text('message');
             $table->enum('status', ['draft', 'pending', 'sent']);
-            $table->foreignId('recipient_list_id')->nullable()->constrained();
-            $table->foreignId('user_id')->constrained();
+            $table->foreignId('recipient_list_id')->nullable();
+            $table->foreignId('user_id');
             $table->timestamp('send_at')->nullable();
             $table->timestamps();
         });

@@ -6,7 +6,7 @@
                 <svg class="flex-shrink-0 h-5 w-5 text-gray-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
-                <input ref="rolloutDay" type="hidden" name="day">
+                <input :value="day" type="hidden" name="day">
                 <h3 ref="dateText" class="mx-2 pt-1 text-xs text-gray-500 font-semibold">{{ displayDate }}</h3>
             </PopoverButton>
             <transition
@@ -130,8 +130,9 @@ export default{
     data(){
         return{
             direction: undefined,
-            selectedDate: this.formatDateToString(new Date(), this.format),
             positionClass: undefined,
+            day: this.formatDateToString(new Date(), this.format),
+            selectedDate: this.formatDateToString(new Date(), this.format),
             currentPeriod: this.startPeriod || this.getPeriodFromValue(
                 this.selectedDate, this.format
             )
@@ -147,9 +148,8 @@ export default{
         },
         valueDate() {
             const value = this.selectedDate;
-            const format = this.format;
             return value
-                ? this.parseDateString(value, format)
+                ? this.parseDateString(value, this.format)
                 : undefined;
         },
         isValidValue() {
@@ -360,10 +360,9 @@ export default{
         selectDateItem(item) {
             if (!item.disabled && !item.outOfRange) {              
                 const newDate = new Date(item.date);
-                //this.$refs.dateText.value = this.formatDateToString(newDate, this.format);
-                //if(currentDate.getMonth()>=)
                 this.selectedDate = this.formatDateToString(newDate, this.format);
-                this.$refs.rolloutDay.value = this.formatDateToString(newDate, this.format);
+                //this.$refs.rolloutDay.value
+                this.day = this.formatDateToString(newDate, this.format);
                 this.close(); 
             }
         },
