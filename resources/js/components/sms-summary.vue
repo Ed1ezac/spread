@@ -1,9 +1,10 @@
 <template>
     <div>
-        <div class="shadow-sm overflow-visible rounded-sm max-w-md border-t-4 border-gray-500">
+        <div class="shadow-sm overflow-visible rounded-sm w-112 border-t-4 border-gray-500">
             <form action="/create/confirm" method="POST">
             <input type="hidden" name="_token" :value="csrf">
             <div class="relative bg-white px-4 pt-2 pb-3 space-y-4 sm:p-6">
+                <input type="hidden" ref="smsId" name="smsId">
                 <!---Sender-->
                 <div class="flex">
                     <svg class="flex-shrink-0 h-6 w-6 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -17,8 +18,8 @@
                     <svg class="flex-shrink-0 h-6 w-6 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
                     </svg>
-                    <div class="ml-2 pl-2 p-1 border-gray-400 border-2">
-                        <p class="font-medium text-gray-600 text-sm">{{ messageText }}</p>
+                    <div class="ml-2 pl-2 p-1 bg-gray-200 border-gray-400 border-2">
+                        <p class="font-medium text-gray-800 text-sm">{{ messageText }}</p>
                     </div>
                     <input type="hidden" ref="message" name="message">
                 </div>
@@ -29,13 +30,6 @@
                     </svg>
                     <p class="leading-5 text-gray-600 self-center ml-2 text-base font-medium">{{ messagingListName }}</p>
                     <input type="hidden" ref="recipientsListId" name="recipient-list-id">
-                </div>
-                <!-- count down timer --->
-                <div v-if="queued" class="flex"> 
-                    <svg class="flex-shrink-0 h-6 w-6 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <p class="text-gray-600 ml-2 self-center"><span class="font-bold">01</span>:<span class="font-bold">30</span>:<span class="font-bold">42</span></p>
                 </div>
                 <!--send options-->
                 <fieldset>
@@ -56,10 +50,13 @@
                     </div>
                     <div class="h-8 flex mt-1 ml-2" v-if="sendLater">
                         <div>
-                        <Datepicker></Datepicker>
+                        <Datepicker 
+                            v-bind:date="date"
+                        ></Datepicker>
                         </div>
                         <div>
-                            <input type="time" min="07:00" max="22:00" name="time" class="px-4 h-full text-xs border border-gray-300 rounded text-gray-500 font-semibold focus:border-gray-200 focus:ring-2 focus:ring-offset-0 focus:ring-accent-800"/>
+                            <!---min="07:00" max="22:00"-->
+                            <input type="time" :value="time" name="time" class="px-4 h-full text-xs border border-gray-300 rounded text-gray-500 font-semibold focus:border-gray-200 focus:ring-2 focus:ring-offset-0 focus:ring-accent-800"/>
                         </div>
                     </div>
                 </fieldset>
@@ -97,6 +94,8 @@ export default {
             senderName:'',
             messageText: '',
             listId: 0,
+            date: undefined,
+            time: undefined,
             queued: false,
             sendLater: false,
             messagingListName: ref(this.recipients[0].name),
@@ -104,7 +103,7 @@ export default {
         }
     },
      props:{
-          recipients: Array,
+        recipients: Array,
       },
     methods:{
         toggle(){
@@ -112,6 +111,18 @@ export default {
         }
     },
     mounted() {
+        if(localStorage.smsId){
+            //this is an edit!
+            this.sendLater = true;
+            this.$refs.smsId.value = localStorage.smsId;
+            if(localStorage.sendingTime){
+                this.time = localStorage.sendingTime; 
+            }
+            if(localStorage.sendingDate){
+                let arr = localStorage.sendingDate.split("-");
+                this.date = new Date(arr[0],arr[1], arr[2]);//year,month,day
+            }
+        }
         if (localStorage.sender) {
           this.senderName = localStorage.sender;
           this.$refs.sender.value = localStorage.sender;
@@ -137,3 +148,8 @@ export default {
     },
 }
 </script>
+<style>
+ .w-112{
+    width: 28rem;
+ }
+</style>

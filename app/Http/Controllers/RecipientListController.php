@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Throwable;
 use Carbon\Carbon;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -83,7 +84,7 @@ class RecipientListController extends Controller
             $file->delete();
 
             return back()->withErrors('data file deleted!');
-        }catch(Exception $e){
+        }catch(Throwable $e){
             return back()->withErrors('Oops! The request file could not be found.');
         }
     }

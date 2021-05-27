@@ -5,7 +5,6 @@
 <!--How much funds you have
     Add funds, request Refund
 -->
-
 <div class="container">
     <div class="shadow-sm overflow-hidden max-w-xs rounded-md">
         <div class="bg-gray-700 p-2 divide-y divide-gray-100">
@@ -124,3 +123,10 @@
 </!--div -->
 
 @endsection
+@push('page-js')
+    <script>
+        localStorage.removeItem('smsId');
+        localStorage.removeItem('sendingDate');
+        localStorage.removeItem('sendingTime');
+    </script>
+@endpush

@@ -2,28 +2,26 @@
 
 namespace App\Events;
 
+use App\Models\Sms;
 use App\Models\User;
-use App\Models\RecipientList;
 use Illuminate\Broadcasting\Channel;
-use Illuminate\Queue\SerializesModels;
+use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Foundation\Events\Dispatchable;
-use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Queue\SerializesModels;
 
-
-class FileProcessingComplete implements ShouldBroadcast{
+class RolloutComplete implements ShouldBroadcast{
     use Dispatchable, InteractsWithSockets, SerializesModels;
-    public $queue = 'uploads';
+    public $queue = 'rollouts';
 
-    public $list;
+    public $sms;
     public $user;
-   
-    public function __construct(RecipientList $recipients)
+    public function __construct(Sms $sms)
     {
-        $this->user = User::find($recipients->user_id);
-        $this->list = $recipients;
+        $this->user = User::find($sms->user_id);
+        $this->sms = $sms;
     }
 
     /**
@@ -33,6 +31,6 @@ class FileProcessingComplete implements ShouldBroadcast{
      */
     public function broadcastOn()
     {
-        return new Channel('uploads.'.$this->user->id);
+        return new Channel('rollouts');//PrivateChannel('channel-name');
     }
 }

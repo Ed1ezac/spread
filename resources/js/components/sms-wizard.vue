@@ -1,7 +1,7 @@
 <template>
-    <div class="mt-2 mb-4 md:grid md:grid-cols-3 2xl:grid-cols-2 md:gap-4 xl:gap-0 px-4">
+    <div class="mt-2 mb-4 md:grid md:grid-cols-3 2xl:grid-cols-6 md:gap-4 xl:gap-0 px-4">
         <!--form-->
-        <div class="shadow-sm col-span-2 2xl:col-span-1 pt-2 bg-white rounded-md max-w-xl md:mr-6">
+        <div class="shadow-sm col-span-2 2xl:col-span-2 pt-2 bg-white rounded-md max-w-xl md:mr-6">
           <form ref="smsform" action="/create/verify" method="POST">
             <input type="hidden" name="_token" :value="csrf">
             <div class="px-6 pb-2 space-y-6 sm:p-6">

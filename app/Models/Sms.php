@@ -10,9 +10,15 @@ class Sms extends Model
 {
     /***
      * 'status'- enum with ONLY
-     * 'draft', 'pending', 'sent'
-     *  as possible entries 
+     * 'draft', 'pending', 'sent', failed, aborted
+     *  as possible entries
      */
+    const Draft = 'draft';
+    const Pending = 'pending';
+    const Sent = 'sent';
+    const Failed = 'failed';
+    const Aborted = 'aborted';
+    
     protected $fillable = [
         'sender', 'message', 'status',
         'recipient_list_id', 'user_id', 'send_at'

@@ -27,10 +27,15 @@ Route::get('/statistics', function() {
 Auth::routes();
 //sms
 Route::post('/create/save', [SMSController::class, 'save']);
-Route::get('/create', [DashboardController::class, 'index']);
+Route::get('/create', [DashboardController::class, 'create']);
 Route::get('/create/summary', [SMSController::class, 'summary']);
 Route::post('/create/verify', [SMSController::class, 'verify']);
 Route::post('/create/confirm', [SMSController::class, 'confirm']);
+Route::post('/drafts/item/delete', [SMSController::class, 'deleteDraft']);
+Route::post('/sms/rollout/abort', [SMSController::class, 'abortRollout']);
+Route::post('/scheduled/sms/abort', [SMSController::class, 'abortScheduledRollout']);
+Route::get('/scheduled/sms/{id?}/update', [SMSController::class, 'updateScheduledSms']);
+Route::post('/scheduled/sms/send-now', [SMSController::class, 'processScheduledRolloutNow']);
 
 Route::get('/funds/add', [DashboardController::class, 'pay']);
 Route::get('/funds', [DashboardController::class, 'funds']);

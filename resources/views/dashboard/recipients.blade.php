@@ -1,9 +1,6 @@
 @extends('layouts.dashboard-header')
 
 @section('features')
-  @if(session('status'))
-    <notification-banner message="{{ session('status') }}"></notification-banner>
-  @endif
   @if ($errors->any())
     @foreach ($errors->all() as $error)
       <error-banner error="{{$error}}"></error-banner>
@@ -53,6 +50,13 @@
   @endif  
 
 @endsection
+@push('page-js')
+    <script>
+        localStorage.removeItem('smsId');
+        localStorage.removeItem('sendingDate');
+        localStorage.removeItem('sendingTime');
+    </script>
+@endpush
 
 <!---div class="shadow-md mx-4 mt-2 max-w-4xl overflow-hidden border-b border-gray-200 sm:rounded-sm">
         <table class="min-w-full divide-y divide-gray-200">

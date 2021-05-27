@@ -14,7 +14,7 @@ class DashboardController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function create()
     {
         $recipients = RecipientList::where([
             ['user_id', '=',Auth::id(),],
@@ -23,7 +23,11 @@ class DashboardController extends Controller
     }
 
     public function scheduled(){
-        return view('dashboard.scheduled');
+        $scheduled = Sms::where([
+            ['user_id','=', Auth::id()],
+            ['status', '=','pending'],
+        ])->orderBy('send_at', 'asc')->get();
+        return view('dashboard.scheduled', compact('scheduled'));
     }
 
     public function recipients(){

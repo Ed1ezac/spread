@@ -39,13 +39,16 @@
     </div>
     <!--Invoice-->
     <div class="md:ml-14 ml-2">
-        <div class="shadow-sm border border-gray-300 overflow-hidden max-w-xs rounded-md">
+        <div class="shadow-sm border border-gray-300 overflow-hidden w-64 rounded-md">
             <div class="p-2 bg-white">
                 <div class="flex-col ml-2">
                     <h5 class="text-base text-gray-400 font-bold">PURCHASING</h5>
-                    <div class="flex mt-4 justify-between items-end">
-                        <p class="text-gray-800 text-3xl font-bold">70'000 <span class="text-gray-800 text-sm font-extrabold">P</span></p>
-                        <p class="text-gray-800 text-base font-bold">0.15t / SMS</p>
+                    <div class="divide-y divide-y-8 divide-gray-300">
+                        <div class="flex-col">
+                            <p class="text-gray-600 text-right font-headings text-3xl font-bold">8'000<span class="text-gray-800 text-sm font-extrabold">sms</span></p>
+                            <p class="text-gray-400 text-right font-headings text-base font-bold">@ P 0.15 <span class="text-gray-800 text-sm font-extrabold">/ sms</span></p>
+                        </div>
+                        <p class="text-gray-800 my-1 pt-2 text-right font-headings text-3xl font-bold">P 762.67</p>
                     </div>
                 </div>
             </div>
