@@ -73,10 +73,10 @@ class SendSms implements ShouldQueue
                     $this->incrementProgress();
                     $this->reportProgress();
                 }
-                // $this->sms->status === Sms::Aborted
+                //poll for abortion
                 if(DB::table('sms')->find($this->sms->id)->status === Sms::Aborted){
                     throw new Exception('Aborted by user.');
-                }           
+                }          
             }
         }
     }

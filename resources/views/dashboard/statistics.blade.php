@@ -9,6 +9,7 @@
   @endif
   <sms-rollout-progress
     user-id="{{Auth::id()}}"
+    v-bind:is-about-to-send="{{ json_encode($isAboutToSend) }}"
   ></sms-rollout-progress>
 @endsection
 @push('page-js')

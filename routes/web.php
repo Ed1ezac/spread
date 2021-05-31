@@ -19,10 +19,6 @@ use App\Http\Controllers\SMSController;
 
 //Route::get('/', 'HomeController@index');
 Route::get('/', [HomeController::class, 'index']);
-//debug
-Route::get('/statistics', function() {
-    return view('dashboard.statistics');
-});
 
 Auth::routes();
 //sms
@@ -41,6 +37,7 @@ Route::get('/funds/add', [DashboardController::class, 'pay']);
 Route::get('/funds', [DashboardController::class, 'funds']);
 Route::get('/drafts', [DashboardController::class, 'drafts']);
 Route::get('/scheduled', [DashboardController::class, 'scheduled']);
+Route::get('/statistics', [DashboardController::class, 'statistics']);
 Route::get('/recipients', [DashboardController::class, 'recipients']);
 Route::get('/recipients/add', [DashboardController::class, 'createRecipients']);
 Route::get('/recipients/{id?}/download', [RecipientListController::class, 'download']);

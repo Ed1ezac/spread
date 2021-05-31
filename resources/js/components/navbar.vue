@@ -37,7 +37,7 @@
                             leave-from-class="transform scale-100 opacity-100"
                             leave-to-class="transform scale-95 opacity-0"
                             >
-                                <MenuItems class="absolute right-0 w-48 mt-2 origin-top-right bg-white border border-gray-200 rounded-md rounded-md shadow-lg outline-none">
+                                <MenuItems class="absolute right-0 w-48 mt-2 origin-top-right bg-white border border-gray-200 rounded-md shadow-lg outline-none">
                                     <MenuItem v-slot="{ active }">
                                     <a href="#" :class="active ? 'bg-gray-100 text-gray-900':'text-gray-700'" class="block px-4 py-2 rounded-t-md text-sm text-gray-700 hover:bg-gray-100 hover:no-underline" role="menuitem">Settings</a>
                                     </MenuItem> 
@@ -153,7 +153,7 @@
                         leave-active-class="transition duration-75 ease-out"
                         leave-from-class="transform scale-100 opacity-100"
                         leave-to-class="transform scale-95 opacity-0">
-                            <MenuItems class="absolute right-0 w-48 mt-2 origin-top-right bg-white border border-gray-200 rounded-md rounded-md shadow-lg outline-none">
+                            <MenuItems class="absolute right-0 w-48 mt-2 origin-top-right bg-white border border-gray-200 rounded-md shadow-lg outline-none">
                                 <MenuItem v-slot="{ active }">
                                     <a href="#" :class="active ? 'bg-gray-100 text-gray-900':'text-gray-700'" class="block px-4 py-2 rounded-t-md text-sm text-gray-700 hover:bg-gray-100 hover:no-underline" role="menuitem">Settings</a>
                                 </MenuItem> 

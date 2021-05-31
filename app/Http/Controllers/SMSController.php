@@ -139,8 +139,7 @@ class SMSController extends Controller
     }
 
     public function abortRollout(Request $request){
-        //attempt to stop an already running job
-        //flag the sms as aborted and hope the job will pick that up
+        //flag the sms as aborted and 'hope' the Job will pick that up
         $sms = Sms::find($request->id);
         //
         $status = JobStatus::where([
