@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Models\User;
+use App\Models\Funds;
+use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use App\Providers\RouteServiceProvider;
@@ -50,8 +52,8 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'name' => ['required', 'string', 'max:100'],
+            'email' => ['required', 'string', 'email', 'max:100', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
     }
@@ -64,10 +66,27 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
+
+        $this->registerFundsRecord($user->id);
+        $role = $this->getOrCreateClientRole();
+        $user->assignRole($role->name);
+        return $user;
+    }
+
+    private function getOrCreateClientRole(){
+        return Role::firstOrCreate([
+            'name' => User::Client,
+        ]);
+    }
+
+    private function registerFundsRecord($userId){
+        $funds = new Funds;
+        $funds->user_id = $userId;
+        $funds->save();
     }
 }

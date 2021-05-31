@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use App\Models\Sms;
+use App\Models\User;
+use App\Models\Funds;
 use Illuminate\Http\Request;
 use App\Models\RecipientList;
+use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
@@ -60,10 +63,8 @@ class DashboardController extends Controller
     }
 
     public function funds(){
-        return view('dashboard.funds');
+        $funds = Auth::user()->funds();
+        return view('dashboard.funds', compact('funds'));
     }
 
-    public function pay(){
-        return view('dashboard.add-funds');
-    }
 }

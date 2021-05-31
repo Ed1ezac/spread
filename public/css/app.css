@@ -751,6 +751,29 @@ select{
   }
 }
 
+.my-sidebar-nav-link{
+  border-radius: 0.25rem;
+  display: flex;
+  align-items: center;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+  margin-top: 0.75rem;
+  padding: 0.5rem;
+}
+
+.my-sidebar-nav-link:focus{
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+  --tw-ring-offset-width: 0px;
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgba(255, 227, 97, var(--tw-ring-opacity));
+}
+
+.my-sidebar-nav-link:hover{
+  text-decoration: none;
+}
+
 .my-btn{
   border-radius: 0.25rem;
   border-width: 1px;

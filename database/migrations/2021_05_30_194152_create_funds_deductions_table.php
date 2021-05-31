@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFundsTable extends Migration
+class CreateFundsDeductionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,11 @@ class CreateFundsTable extends Migration
      */
     public function up()
     {
-        Schema::create('funds', function (Blueprint $table) {
+        Schema::create('funds_deductions', function (Blueprint $table) {
             $table->id();
+            $table->integer('amount')->default(0);
+            $table->foreignId('user_id');
+            $table->foreignId('funds_id');
             $table->timestamps();
         });
     }
@@ -26,6 +29,6 @@ class CreateFundsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('funds');
+        Schema::dropIfExists('funds_deductions');
     }
 }

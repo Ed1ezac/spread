@@ -228,5 +228,6 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         //
         'Pusher' => Pusher\Pusher::class,
+        Spatie\Permission\PermissionServiceProvider::class,
     ],
 ];

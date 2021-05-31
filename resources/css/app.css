@@ -7,6 +7,10 @@
 
 
 @layer components{
+    .my-sidebar-nav-link{
+        @apply mx-2 mt-3 p-2 flex items-center rounded hover:no-underline focus:ring-2 focus:outline-none focus:ring-offset-0 focus:ring-primary-300;
+    }
+
     .my-btn{
         @apply text-white text-sm font-headings tracking-wider font-bold border rounded hover:text-white focus:ring-2 focus:ring-offset-2;
     }

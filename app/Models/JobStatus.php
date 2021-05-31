@@ -20,21 +20,26 @@ class JobStatus extends Model
 
     public $dates = ['started_at', 'finished_at', 'created_at', 'updated_at'];
 
-    public function markAsExecuting(){
+    public function user(){
+        
+        return $this->belongsTo(User::class);
+    }
+
+    protected function markAsExecuting(){
         $this->update([
             'status' => self::STATUS_EXECUTING,
             'started_at' => now(),
         ]);
     }
 
-    public function markAsFinished(){
+    protected function markAsFinished(){
         $this->update([
             'status' => self::STATUS_FINISHED,
             'finished_at' => now(),
         ]);
     }
 
-    public function markAsFailed($message){
+    protected function markAsFailed($message){
         $this->update([
             'status' => self::STATUS_FAILED,
             'finished_at' => now(),
@@ -43,7 +48,7 @@ class JobStatus extends Model
         $this->recordFailError($message);
     }
 
-    public function markAsRetrying(){
+    protected function markAsRetrying(){
         $this->update([
             'status' => self::STATUS_RETRYING,
             'started_at' => now(),

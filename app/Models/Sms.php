@@ -24,8 +24,14 @@ class Sms extends Model
         'recipient_list_id', 'user_id', 'send_at'
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function recipients()
     {
+        //BE CAREFUL!
         return $this->hasOne(RecipientList::class);
     }
 
