@@ -22,27 +22,29 @@ Route::get('/', [HomeController::class, 'index']);
 
 Auth::routes();
 //sms
-Route::post('/create/save', [SMSController::class, 'save']);
+Route::get('/drafts', [DashboardController::class, 'drafts']);
 Route::get('/create', [DashboardController::class, 'create']);
 Route::get('/create/summary', [SMSController::class, 'summary']);
 Route::post('/create/verify', [SMSController::class, 'verify']);
 Route::post('/create/confirm', [SMSController::class, 'confirm']);
+Route::get('/scheduled', [DashboardController::class, 'scheduled']);
+Route::post('/create/save-as-draft', [SMSController::class, 'save']);
 Route::post('/drafts/item/delete', [SMSController::class, 'deleteDraft']);
 Route::post('/sms/rollout/abort', [SMSController::class, 'abortRollout']);
 Route::post('/scheduled/sms/abort', [SMSController::class, 'abortScheduledRollout']);
 Route::get('/scheduled/sms/{id?}/update', [SMSController::class, 'updateScheduledSms']);
 Route::post('/scheduled/sms/send-now', [SMSController::class, 'processScheduledRolloutNow']);
-
-Route::get('/funds/add', [DashboardController::class, 'pay']);
+//funds
+Route::get('/funds/add', [FundsController::class, 'pay']);
 Route::get('/funds', [DashboardController::class, 'funds']);
-Route::get('/drafts', [DashboardController::class, 'drafts']);
-Route::get('/scheduled', [DashboardController::class, 'scheduled']);
-Route::get('/statistics', [DashboardController::class, 'statistics']);
+//recipients
 Route::get('/recipients', [DashboardController::class, 'recipients']);
 Route::get('/recipients/add', [DashboardController::class, 'createRecipients']);
 Route::get('/recipients/{id?}/download', [RecipientListController::class, 'download']);
 Route::post('/recipients/item/delete', [RecipientListController::class, 'deleteList']);
 Route::post('/recipients/add', [RecipientListController::class, 'create'])->name('upload-list');
+//stats
+Route::get('/statistics', [DashboardController::class, 'statistics']);
 
 //Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 /*Route::group(['middleware' => ['consumer', 'auth']], function () {
