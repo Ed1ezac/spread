@@ -6,14 +6,14 @@ use App\Models\FundsDeduction;
 
 trait Deductible{
 
-    protected $fundsDeduction;
+    protected $fundsDeduction; 
 
-    protected function stageDeduction(){
-        //
+    public function stageDeduction(array $data){
+        $this->fundsDeduction = FundsDeduction::create($data);
     }
 
-    protected function setDeductionAmount(){
-
+    public function setDeductionAmount($amount){
+        $this->fundsDeduction->amount = $amount;
+        $this->fundsDeduction->save();
     }
-
 }

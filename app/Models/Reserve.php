@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\Recordable;
 use Illuminate\Database\Eloquent\Model;
 
 class Reserve extends Model
@@ -15,4 +16,5 @@ class Reserve extends Model
     protected $fillable = ['name'];
 
     protected $hidden = ['amount'];
+
 }

@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="shadow-sm overflow-visible rounded-sm w-112 border-t-4 border-gray-500">
-            <form action="/create/confirm" method="POST">
+            <form :action="formAction" method="POST">
             <input type="hidden" name="_token" :value="csrf">
             <div class="relative bg-white px-4 pt-2 pb-3 space-y-4 sm:p-6">
                 <input type="hidden" ref="smsId" name="smsId">
@@ -55,15 +55,14 @@
                         ></Datepicker>
                         </div>
                         <div>
-                            <!---min="07:00" max="22:00"-->
-                            <input type="time" :value="time" name="time" class="px-4 h-full text-xs border border-gray-300 rounded text-gray-500 font-semibold focus:border-gray-200 focus:ring-2 focus:ring-offset-0 focus:ring-accent-800"/>
+                            <input type="time" :value="time" name="time" min="07:00" max="22:00" class="px-4 h-full text-xs border border-gray-300 rounded text-gray-500 font-semibold focus:border-gray-200 focus:ring-2 focus:ring-offset-0 focus:ring-accent-800"/>
                         </div>
                     </div>
                 </fieldset>
             </div>
-            <div class="flex justify-between px-4 py-3 bg-primary-100 sm:px-6">
+            <div class="flex justify-between px-4 py-3 bg-gray-50 sm:px-6">
                 <div>
-                    <a href="/create" class="inline-flex justify-center py-2 pl-2 pr-4 my-btn border-gray-300 text-gray-700 bg-primary-100 hover:border-primary hover:bg-primary-500 focus:ring-primary-800">
+                    <a href="/create" class="inline-flex justify-center py-2 pl-2 pr-4 my-btn border-gray-300 text-gray-700 bg-gray-50 hover:border-primary hover:bg-primary-500 focus:ring-primary-800">
                         <svg class="mr-1 flex-shrink-0 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
                         </svg>
@@ -81,7 +80,7 @@
             </div> 
             </form>           
         </div>
-        <div class="h-56"></div>
+        <div v-if="sendLater" class="h-56"></div>
     </div>
 </template>
 
@@ -108,6 +107,11 @@ export default {
     methods:{
         toggle(){
             this.sendLater = !this.sendLater;
+        }
+    },
+    computed: {
+        formAction(){
+            return (localStorage.smsId) ? '/create/sms/update': '/create/confirm' ;
         }
     },
     mounted() {
