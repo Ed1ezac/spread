@@ -40,15 +40,30 @@
 
 
 <script>
-    export default {
-        data () {
-            return {
-                isVisible: true,
-            }
+  export default {
+    data () {
+      return {
+        isVisible: true,
+        timerCount: 9,
+      }
+    },
+    props:{
+      error: String,
+    },
+    watch: {
+      timerCount: {
+        immediate: true,
+        handler(value) {
+          if (value > 0) {
+            setTimeout(() => {
+                this.timerCount--;
+                if(this.timerCount == 0){
+                  this.isVisible = false;
+                }
+            }, 1000);
+          }
         },
-        props:{
-            error: String,
-        }
+      }
     }
-
+  }
 </script>

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 //use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 
 class RecipientList extends Model
@@ -18,4 +19,26 @@ class RecipientList extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    /*public function getMine(){
+        return $this->where([
+            ['user_id','=', Auth::id()]
+        ])->get();
+    }*/
+
+    public function scopeMine($query)
+    {
+        return $query->where('user_id', Auth::id());
+    }
+
+    public function scopeWithId($query, $id)
+    {
+        return $query->where('id', $id);
+    }
+
+    public function scopeWithStatus($query, $status)
+    {
+        return $query->where('status', $status);
+    }
+
 }

@@ -1,5 +1,5 @@
 <template>
-    <div v-show="isSending || isAboutToSend" class="shadow-sm overflow-hidden divide-y divide-dashed divide-gray-300 rounded mb-4 mr-4 w-full border-t-4 border-gray-500">
+    <div v-show="isSending || isAboutToSend" class="shadow-sm overflow-hidden divide-y divide-dashed divide-gray-300 rounded mb-4 mr-4 max-w-4xl border-t-4 border-gray-500">
         <div class="mb-2 px-4">
             <div class="flex justify-between my-2">
                 <h3 class="text-sm text-gray-400">{{ statusValue }}</h3>
@@ -12,7 +12,10 @@
                 </div>
             </div>
             <div class="h-5 w-full shadow-inner bg-gray-200 rounded-full">
-                <div v-if="percentage>0" class="h-full px-1 bg-accent-600 rounded-full" :style="barStyle">
+                <div v-if="percentage>0" 
+                    class="h-full px-1 rounded-full" 
+                    :class="isSending ? 'bg-accent-600': isAborted ? 'bg-red-600': 'bg-primary-600'"
+                    :style="barStyle">
                     <div class="text-right">
                         <h3 v-if="percentage > 4" class="text-white font-bold">{{ percentage }}%</h3>
                     </div>
@@ -49,7 +52,7 @@
                 <!--p v-else v-if="recipients != null" class="text-gray-500 ml-2 pt-1 text-base font-medium">{{ recipients.name }}</!--p -->
                 <p v-if="false" class="bg-red-100 rounded text-red-400 ml-2 p-1 pt-1 text-base font-medium">missing recipients, sending will fail!</p>
             </div>
-            <div v-if="smsId != null && percentage < 60" class="flex justify-end">
+            <div v-if="smsId != null && percentage < 30" class="flex justify-end">
                 <span class="sm:block">
                     <button @click="abortRollout()" class="inline-flex justify-center py-2 px-4 my-btn shadow-md bg-primary-500 border-primary-500 hover:bg-primary-700 focus:ring-primary-800">
                         <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -70,6 +73,7 @@
 export default {
     data(){ 
         return{
+            expectedMax: -1,
             total: undefined,
             current: undefined,
             smsId: undefined,
@@ -94,21 +98,29 @@ export default {
         },
         statusValue(){
             //discovering, Sending, Complete
-            if(this.smsId != undefined && this.percentage < 100){
+            if(this.isSending && !this.isAborted && !this.isCompleted){
                 return 'Sending...';
-            }else if(this.percentage >= 100){
+            }else if(this.isCompleted){
                 return 'Complete.';
+            }else if(this.isAborted){
+                return 'Stopped.'
             }
             return 'Discovering...';
         },
         isSending(){
-            return this.smsId != undefined;
+            return this.smsId != undefined && this.percentage < 100;
         },
+        isAborted(){
+            return (this.expectedMax > 0) && 
+                    (this.current != this.total) &&
+                    (this.current == this.expectedMax);
+        },
+        isCompleted(){
+            return this.percentage >= 100;
+        }
     },
     methods :{
         abortRollout: function(){
-            //ditch the channel
-            //Echo.leaveChannel(`rollouts.${this.order.id}`);
             if(this.smsId != undefined){
                 this.$refs.abortform.submit();
             }
@@ -124,6 +136,9 @@ export default {
                 this.smsSender = e.smsSender;
                 this.smsMessage = e.smsMessage;
                 this.recipientsName = e.smsRecipients;
+            })
+            .listen('RolloutComplete', (e) =>{
+                this.expectedMax = e.sentSmsCount;
             });
         }  
     },

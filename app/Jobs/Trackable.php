@@ -8,9 +8,9 @@ trait Trackable{
     protected $progressNow = 0;
     protected $progressMax = 0;
     
-    public $jobStatus;
+    protected $jobStatus;
 
-    public function startTracking($job, $model){
+    protected function startTracking($job, $model){
         $this->jobStatus = JobStatus::create([
             'job_id' => $model->job_id,
             'user_id' => $model->user_id,
@@ -40,6 +40,7 @@ trait Trackable{
         $this->progressNow = $value;
     }
 
+    //should be private
     protected function update(array $data)
     {
         $this->jobStatus->update($data);

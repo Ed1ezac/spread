@@ -3,7 +3,6 @@
 namespace App\Events;
 
 use App\Models\Sms;
-use App\Models\User;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -17,20 +16,17 @@ class RolloutComplete implements ShouldBroadcast{
     public $queue = 'rollouts';
 
     public $sms;
-    public $user;
-    public function __construct(Sms $sms)
+    public $sentSmsCount;
+    public function __construct(Sms $sms, $numSent)
     {
-        $this->user = User::find($sms->user_id);
         $this->sms = $sms;
+        $this->sentSmsCount = $numSent;
     }
 
     /**
-     * Get the channels the event should broadcast on.
-     *
      * @return \Illuminate\Broadcasting\Channel|array
      */
-    public function broadcastOn()
-    {
-        return new Channel('rollouts');//PrivateChannel('channel-name');
+    public function broadcastOn(){
+        return new PrivateChannel('rollouts.'.$this->sms->user_id);
     }
 }

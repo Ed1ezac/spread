@@ -20,7 +20,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
                 <p v-if="recipients != null" class="text-gray-500 ml-2 pt-1 text-base font-medium">{{ recipients.name }}</p>
-                <p v-else class="bg-red-100 rounded text-red-400 ml-2 p-1 pt-1 text-base font-medium">missing recipients, sending will fail!</p>
+                <p v-else class="bg-red-100 rounded text-red-400 ml-2 p-1 pt-1 text-base font-medium">missing recipients, sending will fail and sms will be deleted!</p>
             </div>
             <div class="flex">
                 <svg class="flex-shrink-0 h-6 w-6 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
@@ -95,6 +95,9 @@ export default {
     methods:{
         changeStatusToSending(){
             this.isPending = false;
+            if(this.recipients === null){
+                this.abortRollout();
+            }
         },
         abortRollout: function(){
             this.$refs.abortform.submit();
@@ -118,7 +121,7 @@ export default {
             localStorage.messagingListId = this.sms.recipient_list_id;
             localStorage.sendingDate = day;
             localStorage.sendingTime = time;
-            window.location.href = "create/summary"
+            window.location.href = "create/summary/"+this.sms.recipient_list_id;
         },
         gotoStatistics: function(){
             window.location.href = "/statistics"

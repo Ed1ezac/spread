@@ -2,7 +2,6 @@
 
 namespace App\Events;
 
-use App\Models\User;
 use App\Models\RecipientList;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
@@ -18,21 +17,17 @@ class FileProcessingComplete implements ShouldBroadcast{
     public $queue = 'uploads';
 
     public $list;
-    public $user;
-   
+
     public function __construct(RecipientList $recipients)
     {
-        $this->user = User::find($recipients->user_id);
         $this->list = $recipients;
     }
 
     /**
-     * Get the channels the event should broadcast on.
-     *
      * @return \Illuminate\Broadcasting\Channel|array
      */
     public function broadcastOn()
     {
-        return new Channel('uploads.'.$this->user->id);
+        return new PrivateChannel('uploads.'.$this->list->user_id);
     }
 }

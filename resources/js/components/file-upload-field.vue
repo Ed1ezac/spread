@@ -70,14 +70,11 @@
             onChange() {
                 this.filelist = [...this.$refs.file.files];
                 this.hasSelected = true;
-                //console.log('selection: '+ this.filelist);
             },
-
             remove(i) {
                 this.filelist.splice(i, 1);
                 this.hasSelected = false;
             },
-
             dragover(event) {
                 event.preventDefault();
                 //visual feedback
@@ -85,7 +82,6 @@
                     event.currentTarget.classList.add('bg-gray-300');
                 }
             },
-
             dragleave(event) {
                 event.currentTarget.classList.remove('bg-gray-300');
             },

@@ -8,9 +8,9 @@
           <div class="px-6 py-2 space-y-6 sm:p-6">
             <div>
               <label for="collection_name" class="my-form-label">
-                Collection Name
+                Recipients List Name
               </label>
-              <input type="text" name="collection_name" id="collection_name" value="{{ old('collection_name') }}" autocomplete="list-name" 
+              <input type="text" name="list_name" id="list_name" value="{{ old('list_name') }}" autocomplete="list-name" 
                 class="block w-full rounded border-gray-200
                 focus:border-gray-200 focus:ring-2 focus:ring-offset-0 focus:ring-accent-800 
                 @error('collection_name') bg-red-100 border-red-400 focus:ring-red-400 @enderror"/>

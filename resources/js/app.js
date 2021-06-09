@@ -14,11 +14,12 @@ import DraftSms from './components/draft-sms.vue';
 import SmsWizard from './components/sms-wizard.vue';
 import SmsSummary from './components/sms-summary.vue';
 import ErrorBanner from './components/error-banner.vue';
+import AdminSidebar from './components/admin-sidebar.vue';
 import ScheduledSms from './components/scheduled-sms.vue';
+import FundsPurchase from './components/funds-purchase.vue';
 import PasswordField from './components/password-field.vue';
 import RecipientsList from './components/recipients-list.vue';
 import NotificationBanner from './components/notif-banner.vue';
-//import CountDownTimer from './components/count-down-timer.vue';
 import FileUploadField from './components/file-upload-field.vue';
 import SmsRolloutProgress from './components/sms-rollout-progress.vue';
 
@@ -30,9 +31,10 @@ const app = createApp({
         SmsWizard,
         SmsSummary,
         ErrorBanner,
+        AdminSidebar,
         ScheduledSms,
+        FundsPurchase,
         PasswordField,
-        //CountDownTimer,
         RecipientsList,
         FileUploadField,
         NotificationBanner,
