@@ -4,7 +4,6 @@ namespace App\Http\Requests;
 
 use Carbon\Carbon;
 use App\Models\RecipientList;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreateSmsRequest extends FormRequest

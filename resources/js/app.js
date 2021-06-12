@@ -10,18 +10,20 @@ require('./bootstrap');
 import { createApp } from 'vue';
 import Sidebar from './components/sidebar.vue';
 import MyNavbar from './components/navbar.vue';
-import DraftSms from './components/draft-sms.vue';
-import SmsWizard from './components/sms-wizard.vue';
-import SmsSummary from './components/sms-summary.vue';
+import DraftSms from './components/sms/draft-sms.vue';
+import SmsWizard from './components/sms/sms-wizard.vue';
+import SmsSummary from './components/sms/sms-summary.vue';
 import ErrorBanner from './components/error-banner.vue';
-import AdminSidebar from './components/admin-sidebar.vue';
-import ScheduledSms from './components/scheduled-sms.vue';
+import ScheduledSms from './components/sms/scheduled-sms.vue';
 import FundsPurchase from './components/funds-purchase.vue';
 import PasswordField from './components/password-field.vue';
 import RecipientsList from './components/recipients-list.vue';
+import RolesDropDown from './components/admin/roles-drop-down';
 import NotificationBanner from './components/notif-banner.vue';
+import AdminSidebar from './components/admin/admin-sidebar.vue';
 import FileUploadField from './components/file-upload-field.vue';
-import SmsRolloutProgress from './components/sms-rollout-progress.vue';
+import UsersTableOptions from './components/admin/users-table-options.vue';
+import SmsRolloutProgress from './components/sms/sms-rollout-progress.vue';
 
 const app = createApp({
     components:{
@@ -35,8 +37,10 @@ const app = createApp({
         ScheduledSms,
         FundsPurchase,
         PasswordField,
+        RolesDropDown,
         RecipientsList,
         FileUploadField,
+        UsersTableOptions,
         NotificationBanner,
         SmsRolloutProgress
     }

@@ -774,6 +774,34 @@ select{
   text-decoration: none;
 }
 
+.my-popup-menu-link:hover{
+  --tw-bg-opacity: 1;
+  background-color: rgba(255, 244, 153, var(--tw-bg-opacity));
+}
+
+.my-popup-menu-link{
+  display: block;
+  font-family: Alegreya\ Sans;
+  font-weight: 700;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  --tw-text-opacity: 1;
+  color: rgba(55, 65, 81, var(--tw-text-opacity));
+  text-transform: uppercase;
+}
+
+.my-popup-menu-link:hover{
+  text-decoration: none;
+}
+
+.my-popup-menu-link{
+  letter-spacing: 0.05em;
+}
+
 .my-btn{
   border-radius: 0.25rem;
   border-width: 1px;

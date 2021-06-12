@@ -39,7 +39,7 @@
                             >
                                 <MenuItems class="absolute right-0 w-48 mt-2 origin-top-right bg-white border border-gray-200 rounded-md shadow-lg outline-none">
                                     <MenuItem>
-                                        <h3 class="py-1 overflow-clip px-4 text-xs w-40 text-gray-500">{{username}}</h3>
+                                        <h3 class="py-1 whitespace-normal px-4 text-sm w-40 text-gray-500">{{username}}</h3>
                                     </MenuItem>
                                     <MenuItem v-if="isAdmin" v-slot="{ active }">
                                         <a href="/admin/funds-reserve" :class="active ? 'bg-gray-100 text-gray-900':'text-gray-700'" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:no-underline" role="menuitem">Admin Area</a>
@@ -63,7 +63,7 @@
         </div>
 
         <!--mobile view menu -->
-        <div :class="isOpen ? 'block': 'hidden'" class="sm:hidden pt-2 pb-4 sm:items-center px-2">
+        <div :class="isOpen ? 'block': 'hidden'" class="sm:hidden overflow-auto pt-2 pb-4 sm:items-center px-2">
             <a v-if="!isAuth" :href="loginRoute" class="my-btn block px-2 py-1 hover:no-underline hover:bg-primary border-transparent focus:ring-transparent sm:border-white">LOG IN</a>
             <a v-if="!isAuth" :href="registerRoute" class="my-btn block px-2 py-1 sm:py-0 border-transparent hover:no-underline hover:bg-primary focus:ring-transparent sm:ml-2">REGISTER</a>
             <a v-if="isAuth" href="/create" class="mx-2 mt-2 p-2 bg-primary-400 flex items-center rounded-md hover:no-underline">
@@ -161,7 +161,7 @@
                         leave-to-class="transform scale-95 opacity-0">
                             <MenuItems class="absolute right-0 w-48 mt-2 origin-top-right bg-white border border-gray-200 rounded-md shadow-lg outline-none">
                                 <MenuItem>
-                                    <h3 class="py-1 overflow-clip px-4 text-xs w-40 text-gray-500">{{username}}</h3>
+                                    <h3 class="py-1 whitespace-normal px-4 text-sm w-40 text-gray-500">{{username}}</h3>
                                 </MenuItem>
                                 <MenuItem v-if="isAdmin" v-slot="{ active }">
                                     <a href="/admin/funds-reserve" :class="active ? 'bg-gray-100 text-gray-900':'text-gray-700'" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:no-underline" role="menuitem">Admin Area</a>
