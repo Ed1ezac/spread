@@ -5,10 +5,11 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\Sms;
 use App\Models\User;
-use App\Models\Funds;
+use App\Models\FundsRecord;
 use Illuminate\Http\Request;
 use App\Models\RecipientList;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
@@ -38,12 +39,15 @@ class DashboardController extends Controller
         $isAboutToSend = Sms::mine()->withStatus(Sms::Pending)
             ->where([['send_at', '<', Carbon::now()->addMinutes(1)]])
             ->count() > 0;
-            // ->orWhere([
-            //     ['status', '=', Sms::Aborted],
-            //     ['updated_at', '>', Carbon::now()->subMinutes(1)]
-            // ])
             
-        return view('dashboard.statistics', compact('isAboutToSend'));
+            $history = DB::table('sms')
+                            ->where('sms.user_id', Auth::id())
+                            ->join('job_statuses', 'sms.id', '=', 'job_statuses.trackable_id')
+                            ->select('sms.*', 'job_statuses.progress_now')
+                            ->latest()
+                            ->paginate(7);
+           
+        return view('dashboard.statistics', compact('isAboutToSend', 'history'));
     }
 
     public function drafts(){
@@ -53,7 +57,8 @@ class DashboardController extends Controller
 
     public function funds(){
         $funds = Auth::user()->funds;
-        return view('dashboard.funds', compact('funds'));
+        $history = FundsRecord::mine()->latest()->paginate(7);
+        return view('dashboard.funds', compact('funds','history'));
     }
 
 }

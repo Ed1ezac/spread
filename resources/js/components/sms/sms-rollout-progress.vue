@@ -1,5 +1,5 @@
 <template>
-    <div v-show="isSending || isAboutToSend" class="shadow-sm overflow-hidden divide-y divide-dashed divide-gray-300 rounded mb-4 mr-4 max-w-4xl border-t-4 border-gray-500">
+    <div v-show="isSending || isAboutToSend" class="shadow-sm overflow-hidden divide-y divide-dashed divide-gray-300 rounded mb-4 mr-4 xl:mr-6 max-w-7xl border-t-4 border-gray-500">
         <div class="mb-2 px-4">
             <div class="flex justify-between my-2">
                 <h3 class="text-sm text-gray-400">{{ statusValue }}</h3>

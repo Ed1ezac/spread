@@ -103,14 +103,14 @@
                   </div>
                   <input type="hidden" ref="listInput" :value="messagingListItem.id" name="recipient-list-id"/>
                   <p class="mt-2 text-xs text-gray-500">
-                    Dont have a recipient list yet? <a href="/recipients" class="text-accent-800 underline font-semibold hover:text-accent-500">create one</a>
+                    Do you need a different recipient list? <a href="/recipients" class="text-accent-800 underline font-semibold hover:text-accent-500">create one</a>
                   </p>
                 </div>
             </div>
             <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
               <button type="submit" formaction="/create/save-as-draft" class="inline-flex justify-center py-2 px-4 mr-2 my-btn border-gray-300 text-gray-700 bg-gray-50 hover:border-primary-500 hover:bg-primary-500 focus:ring-primary-800">
                   <svg class="mr-1 flex-shrink-0 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
                   </svg>
                   SAVE DRAFT
               </button>
@@ -119,7 +119,7 @@
                   <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
                 </svg>
                 PROCEED
-              </button>   
+              </button>  
             </div>
           </form>  
         </div>

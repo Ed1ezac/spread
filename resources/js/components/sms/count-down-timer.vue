@@ -26,7 +26,7 @@ export default {
   },
   computed:{
     day(){
-        let d = Math.trunc((this.endDate - this.now)/1000/(3600*24));
+        let d = Math.trunc((this.endDate - this.now)/1000/(86400));
         //console.log("Dif: "+(this.endDate - this.now)/1000/(3600*24));
     },
     hour(){
