@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 
 class JobStatus extends Model
@@ -21,25 +21,36 @@ class JobStatus extends Model
     public $dates = ['started_at', 'finished_at', 'created_at', 'updated_at'];
 
     public function user(){
-        
         return $this->belongsTo(User::class);
     }
 
-    protected function markAsExecuting(){
+    public function scopeMine($query){
+        return $query->where('user_id', Auth::id());
+    }
+
+    public function scopeWithStatus($query, $status){
+        return $query->where('status', $status);
+    }
+
+    public function scopeForJob($query, $jobId){
+        return $query->where('job_id', $jobId);
+    }
+
+    public function markAsExecuting(){
         $this->update([
             'status' => self::STATUS_EXECUTING,
             'started_at' => now(),
         ]);
     }
 
-    protected function markAsFinished(){
+    public function markAsFinished(){
         $this->update([
             'status' => self::STATUS_FINISHED,
             'finished_at' => now(),
         ]);
     }
 
-    protected function markAsFailed($message){
+    public function markAsFailed($message){
         $this->update([
             'status' => self::STATUS_FAILED,
             'finished_at' => now(),
@@ -48,7 +59,7 @@ class JobStatus extends Model
         $this->recordFailError($message);
     }
 
-    protected function markAsRetrying(){
+    public function markAsRetrying(){
         $this->update([
             'status' => self::STATUS_RETRYING,
             'started_at' => now(),

@@ -43,10 +43,26 @@
         data () {
             return {
                 isVisible: true,
+                timerCount: 7,
             }
         },
         props:{
             message: String,
+        },
+        watch: {
+            timerCount: {
+                immediate: true,
+                handler(value) {
+                    if (value > 0) {
+                        setTimeout(() => {
+                            this.timerCount--;
+                            if(this.timerCount == 0){
+                                this.isVisible = false;
+                            }
+                        }, 1000);
+                    }
+                },
+            }
         }
     }
 </script>

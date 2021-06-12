@@ -4,7 +4,6 @@ namespace App\Jobs;
 
 use Throwable;
 use Exception;
-use App\Models\User;
 use App\Models\RecipientList;
 use Illuminate\Bus\Queueable;
 use App\Helpers\FileProcessing;
@@ -18,32 +17,28 @@ use Illuminate\Contracts\Queue\ShouldBeUnique;
 
 class ProcessDataFile implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, Trackable;
 
-    public $user;
     private $recipientList;
     private $validEntryCount = 0;
     public $deleteWhenMissingModels = true;
     
-    public function __construct(User $user, RecipientList $item)
+    public function __construct(RecipientList $list)
     {
-        $this->user = $user;
-        $this->recipientList = $item;
-    }
-
-    /*Handle a job failure.*/
-    public function failed(Throwable $exception){
-        $this->recipientList->status = 'invalid';
-        $this->recipientList->save();
-        //fire event
-        FileProcessingComplete::dispatch($this->recipientList);
+        $this->recipientList = $list;
     }
 
     public function handle()
     {
+        $this->startTracking($this, $this->recipientList);
         try{
+            $this->jobStatus->markAsExecuting();
+
             $this->processFile();
-        }catch(Exception $e){
+
+            $this->jobStatus->markAsFinished();
+        }catch(Throwable $e){
+            $this->beforeFail($e);
             $this->fail($e);
         }
     }
@@ -67,9 +62,14 @@ class ProcessDataFile implements ShouldQueue
         if($this->validEntryCount < 5){
             throw new Exception("Low or invalid entries..");
         }else{
-            $this->recipientList->entries = $this->validEntryCount;
-            $this->recipientList->save();
+            $this->recipientList->update(['entries' => $this->validEntryCount]);
         }
+    }
+
+    private function beforeFail(Throwable $e){
+        $this->jobStatus->markAsFailed($e->getMessage());
+        $this->recipientList->update(['status' => RecipientList::Invalid]);
+        FileProcessingComplete::dispatch($this->recipientList);
     }
 }
 ///////////////TEST////////////////

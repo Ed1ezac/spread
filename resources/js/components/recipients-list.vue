@@ -66,7 +66,7 @@
         },
         mounted () {
             if(this.Recipients.status == 'pending'){
-                Echo.channel(`uploads.${this.userId}`)
+                Echo.private(`uploads.${this.userId}`)
                 .listen('FileProcessingComplete', (e) => {
                     if(e.list.id == this.Recipients.id){
                         this.Recipients = e.list;

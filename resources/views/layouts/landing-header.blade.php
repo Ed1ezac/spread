@@ -21,11 +21,23 @@
 
     <body class="font-body bg-gray-50">
         <div id="app">
-        <my-navbar v-bind:is-auth="{{ json_encode(Auth::check()) }}"
+        <my-navbar 
+            v-bind:is-admin="{{ json_encode(
+                Auth::check() ?
+                    Auth::user()->hasRole('administrator')
+                    : false
+                ) }}"
+            v-bind:username="{{ 
+                json_encode(
+                    Auth::check() ? 
+                        Auth::user()->name
+                        : ''
+                ) }}"
             logo-uri="{{asset('logo.svg')}}" 
-            logo-uri-sm="{{asset('logo-small.svg')}}" 
-            register-route="{{ route('register') }}" 
-            login-route="{{ route('login') }}"></my-navbar>
+            logo-uri-sm="{{asset('logo-small.svg')}}"
+            register-route="{{ route('register') }}"
+            login-route="{{ route('login') }}"
+            v-bind:is-auth="{{ json_encode(Auth::check()) }}"></my-navbar>
             <!--- Main Page Content ---> 
             @yield('content')
             

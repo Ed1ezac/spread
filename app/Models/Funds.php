@@ -2,20 +2,19 @@
 
 namespace App\Models;
 
-use App\Models\Traits\Deductible;
-use App\Models\Traits\Purchasable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Traits\RecordsFundsEvents;
 
 class Funds extends Model
 {
-    use Purchasable, Deductible;
+    use RecordsFundsEvents;
     //relo
     public function user()
     {
         return $this->belongsTo(User::class);
     }
-
+    //scopes
     public function scopeMine($query)
     {
         return $query->where('user_id', Auth::id());
@@ -29,5 +28,10 @@ class Funds extends Model
     public function scopeWithId($query, $id)
     {
         return $query->where('id', $id);
+    }
+
+    public function scopeSufficient($query, $challenge)
+    {
+        return $query->where('amount', '>', $challenge);
     }
 }

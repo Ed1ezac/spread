@@ -1,7 +1,15 @@
 <template>
-    <div class="mt-2 mb-4 md:grid md:grid-cols-3 2xl:grid-cols-6 md:gap-4 xl:gap-0 px-4">
+    <div class="flex mt-2 mb-4 flex-wrap px-4">
         <!--form-->
-        <div class="shadow-sm col-span-2 2xl:col-span-2 pt-2 bg-white rounded-md max-w-xl md:mr-6">
+        <div class="shadow-sm flex-shrink bg-white rounded-md w-120 md:mr-2">
+          <div class="flex justify-end relative mr-4 mt-2 -mb-4">
+            <span class="sr-only">Erase</span>
+            <button @click="erase" class="rounded text-gray-600 hover:text-red-500">
+              <svg xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+            </button>
+          </div>
           <form ref="smsform" action="/create/verify" method="POST">
             <input type="hidden" name="_token" :value="csrf">
             <div class="px-6 pb-2 space-y-6 sm:p-6">
@@ -10,7 +18,7 @@
                   <label for="sender" class="my-form-label">
                     Sender
                   </label>
-                  <input type="text" v-model="titleText" name="sender" id="sender" autocomplete="sender" class="w-full my-form-input">
+                  <input type="text" v-model="titleText" name="sender" id="sender" autocomplete="sender" required class="w-full my-form-input">
                   <span v-if="senderError!=''" class="text-xs p-1 bg-red-100 rounded font-normal text-red-400" role="alert">
                       <strong>{{ senderError }}</strong>
                   </span>
@@ -24,7 +32,7 @@
                     <span class="text-xs text-gray-500" v-text="(max - messageText.length)"></span>
                   </div>
                   <div class="mt-1">
-                    <textarea id="message" v-model="messageText" name="message" maxlength="140" rows="3" class="w-full my-form-input" placeholder="Type your text message here"></textarea>
+                    <textarea id="message" v-model="messageText" name="message" maxlength="140" rows="3" class="w-full my-form-input" placeholder="Type your text message here" required></textarea>
                     <span v-if="messageError!=''" class="text-xs p-1 bg-red-100 rounded font-normal text-red-400" role="alert">
                       <strong>{{ messageError }}</strong>
                     </span>
@@ -95,14 +103,14 @@
                   </div>
                   <input type="hidden" ref="listInput" :value="messagingListItem.id" name="recipient-list-id"/>
                   <p class="mt-2 text-xs text-gray-500">
-                    Dont have a recipient list yet? <a href="/recipients" class="text-accent-800 underline font-semibold hover:text-accent-500">create one</a>
+                    Do you need a different recipient list? <a href="/recipients" class="text-accent-800 underline font-semibold hover:text-accent-500">create one</a>
                   </p>
                 </div>
             </div>
-            <div class="px-4 py-3 bg-primary-100 text-right sm:px-6">
-              <button type="submit" formaction="/create/save-as-draft" class="inline-flex justify-center py-2 px-4 mr-2 my-btn border-gray-300 text-gray-700 bg-primary-100 hover:border-primary-500 hover:bg-primary-500 focus:ring-primary-800">
+            <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+              <button type="submit" formaction="/create/save-as-draft" class="inline-flex justify-center py-2 px-4 mr-2 my-btn border-gray-300 text-gray-700 bg-gray-50 hover:border-primary-500 hover:bg-primary-500 focus:ring-primary-800">
                   <svg class="mr-1 flex-shrink-0 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
                   </svg>
                   SAVE DRAFT
               </button>
@@ -111,19 +119,19 @@
                   <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
                 </svg>
                 PROCEED
-              </button>   
+              </button>  
             </div>
           </form>  
         </div>
         <!--preview-->
-        <div class="px-2 hidden md:block w-60 relative">
+        <div class="px-2 ml-8 2xl:ml-12 hidden md:block w-60 relative">
             <div class="absolute mt-16 ml-7 w-36">
             <p id="title" class="text-sm truncate font-sans mx-3 text-white cursor-default">{{ titleText }}</p>
             </div>
             <div v-if="messageText != ''" class="absolute bg-gray-300 mt-28 rounded-r-lg rounded-tl-lg py-1 ml-5 w-7/12">
             <p id="text" class="text-xs font-sans ml-2 text-gray-700 cursor-default">{{ messageText }}</p>
             </div>
-            <img class="max-h-96" :src="graphicUri" alt="preview"> 
+            <img class="max-h-96" :src="graphicUri" alt="preview">
         </div>
     </div>
 </template>
@@ -155,6 +163,11 @@
           recipients: Array,
       },
       methods:{
+        erase(){
+          localStorage.clear();
+          this.titleText = '';
+          this.messageText = '';
+        },
         persistData() {
           localStorage.sender = this.titleText;
           localStorage.message = this.messageText;
@@ -168,6 +181,7 @@
         },
       },
       mounted() {
+        //sessionStorage.test = "hello session";works!
         if (localStorage.sender) {
           this.titleText = localStorage.sender;
         }
@@ -193,3 +207,8 @@
       }
     }
 </script>
+<style>
+ .w-120{
+    width: 30rem;
+ }
+</style>

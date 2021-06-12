@@ -20,7 +20,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
                 <p v-if="recipients != null" class="text-gray-500 ml-2 pt-1 text-base font-medium">{{ recipients.name }}</p>
-                <p v-else class="bg-red-100 rounded text-red-400 ml-2 p-1 pt-1 text-base font-medium">missing recipients, sending will fail!</p>
+                <p v-else class="bg-red-100 rounded text-red-400 ml-2 p-1 pt-1 text-base font-medium">missing recipients, sending will fail and sms will be deleted!</p>
             </div>
             <div class="flex">
                 <svg class="flex-shrink-0 h-6 w-6 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
@@ -62,8 +62,8 @@
                 </span>
                 <span class="sm:block">
                     <button @click="gotoSummary()" class="inline-flex justify-center py-2 px-4 my-btn shadow-md bg-primary-500 border-primary-500 hover:bg-primary-700 focus:ring-primary-800">
-                        <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                        <svg class="flex-shrink-0 -ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                         </svg>
                         EDIT
                     </button>   
@@ -76,7 +76,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
                         </svg>
                         VIEW PROGRESS
-                    </button>   
+                    </button> 
                 </span>
             </div>
         </div>
@@ -86,7 +86,7 @@
 <script>
 import CountDownTimer from './count-down-timer.vue';
 export default {
-    data(){ 
+    data(){
         return{
             isPending: true,
             csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
@@ -95,6 +95,9 @@ export default {
     methods:{
         changeStatusToSending(){
             this.isPending = false;
+            if(this.recipients === null){
+                this.abortRollout();
+            }
         },
         abortRollout: function(){
             this.$refs.abortform.submit();
@@ -118,7 +121,7 @@ export default {
             localStorage.messagingListId = this.sms.recipient_list_id;
             localStorage.sendingDate = day;
             localStorage.sendingTime = time;
-            window.location.href = "create/summary"
+            window.location.href = "create/summary/"+this.sms.recipient_list_id;
         },
         gotoStatistics: function(){
             window.location.href = "/statistics"

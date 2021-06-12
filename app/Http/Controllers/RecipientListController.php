@@ -15,26 +15,28 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class RecipientListController extends Controller
-{
-    //'status', ['processed', 'pending', 'invalid']
+{    
+    public function createRecipients(){
+        return view('dashboard.add-recipients');
+    }
+
     public function create(Request $request){
         $validator =  $this->validateForm($request);
         if ($validator->fails()) {
             return back()->withInput()->withErrors($validator);
         }
-
         //storage
         $path = $request->file('data-file')->store('shelf');
         //databse
         $list = RecipientList::create([
             'user_id' => Auth::id(),
-            'name' => $request->input('collection_name'),
+            'name' => $request->input('list_name'),
             'entries' => 0,
-            'status' => 'pending',
+            'status' => RecipientList::Pending,
             'file_extension' => $request->file('data-file')->extension(),
             'file_path' => $path,
         ]);
-        //$this->processFile($list);-Test
+        
         $this->dispatchFileProcessingJob($list);
         
         return redirect('/recipients')
@@ -44,12 +46,12 @@ class RecipientListController extends Controller
     private function validateForm(Request $request){
         //Convert this to middleware in the future
         return Validator::make([
-                'collection_name' => $request->collection_name,
+                'list_name' => $request->list_name,
                 'data-file' => $request->file('data-file'),
                 'extension' => $request->file('data-file')->extension(),
             ],
             [
-                'collection_name' => 'required|max:20',
+                'list_name' => 'required|max:20',
                 'data-file' => 'required|max:10250|min:0.045',//47-bytes
                 'extension' => 'in:csv,txt,xls,xlsx',
             ],$messages = [
@@ -64,10 +66,9 @@ class RecipientListController extends Controller
 
     private function dispatchFileProcessingJob($list){
         Bus::chain([
-            new ProcessDataFile(Auth::user(), $list),
+            new ProcessDataFile($list),
             function () use ($list) {
-                $list->status = 'processed';
-                $list->save();
+                $list->update(['status' => RecipientList::Processed]);
                 FileProcessingComplete::dispatch($list);
             },
         ])->onQueue('uploads')->delay(now()->addSeconds(6))->dispatch();
@@ -76,25 +77,19 @@ class RecipientListController extends Controller
     public function deleteList(Request $request){
         $id = $request->id;
         try{
-            $file = RecipientList::where([
-                ['id','=', $id],
-                ['user_id','=', Auth::id()]
-                ])->firstOrFail();
+            $file = RecipientList::mine()->withId($id)->firstOrFail();
+            
             Storage::delete($file->file_path);
             $file->delete();
-
             return back()->withErrors('data file deleted!');
         }catch(Throwable $e){
-            return back()->withErrors('Oops! The request file could not be found.');
+            return back()->withErrors('Oops! The requested file could not be found.');
         }
     }
 
     public function download($id){
         try{
-            $file = RecipientList::where([
-                ['id','=', $id],
-                ['user_id','=', Auth::id()]
-                ])->firstOrFail();
+            $file = RecipientList::mine()->withId($id)->firstOrFail();
             
             return Storage::download($file->file_path, $file->name);
         }catch(Exception $e){

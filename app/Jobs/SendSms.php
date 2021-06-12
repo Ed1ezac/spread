@@ -5,6 +5,7 @@ namespace App\Jobs;
 use Exception;
 use Throwable;
 use App\Models\Sms;
+use App\Models\Funds;
 use App\Models\RecipientList;
 use Illuminate\Bus\Queueable;
 use App\Events\ReportProgress;
@@ -40,6 +41,7 @@ class SendSms implements ShouldQueue
         $this->startTracking($this, $this->sms);
         $this->setProgressMax($this->recipients->entries);
         try{
+            $this->verifySufficientFunds();
             $this->jobStatus->markAsExecuting();
 
             $this->performRollout();
@@ -73,6 +75,13 @@ class SendSms implements ShouldQueue
                     throw new Exception('Aborted by user.');
                 }          
             }
+        }
+    }
+
+    private function verifySufficientFunds(){    
+        if($this->fundsProcessor
+            ->hasSufficientFunds($this->sms->user_id, $this->recipients->entries)){
+            throw new Exception('Insufficient funds.');
         }
     }
 

@@ -5,66 +5,60 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\Sms;
 use App\Models\User;
-use App\Models\Funds;
+use App\Models\FundsRecord;
 use Illuminate\Http\Request;
 use App\Models\RecipientList;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
-    public function __construct()
+    public function __construct(RecipientList $list)
     {
         $this->middleware('auth');
     }
 
-    public function create()
-    {
-        $recipients = RecipientList::where([
-            ['user_id', '=',Auth::id(),],
-            ['status', '=', 'processed']])->get();
+    public function create(){
+        $recipients = RecipientList::mine()->withStatus(RecipientList::Processed)->get();
         return view('dashboard.create-sms', compact('recipients'));
     }
 
     public function scheduled(){
-        $scheduled = Sms::where([
-            ['user_id','=', Auth::id()],
-            ['status', '=', Sms::Pending],
-        ])->orderBy('send_at', 'asc')->get();
+        $scheduled = Sms::mine()->withStatus(Sms::Pending)
+            ->orderBy('send_at', 'asc')->get();
         return view('dashboard.scheduled', compact('scheduled'));
     }
 
     public function recipients(){
-        $recipients = RecipientList::where('user_id', Auth::id())->get();
+        $recipients = RecipientList::mine()->get();
         return view('dashboard.recipients', compact('recipients'));
     }
 
-    public function createRecipients(){
-        return view('dashboard.add-recipients');
-    }
-
     public function statistics() {
-        //send_at less than now()->AddMinutes(1);
-        $isAboutToSend = Sms::where([
-            ['user_id', '=', Auth::id()],
-            ['status', '=', Sms::Pending],
-            ['send_at', '<', Carbon::now()->addMinutes(1)],
-        ])->count() > 0;
-        
-        return view('dashboard.statistics', compact('isAboutToSend'));
+        $isAboutToSend = Sms::mine()->withStatus(Sms::Pending)
+            ->where([['send_at', '<', Carbon::now()->addMinutes(1)]])
+            ->count() > 0;
+            
+            $history = DB::table('sms')
+                            ->where('sms.user_id', Auth::id())
+                            ->join('job_statuses', 'sms.id', '=', 'job_statuses.trackable_id')
+                            ->select('sms.*', 'job_statuses.progress_now')
+                            ->latest()
+                            ->paginate(7);
+           
+        return view('dashboard.statistics', compact('isAboutToSend', 'history'));
     }
 
     public function drafts(){
-        $drafts = Sms::where([
-            ['user_id','=', Auth::id()],
-            ['status', '=', Sms::Draft],
-        ])->orderBy('created_at', 'desc')->get();
+        $drafts = Sms::mine()->withStatus(Sms::Draft)->orderBy('created_at', 'desc')->get();
         return view('dashboard.drafts', compact('drafts'));
     }
 
     public function funds(){
-        $funds = Auth::user()->funds();
-        return view('dashboard.funds', compact('funds'));
+        $funds = Auth::user()->funds;
+        $history = FundsRecord::mine()->latest()->paginate(7);
+        return view('dashboard.funds', compact('funds','history'));
     }
 
 }

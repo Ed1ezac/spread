@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\RecipientList;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -21,7 +22,11 @@ class Sms extends Model
     
     protected $fillable = [
         'sender', 'message', 'status',
-        'recipient_list_id', 'user_id', 'send_at'
+        'recipient_list_id', 'user_id', 'send_at',
+    ];
+
+    protected $casts = [
+        'send_at' => 'datetime',
     ];
 
     public function user()
@@ -31,11 +36,23 @@ class Sms extends Model
 
     public function recipients()
     {
-        //BE CAREFUL!
+        //BE CAREFUL-may not always resolve!
         return $this->hasOne(RecipientList::class);
     }
 
-    protected $casts = [
-        'send_at' => 'datetime',
-    ];
+    public function scopeMine($query)
+    {
+        return $query->where('user_id', Auth::id());
+    }
+
+    public function scopeWithId($query, $id)
+    {
+        return $query->where('id', $id);
+    }
+
+    public function scopeWithStatus($query, $status)
+    {
+        return $query->where('status', $status);
+    }
+
 }

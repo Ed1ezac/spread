@@ -4,7 +4,7 @@ namespace App\Models\Traits;
 
 use App\Models\ReserveRecord;
 
-trait Recordable{
+trait RecordsReservesEvents{
     //
     public function recordEvent(array $data){
         ReserveRecord::create($data);

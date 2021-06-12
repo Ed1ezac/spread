@@ -4,6 +4,7 @@ namespace App\Helpers;
 
 use App\Models\Funds;
 use App\Models\Reserve;
+use App\Models\FundsRecord;
 use App\Models\ReserveRecord;
 use Illuminate\Support\Facades\DB;
 
@@ -16,8 +17,12 @@ class FundsProcessing{
     /**
     * The assumption is that a different user can be authenticated
     * at the point of purchase/deduction so we need to explicitly pass the
-    * ID of the User that should be billed.
+    * ID of the User that should be billed.||this is probably wrong tho...
     **/
+    public function hasSufficientFunds($userId, $minimum){
+        return Funds::forUserId($userId)->sufficient($minimum)->first() > 0;
+    }
+
     public function incrementUserFunds($userId, $amount){
         DB::transaction(function() use ($userId, $amount) {
             $this->setReserve();
@@ -27,7 +32,7 @@ class FundsProcessing{
             $this->userFunds->increment('amount', $amount);
             //
             $this->recordReserveDeductionEvent($amount);
-            $this->recordFundsPurchase($amount);
+            $this->postFundsRecord(FundsRecord::Purchase, $amount);
 
         }, self::$retryIncrementAttempts);
 
@@ -39,7 +44,7 @@ class FundsProcessing{
             //
             $this->userFunds->decrement('amount', $amount);
             //
-            $this->recordFundsDeduction($amount);
+            $this->postFundsRecord(FundsRecord::Deduction, $amount);
 
         }, self::$retryDecrementAttempts);
     }
@@ -61,19 +66,12 @@ class FundsProcessing{
         ]);
     }
 
-    private function recordFundsPurchase($amount){
-        $this->userFunds->stagePurchase([
-            'user_id' => $this->userFunds->user_id,
+    private function postFundsRecord($event,$amount){
+        $this->userFunds->stageRecord([
             'funds_id' => $this->userFunds->id,
+            'user_id' => $this->userFunds->user_id,            
+            'event' => $event,
         ]);
-        $this->userFunds->setPurchaseAmount($amount);
-    }
-
-    private function recordFundsDeduction($amount){
-        $this->userFunds->stageDeduction([
-            'user_id' => $this->userFunds->user_id,
-            'funds_id' => $this->userFunds->id,
-        ]);
-        $this->userFunds->setDeductionAmount($amount);
+        $this->userFunds->setRecordAmount($amount);
     }
 }
