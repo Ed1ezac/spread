@@ -20,6 +20,14 @@ use Illuminate\Support\Facades\Validator;
 class SMSController extends Controller
 {
     //
+    public function viewSms($id){
+        //
+        $sms = Sms::find($id);
+        $recipients = RecipientList::find($sms->recipient_list_id);
+        $details = JobStatus::mine()->forJob($sms->job_id)->first();
+        return view('dashboard.sms-details', compact('sms','recipients', 'details'));
+    }
+
     public function createAndQueue(CreateSmsRequest $request){
         $send_at = $this->determineSendingTime();
         $sendsNow = Carbon::now()->diffInMinutes($send_at)<1;
@@ -35,6 +43,19 @@ class SMSController extends Controller
         }else{
             return redirect('/scheduled')->with('status', 'Sms rollout has beed scheduled successfully');
         }
+    }
+
+    private function dispatchSmsRolloutJob($sms){
+        $recipients = RecipientList::find($sms->recipient_list_id);
+        return  Bus::chain([
+                    new SendSms($sms, $recipients),
+                    function () use ($sms, $recipients) {
+                        $sms->update(['status' => Sms::Sent]);
+                        RolloutComplete::dispatch($sms, $recipients->entries);
+                    },
+                ])->onQueue('rollouts')
+                ->delay($sms->send_at)
+                ->dispatch();
     }
 
     public function saveDraft(Request $request){
@@ -84,19 +105,6 @@ class SMSController extends Controller
         }
     }
 
-    private function dispatchSmsRolloutJob($sms){
-        $recipients = RecipientList::find($sms->recipient_list_id);
-        return  Bus::chain([
-                    new SendSms($sms, $recipients),
-                    function () use ($sms, $recipients) {
-                        $sms->update(['status' => Sms::Sent]);
-                        RolloutComplete::dispatch($sms, $recipients->entries);
-                    },
-                ])->onQueue('rollouts')
-                ->delay($sms->send_at)
-                ->dispatch();
-    }
-
     public function updateScheduledSms($id){
         $sms = Sms::find($id);
 
@@ -121,16 +129,12 @@ class SMSController extends Controller
         //flag the sms as aborted and 'hope' the Job will pick that up
         $sms = Sms::find($request->id);
         //
-        $status = JobStatus::where([
-            ['user_id', '=', Auth::id()],
-            ['job_id', '=', $sms->job_id],
-            ['trackable_id', '=', $sms->id]
-        ])->first();
-        if($status->status === 'finished'){
-            return back()->withErrors('Sms rollout task cannot be aborted at this stage.');
-        }else{
-            $sms->update(['status' => Sms::Aborted]);
-        }
+        $status = JobStatus::mine()
+                ->forJob($sms->job_id)
+                ->withStatus(JobStatus::STATUS_EXECUTING)
+                ->where('trackable_id', $sms->id)->first();
+
+        $sms->update(['status' => Sms::Aborted]);
         return back()->withErrors('Sms rollout task has been stopped.');
     }
 

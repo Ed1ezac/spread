@@ -56,4 +56,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(JobStatus::class);
     }
+    //---accessor
+    public function getInitialsAttribute(){
+        $name = $this->name;
+        $name_array = explode(' ',trim($name));
+
+        $firstWord = $name_array[0];
+        $lastWord = $name_array[count($name_array)-1];
+
+        return $firstWord[0]."".$lastWord[0];
+    }
 }

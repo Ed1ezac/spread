@@ -43,7 +43,7 @@
             
         </div>
         <!---->
-        @stack('page-js')
         <script src="{{ asset('js/app.js') }}"></script>
+        @stack('page-js')
     </body>
 </html>    

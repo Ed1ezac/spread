@@ -11,6 +11,10 @@
         @apply mx-2 mt-3 p-2 flex items-center rounded hover:no-underline focus:ring-2 focus:ring-offset-0 focus:ring-primary-300;
     }
 
+    .my-popup-menu-link{
+        @apply block px-4 py-2 text-xs font-bold font-headings tracking-wider text-gray-700 uppercase hover:bg-primary-200 hover:no-underline;
+    }
+
     .my-btn{
         @apply text-white text-sm font-headings tracking-wider font-bold border rounded hover:text-white focus:ring-2 focus:ring-offset-2;
     }

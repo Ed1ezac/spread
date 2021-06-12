@@ -49,11 +49,23 @@ Route::post('/recipients/item/delete', [RecipientListController::class, 'deleteL
 Route::post('/recipients/add', [RecipientListController::class, 'create'])->name('upload-list');
 //stats
 Route::get('/statistics', [DashboardController::class, 'statistics']);
+Route::get('/statistics/view/sms/{id}', [SMSController::class, 'viewSms']);
 
 Route::group(['prefix' =>'admin', 'middleware' =>'admin'], function () {
     //admin privileged
-    Route::get('/funds-reserve', [AdminController::class, 'fundsReserve']);
-    //Route::get('/tasks', [AdminController::class, '']);
-    //Route::get('/spread-websockets');
+    Route::get('/funds-reserve', [AdminController::class, 'reserve']);
+    Route::get('/reserve/edit', [AdminController::class, 'editReserve']);
+    Route::get('/rollout-tasks', [AdminController::class, 'tasks']);
+    //sms
+    Route::get('/smses', [AdminController::class, 'smses']);   
+    //users
+    Route::get('/users', [AdminController::class, 'users']);
+    Route::get('/users/user/{id?}/edit/funds', [AdminController::class, 'editUserFunds']);
+    Route::get('/users/user/{id?}/edit/roles', [AdminController::class, 'editUserRoles']);
+    Route::post('/user/deduct/funds', [AdminController::class, 'deductUserFunds']);
+    Route::post('/user/credit/funds', [AdminController::class, 'creditUserFunds']);
+    Route::post('/user/add/role', [AdminController::class, 'assignRole']);
+    Route::post('/user/remove/role', [AdminController::class, 'removeRole']);
+
 });
 Route::get('/user/challenge/admin/get-role', [AdminController::class, 'createFirstSuperAdmin'])->middleware('auth');

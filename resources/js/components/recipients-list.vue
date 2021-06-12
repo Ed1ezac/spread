@@ -17,10 +17,10 @@
                     leave-to-class="transform scale-95 opacity-0">
                     <MenuItems class="absolute right-0 w-28 mr-3 origin-top-right rounded-sm bg-primary-100 border border-primary-300 shadow-lg outline-none">
                         <MenuItem v-slot="{ active }">
-                            <a :href="'/recipients/'+ Recipients.id +'/download'" :class="active ? 'bg-primary-200 text-gray-900':'text-gray-700'" class="block px-4 py-2 text-xs font-bold font-headings tracking-wider text-gray-700 hover:bg-primary-200 hover:no-underline" role="menuitem">DOWNLOAD</a>
+                            <a :href="'/recipients/'+ Recipients.id +'/download'" :class="active ? 'bg-primary-200 text-gray-900':'text-gray-700'" class="my-popup-menu-link" role="menuitem">DOWNLOAD</a>
                         </MenuItem> 
                         <MenuItem v-slot="{ active }">
-                            <a @click.prevent="deleteItem" href="/recipients/item/delete" :class="active ? 'bg-primary-200 text-gray-900':'text-gray-700'" class="block px-4 py-2 text-xs font-bold font-headings tracking-wider text-gray-700 hover:bg-primary-200 hover:no-underline" role="menuitem">DELETE</a>
+                            <a @click.prevent="deleteItem" href="/recipients/item/delete" :class="active ? 'bg-primary-200 text-gray-900':'text-gray-700'" class="my-popup-menu-link" role="menuitem">DELETE</a>
                         </MenuItem>
                     </MenuItems>
                 </transition>

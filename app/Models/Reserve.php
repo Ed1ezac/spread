@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
-use App\Models\Traits\Recordable;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Traits\RecordsReservesEvents;
 
 class Reserve extends Model
 {
-    use Recordable;
+    use RecordsReservesEvents;
     //status
     const Low = 'low';
     const Okay = 'okay';
