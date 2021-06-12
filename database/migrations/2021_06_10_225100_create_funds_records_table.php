@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFundsDeductionsTable extends Migration
+class CreateFundsRecordsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class CreateFundsDeductionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('funds_deductions', function (Blueprint $table) {
+        Schema::create('funds_records', function (Blueprint $table) {
             $table->id();
-            $table->integer('amount')->default(0);
             $table->foreignId('user_id');
             $table->foreignId('funds_id');
+            $table->enum('event',['purchase', 'deduction']);
+            $table->integer('amount')->default(0);
             $table->timestamps();
         });
     }
@@ -29,6 +30,6 @@ class CreateFundsDeductionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('funds_deductions');
+        Schema::dropIfExists('funds_records');
     }
 }
