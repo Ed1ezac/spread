@@ -3,7 +3,7 @@
         leave-active-class="transform-gpu ease-out duration-300"
         leave-class="opacity-100"
         leave-to-class="opacity-0">
-        <div v-if="isVisible" class="bg-accent-600 max-h-14 mx-4 my-2">
+        <div v-if="isVisible" class="bg-accent-600 max-h-14 mr-4 mb-4">
             <div class="max-w-7xl mx-auto py-2 px-3 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between flex-wrap">
                 <div class="w-0 flex-1 flex items-center">

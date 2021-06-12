@@ -1,5 +1,5 @@
 <template>
-    <header class="fixed w-full z-10 shadow-md bg-primary-600 sm:flex sm:justify-between sm:px-4">
+    <header class="fixed w-full z-50 shadow-md bg-primary-600 sm:flex sm:justify-between sm:px-4">
         <div class="flex items-center h-16 justify-between sm:justify-evenly px-4 py-8 sm:p-0">
             <!--Mobile View-->
             <!--/Logo-->
@@ -25,7 +25,7 @@
                 <div class="flex items-center">
                     <div class="relative inline-block text-left">
                         <Menu>
-                            <MenuButton type="button" class="bg-gray-800 relative z-10 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white" id="user-menu" aria-expanded="false" aria-haspopup="true">
+                            <MenuButton type="button" class="bg-gray-800 relative z-50 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-primary-300" id="user-menu" aria-expanded="false" aria-haspopup="true">
                                 <span class="sr-only">Open user menu</span>
                                 <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
                             </MenuButton>
@@ -37,9 +37,15 @@
                             leave-from-class="transform scale-100 opacity-100"
                             leave-to-class="transform scale-95 opacity-0"
                             >
-                                <MenuItems class="absolute right-0 w-48 mt-2 origin-top-right bg-white border border-gray-200 rounded-md rounded-md shadow-lg outline-none">
+                                <MenuItems class="absolute right-0 w-48 mt-2 origin-top-right bg-white border border-gray-200 rounded-md shadow-lg outline-none">
+                                    <MenuItem>
+                                        <h3 class="py-1 overflow-clip px-4 text-xs w-40 text-gray-500">{{username}}</h3>
+                                    </MenuItem>
+                                    <MenuItem v-if="isAdmin" v-slot="{ active }">
+                                        <a href="/admin/funds-reserve" :class="active ? 'bg-gray-100 text-gray-900':'text-gray-700'" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:no-underline" role="menuitem">Admin Area</a>
+                                    </MenuItem> 
                                     <MenuItem v-slot="{ active }">
-                                    <a href="#" :class="active ? 'bg-gray-100 text-gray-900':'text-gray-700'" class="block px-4 py-2 rounded-t-md text-sm text-gray-700 hover:bg-gray-100 hover:no-underline" role="menuitem">Settings</a>
+                                        <a href="#" :class="active ? 'bg-gray-100 text-gray-900':'text-gray-700'" class="block px-4 py-2 rounded-t-md text-sm text-gray-700 hover:bg-gray-100 hover:no-underline" role="menuitem">Settings</a>
                                     </MenuItem> 
                                     <MenuItem v-slot="{ active }">
                                         <a v-on:click.prevent="logout" href="/logout" :class="active ? 'bg-gray-100 text-gray-900':'text-gray-700'" class="block px-4 py-2 rounded-b-md text-sm text-gray-700 hover:bg-gray-100 hover:no-underline" role="menuitem">Log Out</a>
@@ -130,7 +136,7 @@
         <!--DP normal view-->
         <div v-if="isAuth" class="hidden sm:block self-center relative">
             <div class="flex items-center">
-                <a href="/create" class="my-btn mr-3 flex px-2 py-1 items-center border-white focus:ring-transparent hover:bg-primary-400 sm:ml-2 hover:no-underline">
+                <a href="/create" class="my-btn mr-3 flex px-2 py-1 items-center border-primary-400 focus:ring-offset-0 focus:ring-primary-300 hover:bg-primary-400 sm:ml-2 hover:no-underline">
                     <svg class="flex-shrink-0 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                     </svg>
@@ -142,7 +148,7 @@
                 </a>
                 <div class="relative inline-block text-left">
                     <Menu>
-                        <MenuButton type="button" class="bg-gray-800 relative z-10 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white" id="user-menu" aria-expanded="false" aria-haspopup="true">
+                        <MenuButton type="button" class="bg-gray-800 relative z-10 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-primary-300" id="user-menu" aria-expanded="false" aria-haspopup="true">
                             <span class="sr-only">Open user menu</span>
                             <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
                         </MenuButton>
@@ -153,9 +159,15 @@
                         leave-active-class="transition duration-75 ease-out"
                         leave-from-class="transform scale-100 opacity-100"
                         leave-to-class="transform scale-95 opacity-0">
-                            <MenuItems class="absolute right-0 w-48 mt-2 origin-top-right bg-white border border-gray-200 rounded-md rounded-md shadow-lg outline-none">
+                            <MenuItems class="absolute right-0 w-48 mt-2 origin-top-right bg-white border border-gray-200 rounded-md shadow-lg outline-none">
+                                <MenuItem>
+                                    <h3 class="py-1 overflow-clip px-4 text-xs w-40 text-gray-500">{{username}}</h3>
+                                </MenuItem>
+                                <MenuItem v-if="isAdmin" v-slot="{ active }">
+                                    <a href="/admin/funds-reserve" :class="active ? 'bg-gray-100 text-gray-900':'text-gray-700'" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:no-underline" role="menuitem">Admin Area</a>
+                                </MenuItem>
                                 <MenuItem v-slot="{ active }">
-                                    <a href="#" :class="active ? 'bg-gray-100 text-gray-900':'text-gray-700'" class="block px-4 py-2 rounded-t-md text-sm text-gray-700 hover:bg-gray-100 hover:no-underline" role="menuitem">Settings</a>
+                                    <a href="#" :class="active ? 'bg-gray-100 text-gray-900':'text-gray-700'" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:no-underline" role="menuitem">Settings</a>
                                 </MenuItem> 
                                 <MenuItem v-slot="{ active }">
                                     <a v-on:click.prevent="logout" href="/logout" :class="active ? 'bg-gray-100 text-gray-900':'text-gray-700'" class="block px-4 py-2 rounded-b-md text-sm text-gray-700 hover:bg-gray-100 hover:no-underline" role="menuitem">Log Out</a>
@@ -184,9 +196,14 @@ import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
             }
         },
         props:{
+            isAdmin:{
+                type: Boolean,
+                default: false,
+            },
             isAuth: Boolean,
             logoUri: String,
             logoUriSm:String,
+            username: String,
             loginRoute: String,
             registerRoute: String,
         },

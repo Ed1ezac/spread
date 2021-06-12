@@ -1,7 +1,7 @@
 <template>
-    <div class="mt-2 mb-4 md:grid md:grid-cols-3 2xl:grid-cols-2 md:gap-4 xl:gap-0 px-4">
+    <div class="mt-2 mb-4 md:grid md:grid-cols-3 2xl:grid-cols-6 md:gap-4 xl:gap-0 px-4">
         <!--form-->
-        <div class="shadow-sm col-span-2 2xl:col-span-1 pt-2 bg-white rounded-md max-w-xl md:mr-6">
+        <div class="shadow-sm col-span-2 2xl:col-span-2 pt-2 bg-white rounded-md max-w-xl md:mr-6">
           <form ref="smsform" action="/create/verify" method="POST">
             <input type="hidden" name="_token" :value="csrf">
             <div class="px-6 pb-2 space-y-6 sm:p-6">
@@ -100,7 +100,7 @@
                 </div>
             </div>
             <div class="px-4 py-3 bg-primary-100 text-right sm:px-6">
-              <button type="submit" formaction="/create/save" class="inline-flex justify-center py-2 px-4 mr-2 my-btn border-gray-300 text-gray-700 bg-primary-100 hover:border-primary-500 hover:bg-primary-500 focus:ring-primary-800">
+              <button type="submit" formaction="/create/save-as-draft" class="inline-flex justify-center py-2 px-4 mr-2 my-btn border-gray-300 text-gray-700 bg-primary-100 hover:border-primary-500 hover:bg-primary-500 focus:ring-primary-800">
                   <svg class="mr-1 flex-shrink-0 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                   </svg>

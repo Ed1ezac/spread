@@ -10,16 +10,28 @@ class Sms extends Model
 {
     /***
      * 'status'- enum with ONLY
-     * 'draft', 'pending', 'sent'
-     *  as possible entries 
+     * 'draft', 'pending', 'sent', failed, aborted
+     *  as possible entries
      */
+    const Draft = 'draft';
+    const Pending = 'pending';
+    const Sent = 'sent';
+    const Failed = 'failed';
+    const Aborted = 'aborted';
+    
     protected $fillable = [
         'sender', 'message', 'status',
         'recipient_list_id', 'user_id', 'send_at'
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function recipients()
     {
+        //BE CAREFUL!
         return $this->hasOne(RecipientList::class);
     }
 

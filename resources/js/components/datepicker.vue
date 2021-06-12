@@ -70,7 +70,6 @@
 
 <script>
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/vue";
-//import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
 const formatRE = /,|\.|-| |:|\/|\\/;
 const dayRE = /D+/;
 const monthRE = /M+/;
@@ -78,6 +77,10 @@ const yearRE = /Y+/;
 export default{
     name: 'Datepicker',
     props: {
+        date:{
+            type:Date,
+            default: function () { return new Date() }
+        },
         format: {
             type: String,
             default: 'DD.MM.YYYY'
@@ -131,8 +134,8 @@ export default{
         return{
             direction: undefined,
             positionClass: undefined,
-            day: this.formatDateToString(new Date(), this.format),
-            selectedDate: this.formatDateToString(new Date(), this.format),
+            day: this.formatDateToString(this.date, this.format),
+            selectedDate: this.formatDateToString(this.date, this.format),
             currentPeriod: this.startPeriod || this.getPeriodFromValue(
                 this.selectedDate, this.format
             )
@@ -374,8 +377,7 @@ export default{
         close() {
             this.$refs.popButton.$el.click();//workaround to close panel
             this.teardownPosition();
-        },
-        
+        },    
     },
     components:{ 
         Popover,

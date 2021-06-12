@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Sms;
+use App\Models\User;
+use App\Models\Funds;
 use Illuminate\Http\Request;
 use App\Models\RecipientList;
+use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
@@ -14,7 +18,7 @@ class DashboardController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function create()
     {
         $recipients = RecipientList::where([
             ['user_id', '=',Auth::id(),],
@@ -23,11 +27,14 @@ class DashboardController extends Controller
     }
 
     public function scheduled(){
-        return view('dashboard.scheduled');
+        $scheduled = Sms::where([
+            ['user_id','=', Auth::id()],
+            ['status', '=', Sms::Pending],
+        ])->orderBy('send_at', 'asc')->get();
+        return view('dashboard.scheduled', compact('scheduled'));
     }
 
     public function recipients(){
-        
         $recipients = RecipientList::where('user_id', Auth::id())->get();
         return view('dashboard.recipients', compact('recipients'));
     }
@@ -36,19 +43,28 @@ class DashboardController extends Controller
         return view('dashboard.add-recipients');
     }
 
+    public function statistics() {
+        //send_at less than now()->AddMinutes(1);
+        $isAboutToSend = Sms::where([
+            ['user_id', '=', Auth::id()],
+            ['status', '=', Sms::Pending],
+            ['send_at', '<', Carbon::now()->addMinutes(1)],
+        ])->count() > 0;
+        
+        return view('dashboard.statistics', compact('isAboutToSend'));
+    }
+
     public function drafts(){
         $drafts = Sms::where([
             ['user_id','=', Auth::id()],
-            ['status', '=','draft'],
+            ['status', '=', Sms::Draft],
         ])->orderBy('created_at', 'desc')->get();
         return view('dashboard.drafts', compact('drafts'));
     }
 
     public function funds(){
-        return view('dashboard.funds');
+        $funds = Auth::user()->funds();
+        return view('dashboard.funds', compact('funds'));
     }
 
-    public function pay(){
-        return view('dashboard.add-funds');
-    }
 }

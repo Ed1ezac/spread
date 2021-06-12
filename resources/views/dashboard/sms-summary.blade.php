@@ -1,11 +1,13 @@
 @extends('layouts.dashboard-header')
 
 @section('features')
+    @if ($errors->any())
+        @foreach ($errors->all() as $error)
+            <error-banner error="{{$error}}"></error-banner>
+        @endforeach
+    @endif
     <!---
-        the message/preview
-        the recipient list
         the capacity and funds
-        the sending action - 'now/later'
     --->
     <div class="flex space-x-4">
         <sms-summary v-bind:recipients = "{{ json_encode($recipients) }}"></sms-summary>

@@ -15,10 +15,10 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
 class FileProcessingComplete implements ShouldBroadcast{
     use Dispatchable, InteractsWithSockets, SerializesModels;
+    public $queue = 'uploads';
 
     public $list;
     public $user;
-    public $queue = 'uploads';
    
     public function __construct(RecipientList $recipients)
     {
