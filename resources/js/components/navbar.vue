@@ -27,16 +27,18 @@
                         <Menu>
                             <MenuButton type="button" class="bg-gray-800 relative z-50 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-primary-300" id="user-menu" aria-expanded="false" aria-haspopup="true">
                                 <span class="sr-only">Open user menu</span>
-                                <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+                                <div class="w-8 h-8 bg-gray-700 rounded-full overflow-hidden shadow-inner text-center bg-purple table">
+                                    <span class="table-cell text-sm text-white font-bold align-middle">{{ initials }}</span>
+                                </div>
                             </MenuButton>
                             <transition
-                            enter-active-class="transition duration-100 ease-out"
-                            enter-from-class="transform scale-95 opacity-0"
-                            enter-to-class="transform scale-100 opacity-100"
-                            leave-active-class="transition duration-75 ease-out"
-                            leave-from-class="transform scale-100 opacity-100"
-                            leave-to-class="transform scale-95 opacity-0"
-                            >
+                                enter-active-class="transition duration-100 ease-out"
+                                enter-from-class="transform scale-95 opacity-0"
+                                enter-to-class="transform scale-100 opacity-100"
+                                leave-active-class="transition duration-75 ease-out"
+                                leave-from-class="transform scale-100 opacity-100"
+                                leave-to-class="transform scale-95 opacity-0"
+                                >
                                 <MenuItems class="absolute right-0 w-48 mt-2 origin-top-right bg-white border border-gray-200 rounded-md shadow-lg outline-none">
                                     <MenuItem>
                                         <h3 class="py-1 whitespace-normal px-4 text-sm w-40 text-gray-500">{{username}}</h3>
@@ -45,7 +47,7 @@
                                         <a href="/admin/funds-reserve" :class="active ? 'bg-gray-100 text-gray-900':'text-gray-700'" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:no-underline" role="menuitem">Admin Area</a>
                                     </MenuItem> 
                                     <MenuItem v-slot="{ active }">
-                                        <a href="#" :class="active ? 'bg-gray-100 text-gray-900':'text-gray-700'" class="block px-4 py-2 rounded-t-md text-sm text-gray-700 hover:bg-gray-100 hover:no-underline" role="menuitem">Settings</a>
+                                        <a href="/settings" :class="active ? 'bg-gray-100 text-gray-900':'text-gray-700'" class="block px-4 py-2 rounded-t-md text-sm text-gray-700 hover:bg-gray-100 hover:no-underline" role="menuitem">Settings</a>
                                     </MenuItem> 
                                     <MenuItem v-slot="{ active }">
                                         <a v-on:click.prevent="logout" href="/logout" :class="active ? 'bg-gray-100 text-gray-900':'text-gray-700'" class="block px-4 py-2 rounded-b-md text-sm text-gray-700 hover:bg-gray-100 hover:no-underline" role="menuitem">Log Out</a>
@@ -66,72 +68,136 @@
         <div :class="isOpen ? 'block': 'hidden'" class="sm:hidden overflow-auto pt-2 pb-4 sm:items-center px-2">
             <a v-if="!isAuth" :href="loginRoute" class="my-btn block px-2 py-1 hover:no-underline hover:bg-primary border-transparent focus:ring-transparent sm:border-white">LOG IN</a>
             <a v-if="!isAuth" :href="registerRoute" class="my-btn block px-2 py-1 sm:py-0 border-transparent hover:no-underline hover:bg-primary focus:ring-transparent sm:ml-2">REGISTER</a>
-            <a v-if="isAuth" href="/create" class="mx-2 mt-2 p-2 bg-primary-400 flex items-center rounded-md hover:no-underline">
-                <svg class="flex-shrink-0 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                </svg>
-                <div class="ml-3">
-                    <p class="text-sm font-headings tracking-wider font-bold text-white">
-                        NEW SMS *
-                    </p>
-                </div>
-            </a>
-            <a v-if="isAuth" href="/scheduled" class="mx-2 mt-1 p-2 flex items-center rounded-md text-gray-100 hover:bg-primary-300 hover:no-underline hover:text-accent-900">
-                <svg class="flex-shrink-0 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <div class="ml-3">
-                    <p class="text-sm font-headings tracking-wider font-bold">
-                        SCHEDULED
-                    </p>
-                </div>
-            </a>
-            <a v-if="isAuth" href="/recipients" class="mx-2 mt-1 p-2 flex items-center rounded-md hover:bg-primary-300 hover:no-underline text-gray-200 hover:text-accent-900">
-                <svg class="flex-shrink-0 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-                <div class="ml-3">
-                    <p class="text-sm font-headings tracking-wider font-bold ">
-                        RECIPIENTS
-                    </p>
-                </div>
-            </a>
-            <a v-if="isAuth" href="/statistics" class="mx-2 mt-1 p-2 flex items-center rounded-md text-gray-200 hover:bg-primary-300 hover:no-underline hover:text-accent-900">
-                <svg class="flex-shrink-0 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                </svg>
-                <div class="ml-3">
-                    <p class="text-sm font-headings tracking-wider font-bold">
-                        STATISTICS
-                    </p>
-                </div>
-            </a>
-            <a v-if="isAuth" href="/drafts" class="mx-2 mt-1 p-2 flex items-center rounded-md text-gray-200 hover:bg-primary-300 hover:no-underline hover:text-accent-900">
-                <svg class="flex-shrink-0 h-5 w-5 " xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                </svg>
-                <div class="ml-3">
-                    <p class="text-sm font-headings tracking-wider font-bold">
-                        DRAFTS
-                    </p>
-                </div>
-            </a >
-            <a v-if="isAuth" href="/funds" class="mx-2 mt-1 p-2 flex items-center rounded-md text-gray-200 hover:bg-primary-300 hover:no-underline hover:text-accent-900">
-                <svg class="flex-shrink-0 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                </svg>
-                <div class="ml-3">
-                    <p class="text-sm font-headings tracking-wider font-bold">
-                        FUNDS
-                    </p>
-                </div>
-            </a >
+            <div v-if="isAuth && !isOnAdmin">
+                <a href="/create" v-bind:class="currentUrl == 'create' ? 'bg-primary-400 text-white' : 'text-gray-100 hover:bg-primary-300 hover:text-accent-900'" class="mt-2 rounded-md my-sidebar-nav-link">
+                    <svg class="flex-shrink-0 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" :stroke-width="currentUrl == 'create' ? 2:1" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                    <div class="ml-3">
+                        <p class="text-sm font-headings tracking-wider font-bold">
+                            NEW SMS *
+                        </p>
+                    </div>
+                </a>
+                <a href="/scheduled" v-bind:class="currentUrl == 'scheduled' ? 'bg-primary-400 text-white' : 'text-gray-100 hover:bg-primary-300 hover:text-accent-900'" class="mt-1 rounded-md my-sidebar-nav-link">
+                    <svg class="flex-shrink-0 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" :stroke-width="currentUrl == 'scheduled' ?2:1" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <div class="ml-3">
+                        <p class="text-sm font-headings tracking-wider font-bold">
+                            SCHEDULED
+                        </p>
+                    </div>
+                </a>
+                <a href="/recipients" v-bind:class="currentUrl == 'recipients' ? 'bg-primary-400 text-white' : 'text-gray-100 hover:bg-primary-300 hover:text-accent-900'" class="mt-1 rounded-md my-sidebar-nav-link">
+                    <svg class="flex-shrink-0 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" :stroke-width="currentUrl == 'recipients' ? 2:1" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    <div class="ml-3">
+                        <p class="text-sm font-headings tracking-wider font-bold ">
+                            RECIPIENTS
+                        </p>
+                    </div>
+                </a>
+                <a href="/statistics" v-bind:class="currentUrl == 'statistics' ? 'bg-primary-400 text-white' : 'text-gray-100 hover:bg-primary-300 hover:text-accent-900'" class="mt-1 rounded-md my-sidebar-nav-link">
+                    <svg class="flex-shrink-0 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" :stroke-width="currentUrl == 'statistics' ? 2:1" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                    <div class="ml-3">
+                        <p class="text-sm font-headings tracking-wider font-bold">
+                            STATISTICS
+                        </p>
+                    </div>
+                </a>
+                <a href="/drafts" v-bind:class="currentUrl == 'drafts' ? 'bg-primary-400 text-white' : 'text-gray-100 hover:bg-primary-300 hover:text-accent-900'" class="mt-1 rounded-md my-sidebar-nav-link">
+                    <svg class="flex-shrink-0 h-5 w-5 " xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" :stroke-width="currentUrl == 'drafts' ? 2:1" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                    <div class="ml-3">
+                        <p class="text-sm font-headings tracking-wider font-bold">
+                            DRAFTS
+                        </p>
+                    </div>
+                </a >
+                <a href="/funds" v-bind:class="currentUrl == 'funds' ? 'bg-primary-400 text-white' : 'text-gray-100 hover:bg-primary-300 hover:text-accent-900'" class="mt-1 rounded-md my-sidebar-nav-link">
+                    <svg class="flex-shrink-0 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" :stroke-width="currentUrl == 'funds' ? 2:1" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                    </svg>
+                    <div class="ml-3">
+                        <p class="text-sm font-headings tracking-wider font-bold">
+                            FUNDS
+                        </p>
+                    </div>
+                </a>
+            </div>
+            <div v-if="isAuth && isAdmin && isOnAdmin">
+                <a href="/admin/funds-reserve" v-bind:class="currentAdminUrl == 'funds-reserve' ? 'bg-primary-400 text-white' : 'text-gray-100 hover:bg-primary-300 hover:text-accent-900'" class="my-sidebar-nav-link">
+                    <svg class="flex-shrink-0 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" :stroke-width="currentAdminUrl == 'funds-reserve' ? 2:1" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" />
+                    </svg>
+                    <div class="ml-3">
+                        <p class="text-sm font-headings uppercase tracking-wider font-bold">
+                            Reserve
+                        </p>
+                    </div>
+                </a>
+                <a href="/admin/users" v-bind:class="currentAdminUrl == 'users' ? 'bg-primary-400 text-white' : 'text-gray-100 hover:bg-primary-300 hover:text-accent-900'" class="my-sidebar-nav-link">
+                    <svg class="flex-shrink-0 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" :stroke-width="currentAdminUrl == 'users' ? 2:1" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    <div class="ml-3">
+                        <p class="text-sm font-headings uppercase tracking-wider font-bold">
+                            Users
+                        </p>
+                    </div>
+                </a>
+                <a href="/admin/smses" v-bind:class="currentAdminUrl == 'smses' ? 'bg-primary-400 text-white' : 'text-gray-100 hover:bg-primary-300 hover:text-accent-900'" class="my-sidebar-nav-link">
+                    <svg class="flex-shrink-0 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" :stroke-width="currentAdminUrl == 'smses' ? 2:1" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                    <div class="ml-3">
+                        <p class="text-sm font-headings uppercase tracking-wider font-bold">
+                            Smses
+                        </p>
+                    </div>
+                </a>
+                <a href="/admin/commands" v-bind:class="currentAdminUrl == 'commands' ? 'bg-primary-400 text-white' : 'text-gray-100 hover:bg-primary-300 hover:text-accent-900'" class="my-sidebar-nav-link">
+                    <svg class="flex-shrink-0 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" :stroke-width="currentAdminUrl == 'commands' ? 2:1" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <div class="ml-3">
+                        <p class="text-sm font-headings uppercase tracking-wider font-bold">
+                            Commands
+                        </p>
+                    </div>
+                </a>
+                <a href="/admin/rollout-tasks" v-bind:class="currentAdminUrl == 'rollout-tasks' ? 'bg-primary-400 text-white' : 'text-gray-100 hover:bg-primary-300 hover:text-accent-900'" class="my-sidebar-nav-link">
+                    <svg class="flex-shrink-0 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" :stroke-width="currentAdminUrl == 'rollout-tasks' ? 2:1" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                    </svg>
+                    <div class="ml-3">
+                        <p class="text-sm font-headings uppercase tracking-wider font-bold">
+                            Rollout Tasks
+                        </p>
+                    </div>
+                </a>
+                <a href="/admin/spread-websockets" v-bind:class="currentAdminUrl == 'create' ? 'bg-primary-400 text-white' : 'text-gray-100 hover:bg-primary-300 hover:text-accent-900'" class="my-sidebar-nav-link">
+                    <svg class="flex-shrink-0 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" :stroke-width="currentAdminUrl == 'spread-websockets' ? 2:1" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                    </svg>
+                    <div class="ml-3">
+                        <p class="text-sm font-headings tracking-wider font-bold">
+                            WEB SOCKETS
+                        </p>
+                    </div>
+                </a>
+            </div>
         </div>
 
         <!--normal view menu-->
         <div class="sm:flex hidden sm:items-center pt-0 pb-0 px-2">
-            <a v-if="!isAuth" :href="loginRoute" class="my-btn block px-2 py-1 hover:no-underline hover:bg-primary-400 border-transparent focus:ring-transparent sm:border-white">LOG IN</a>
-            <a v-if="!isAuth" :href="registerRoute" class="my-btn block px-2 py-1 border-transparent hover:no-underline hover:bg-primary-400 focus:ring-transparent sm:ml-2">REGISTER</a>
+            <a v-if="!isAuth" :href="loginRoute" class="my-btn block px-2 py-1 hover:no-underline hover:bg-primary-400 border-transparent focus:ring-offset-0 focus:ring-primary-300 sm:border-primary-400">LOG IN</a>
+            <a v-if="!isAuth" :href="registerRoute" class="my-btn block px-2 py-1 border-transparent hover:no-underline hover:bg-primary-400 focus:ring-offset-0 focus:ring-primary-300 sm:ml-2">REGISTER</a>
         </div>
         <!--DP normal view-->
         <div v-if="isAuth" class="hidden sm:block self-center relative">
@@ -150,15 +216,17 @@
                     <Menu>
                         <MenuButton type="button" class="bg-gray-800 relative z-10 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-primary-300" id="user-menu" aria-expanded="false" aria-haspopup="true">
                             <span class="sr-only">Open user menu</span>
-                            <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+                            <div class="w-8 h-8 bg-gray-700 rounded-full overflow-hidden shadow-inner text-center bg-purple table">
+                                <span class="table-cell text-sm text-white font-bold align-middle">{{ initials }}</span>
+                            </div>
                         </MenuButton>
                         <transition
-                        enter-active-class="transition duration-100 ease-out"
-                        enter-from-class="transform scale-95 opacity-0"
-                        enter-to-class="transform scale-100 opacity-100"
-                        leave-active-class="transition duration-75 ease-out"
-                        leave-from-class="transform scale-100 opacity-100"
-                        leave-to-class="transform scale-95 opacity-0">
+                            enter-active-class="transition duration-100 ease-out"
+                            enter-from-class="transform scale-95 opacity-0"
+                            enter-to-class="transform scale-100 opacity-100"
+                            leave-active-class="transition duration-75 ease-out"
+                            leave-from-class="transform scale-100 opacity-100"
+                            leave-to-class="transform scale-95 opacity-0">
                             <MenuItems class="absolute right-0 w-48 mt-2 origin-top-right bg-white border border-gray-200 rounded-md shadow-lg outline-none">
                                 <MenuItem>
                                     <h3 class="py-1 whitespace-normal px-4 text-sm w-40 text-gray-500">{{username}}</h3>
@@ -167,7 +235,7 @@
                                     <a href="/admin/funds-reserve" :class="active ? 'bg-gray-100 text-gray-900':'text-gray-700'" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:no-underline" role="menuitem">Admin Area</a>
                                 </MenuItem>
                                 <MenuItem v-slot="{ active }">
-                                    <a href="#" :class="active ? 'bg-gray-100 text-gray-900':'text-gray-700'" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:no-underline" role="menuitem">Settings</a>
+                                    <a href="/settings" :class="active ? 'bg-gray-100 text-gray-900':'text-gray-700'" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:no-underline" role="menuitem">Settings</a>
                                 </MenuItem> 
                                 <MenuItem v-slot="{ active }">
                                     <a v-on:click.prevent="logout" href="/logout" :class="active ? 'bg-gray-100 text-gray-900':'text-gray-700'" class="block px-4 py-2 rounded-b-md text-sm text-gray-700 hover:bg-gray-100 hover:no-underline" role="menuitem">Log Out</a>
@@ -200,12 +268,26 @@ import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
                 type: Boolean,
                 default: false,
             },
+            currentAdminUrl: {
+                type: String,
+                default: '',
+            },
             isAuth: Boolean,
             logoUri: String,
             logoUriSm:String,
             username: String,
+            initials: String,
+            currentUrl: String,
             loginRoute: String,
             registerRoute: String,
+        },
+        mounted(){
+            console.log(this.initials);
+        },
+        computed: {
+            isOnAdmin(){
+                return this.currentUrl === 'admin';
+            }
         },
         methods:{
             logout: function(){

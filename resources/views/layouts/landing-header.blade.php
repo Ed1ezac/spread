@@ -33,10 +33,18 @@
                         Auth::user()->name
                         : ''
                 ) }}"
+            v-bind:initials="{{ 
+            json_encode(
+                Auth::check() ? 
+                    Auth::user()->initials
+                    : ''
+            ) }}"
             logo-uri="{{asset('logo.svg')}}" 
             logo-uri-sm="{{asset('logo-small.svg')}}"
             register-route="{{ route('register') }}"
             login-route="{{ route('login') }}"
+            current-url="{{ Request::segment(1) }}"
+            current-admin-url="{{ Request::segment(2) }}"
             v-bind:is-auth="{{ json_encode(Auth::check()) }}"></my-navbar>
             <!--- Main Page Content ---> 
             @yield('content')
