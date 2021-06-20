@@ -95,6 +95,7 @@
         @if(isset($details))
         <div class="w-72 mb-4 border border-gray-200 rounded">
             <h3 class="m-2 text-sm text-gray-800 font-medium">Rollout Stats</h3>
+            
             <div class="divide-y divide-dashed divide-gray-300">
                 <div class="space-y-2 mb-1">
                     <div class="m-2 flex justify-between">
@@ -111,22 +112,34 @@
                     </div>    
                     <div class="m-2 flex justify-between">
                         <div class="text-xs text-gray-500">Started at:</div>
-                        <div class="ml-12 text-xs text-gray-700 font-medium">{{$details->started_at->toDateTimeString()}}</div>
+                        <div class="ml-12 text-xs text-gray-700 font-medium">
+                        {{$details->started_at == null ? '--:--' : $details->started_at->toDateTimeString()}}
+                        </div>
                     </div> 
                     <div class="m-2 flex odd:bg-primary-200 justify-between">
                         <div class="text-xs text-gray-500">Finished at:</div>
-                        <div class="ml-12 text-xs text-gray-700 font-medium">{{$details->finished_at->toDateTimeString()}}</div>
+                        <div class="ml-12 text-xs text-gray-700 font-medium">
+                        {{$details->finished_at == null ? '--:--' : $details->finished_at->toDateTimeString()}}
+                        </div>
                     </div>
                     <div class="m-2 flex odd:bg-primary-200 justify-between">
                         <div class="text-xs text-gray-500">Rollout Time:</div>
-                        <div class="ml-12 text-xs text-gray-700 font-medium">{{$details->started_at->diffForHumans($details->finished_at, true)}}</div>
+                        <div class="ml-12 text-xs text-gray-700 font-medium">
+                            {{ ($details->finished_at == null || $details->started_at == null) ? 'pending..' : 
+                               ($details->finished_at->diffInHours($details->started_at) > 0 ?
+                                $details->finished_at->diffForHumans($details->started_at, true).' '.
+                                $details->finished_at->diffForHumans($details->started_at->subHours(1), true)
+                               :
+                                $details->finished_at->diffForHumans($details->started_at, true))
+                             }}
+                        </div>
                     </div>  
                 </div>
                 <div class="p-2 h-full">
                 @if (isset($details->fail_error))
                     <p class="text-xs text-gray-500">{{ $details->fail_error }}</p>
                 @else
-                    <p class="text-xs text-gray-500">Failure notes appear here...</p>          
+                    <p class="text-xs italic text-gray-500">Failure notes appear here...</p>          
                 @endif
                 </div> 
             </div>                     

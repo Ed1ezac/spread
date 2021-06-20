@@ -13,7 +13,7 @@
   ></sms-rollout-progress>
 
   @if(isset($history) && count($history)>0)
-  <div class="mr-4 xl:mr-6 mt-8 xl:mt-10">
+  <div class="mr-4 xl:mr-6 mt-8 xl:mt-10 mb-8">
     <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
       <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
         <div class="max-w-7xl shadow overflow-hidden border-b border-gray-200 sm:rounded">
@@ -27,7 +27,7 @@
                   Status
                 </th>
                 <th scope="col" class="px-6 py-3 text-left text-xs font-headings font-bold text-gray-500 uppercase tracking-wider">
-                  Sent
+                  Sent To
                 </th>
                 <th scope="col" class="px-6 py-3 text-left text-xs font-headings font-bold text-gray-500 uppercase tracking-wider">
                   Time
