@@ -24,7 +24,7 @@
                         <label for="password" class="my-form-label">
                         Password
                         </label>
-                        <password-field is-registration="n" confirmer=""></password-field>
+                        <password-field name="password"></password-field>
                             @error('password')
                             <span class="text-xs p-1 bg-red-100 rounded font-normal text-red-400" role="alert">
                                 <strong>{{ $message }}</strong>

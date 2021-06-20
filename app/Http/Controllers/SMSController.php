@@ -19,9 +19,11 @@ use Illuminate\Support\Facades\Validator;
 
 class SMSController extends Controller
 {
-    //
+    public function __construct(){
+        $this->middleware('auth');
+    }
+
     public function viewSms($id){
-        //
         $sms = Sms::find($id);
         $recipients = RecipientList::find($sms->recipient_list_id);
         $details = JobStatus::mine()->forJob($sms->job_id)->first();
@@ -41,7 +43,7 @@ class SMSController extends Controller
         if($sendsNow){
             return redirect('/statistics')->with('status', 'Sms created, preparing to send...');
         }else{
-            return redirect('/scheduled')->with('status', 'Sms rollout has beed scheduled successfully');
+            return redirect('/scheduled')->with('status', 'Sms rollout has been scheduled successfully');
         }
     }
 
@@ -133,9 +135,13 @@ class SMSController extends Controller
                 ->forJob($sms->job_id)
                 ->withStatus(JobStatus::STATUS_EXECUTING)
                 ->where('trackable_id', $sms->id)->first();
-
-        $sms->update(['status' => Sms::Aborted]);
-        return back()->withErrors('Sms rollout task has been stopped.');
+        $processed = ($status->progress_now/$status->progress_max);   
+        if(($processed < 0.15) && ($status->progress_now < 1500)){
+            $sms->update(['status' => Sms::Aborted]);
+            return back()->withErrors('Sms rollout task is stopping..');
+        }else{
+            return back()->withErrors('Sorry.. sms rollout can\'t be stopped at this stage.');
+        }
     }
 
     public function processScheduledRolloutNow(Request $request){

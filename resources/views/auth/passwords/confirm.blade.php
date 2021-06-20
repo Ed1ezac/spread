@@ -12,7 +12,7 @@
                         <label for="password" class="block text-md font-medium text-gray-800">
                         Password
                         </label>
-                        <password-field></password-field>
+                        <password-field name="password"></password-field>
                     </div>
                     <div class="flex justify-end items-center">
                         <a class="font-semibold text-gray-700" href="{{ route('password.request') }}">Forgot your password?</a>

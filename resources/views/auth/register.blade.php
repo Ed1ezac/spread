@@ -36,7 +36,7 @@
                         <label for="password" class="my-form-label">
                         Password
                         </label>
-                        <password-field is-registration="y" confirmer=""></password-field>
+                        <password-field name="password"></password-field>
                             @error('password')
                             <span class="text-xs p-1 bg-red-100 rounded font-normal text-red-400" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -47,9 +47,20 @@
                         <label for="password_confirmation" class="my-form-label">
                         Confirm Password
                         </label>
-                        <password-field is-registration="y" confirmer="y"></password-field>
+                        <password-field name="password_confirmation"></password-field>
                     </div>
-                   
+                    <div class="inline-flex items-center">
+                        <input id="terms" name="terms" type="checkbox" class="h-4 w-4 text-accent-800 focus:ring-2 focus:ring-accent-800 border-gray-300 rounded" required>
+                        <label for="terms" class="ml-2 text-sm my-form-label">
+                            I agree to the 
+                                <span>
+                                    <a href="/terms" class="text-accent-800 underline font-semibold hover:text-accent-500">terms</a>
+                                </span> and 
+                                <span>
+                                <a href="/privacy" class="text-accent-800 underline font-semibold hover:text-accent-500">privacy policy</a>
+                                </span>
+                        </label>
+                    </div>
                     <div>
                         <button type="submit" class="group relative w-full flex justify-center py-2 px-4 mb-3 my-btn border-transparent bg-primary-500 hover:bg-primary-700 focus:outline-none focus:ring-primary-800">
                             <span class="absolute left-0 inset-y-0 flex items-center pl-3">
