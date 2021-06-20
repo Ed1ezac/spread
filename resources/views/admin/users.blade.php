@@ -32,14 +32,17 @@
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
                                 <div class="flex-shrink-0 h-10 w-10">
-                                    <img class="h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60" alt="">
+                                    <!--img class="h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60" alt=""-->
+                                    <div class="w-full h-full bg-gray-700 rounded-full overflow-hidden shadow-inner text-center bg-purple table">
+                                        <span class="table-cell text-sm text-white font-bold align-middle">{{ $user->initials }}</span>
+                                    </div>
                                 </div>
                                 <div class="ml-4">
                                     <div class="text-sm font-medium text-gray-900">
-                                    {{$user->name}}
+                                    {{ $user->name }}
                                     </div>
                                     <div class="text-sm text-gray-500">
-                                    {{$user->email}}
+                                    {{ $user->email }}
                                     </div>
                                 </div>
                                 </div>
@@ -62,6 +65,7 @@
                         @endforeach
                     </tbody>
                 </table>
+                <div class="px-4 py-2">{{ $users->links() }}</div>
             </div>
         </div>
     </div>
