@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
+use App\Traits\RecordsReservesEvents;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Traits\RecordsReservesEvents;
 
 class Reserve extends Model
 {

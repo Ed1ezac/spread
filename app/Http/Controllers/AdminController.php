@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Sms;
 use App\Models\User;
 use App\Models\Reserve;
+use App\Models\JobStatus;
 use Illuminate\Http\Request;
 use App\Helpers\FundsProcessing;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Admin\AdminRoleRequest;
 use App\Http\Requests\Admin\AssignRoleRequest;
@@ -23,16 +25,30 @@ class AdminController extends Controller
     {
         $this->fundsProcessor = $fundsProcessor;
     }
+    
     public function reserve(){
         $reserve = Reserve::first();
-        //$records = ReserveRecord
 
-        return view('admin.reserves', compact('reserve'));
+        $history = DB::table('reserve_records')
+                    ->join('users', 'reserve_records.triggering_user_id', '=', 'users.id')
+                    ->select('users.name', 'reserve_records.*')
+                    ->latest()
+                    ->paginate(8);
+                    
+        return view('admin.reserves', compact('reserve', 'history'));
     }
 
-    public function editReserve(){
-        $reserve = Reserve::first();
-        return view('admin.edit-reserve', compact('reserve'));
+    public function makeReserve(){
+        return view('admin.create-reserve');
+    }
+
+    public function createReserve(Request $request){
+        //
+        Reserve::create([
+            'name' => $request->input('name'),
+        ]);
+
+        return redirect('/admin/funds-reserve')->with('status', 'Reserve created successfully.');
     }
 
     public function smses(){
@@ -41,11 +57,13 @@ class AdminController extends Controller
     }
 
     public function tasks(){
-        return view('admin.tasks');
+        $history = JobStatus::where('queue', '!=','uploads')->latest()->paginate(8);
+
+        return view('admin.tasks', compact('history'));
     }
 
     public function users(){
-        $users = User::all();//with(['funds', 'roles'])->get();
+        $users = User::paginate(8);//with(['funds', 'roles'])->get();
         return view('admin.users', compact('users'));
     }
 
@@ -96,9 +114,14 @@ class AdminController extends Controller
             ->with('status', $user->name.' is no longer a '.$data['role'].'.');
     }
 
+    public function commands(){
+        return view('admin.commands');
+    }
+
     //-----------------
     public function createFirstSuperAdmin(AdminRoleRequest $request){
         Auth::user()->assignRole(User::Administrator);
         return back()->with('status', 'admin priviledges granted');
     }
+    
 }

@@ -21,6 +21,6 @@ class VerifyAdministrator
         if(Auth::check() && Auth::user()->hasRole(User::Administrator)){
             return $next($request);
         }
-        return back()->withErrors('You must be an administrator to access that!');
+        return redirect('/create')->withErrors('You must be an administrator to access that!');
     }
 }
