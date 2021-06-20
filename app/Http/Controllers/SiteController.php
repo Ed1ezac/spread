@@ -13,14 +13,14 @@ class SiteController extends Controller
     }
 
     public function terms(){
-
+        return view('terms');
     }
 
-    public function policy(){
-
+    public function privacy(){
+        return view('privacy');
     }
 
-    public function faq(){
-        
+    public function faqs(){
+        return view('faq');
     }
 }

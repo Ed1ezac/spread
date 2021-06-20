@@ -281,9 +281,6 @@ import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
             loginRoute: String,
             registerRoute: String,
         },
-        mounted(){
-            console.log(this.initials);
-        },
         computed: {
             isOnAdmin(){
                 return this.currentUrl === 'admin';
