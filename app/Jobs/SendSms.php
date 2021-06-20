@@ -6,23 +6,26 @@ use Exception;
 use Throwable;
 use App\Models\Sms;
 use App\Models\Funds;
+use App\Traits\Trackable;
+use App\Traits\FlagsAbortion;
 use App\Models\RecipientList;
 use Illuminate\Bus\Queueable;
 use App\Events\ReportProgress;
 use App\Events\RolloutComplete;
 use App\Helpers\FileProcessing;
 use App\Helpers\FundsProcessing;
-use Illuminate\Support\Facades\DB;
+use App\Helpers\FileChunkReadFilter;
+use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
+use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 
 class SendSms implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, Trackable;
+    use Dispatchable, InteractsWithQueue, Queueable, 
+        SerializesModels, Trackable, FlagsAbortion;
     public $deleteWhenMissingModels = true; 
 
     public $sms;
@@ -40,6 +43,7 @@ class SendSms implements ShouldQueue
     {
         $this->startTracking($this, $this->sms);
         $this->setProgressMax($this->recipients->entries);
+        $this->prepareSmsStatusPolling();
         try{
             $this->verifySufficientFunds();
             $this->jobStatus->markAsExecuting();
@@ -55,32 +59,49 @@ class SendSms implements ShouldQueue
     }
 
     private function performRollout(){
-        $worksheet = FileProcessing::openFile(
-                $this->recipients->file_path, 
-                $this->recipients->file_extension
-            );
+        $chunkFilter = new FileChunkReadFilter();
+        $reader = FileProcessing::createReader($this->recipients->file_extension);
+        $maxRows = FileProcessing::getMaxRowSnapShot($reader, $this->recipients->file_path);
+        $reader->setReadFilter($chunkFilter);
 
-        foreach ($worksheet->getRowIterator() as $row) {
+        for($startRow = 1; $startRow <= $maxRows; $startRow += FileChunkReadFilter::chunkSize) {
+            $chunkFilter->setRows($startRow);
+            $spreadsheet = FileProcessing::loadFile($reader, $this->recipients->file_path);
+            //validate entries
+            $this->validateAndSendSms($spreadsheet->getActiveSheet());
+        }
+        
+    }
+
+    private function validateAndSendSms($worksheet){
+        foreach($worksheet->getRowIterator() as $row) {
             $cellIterator = $row->getCellIterator();
             $cellIterator->setIterateOnlyExistingCells(true);//only cells with data
-            foreach ($cellIterator as $cell) {
+            foreach($cellIterator as $cell) {
                 if(FileProcessing::isValidBwNumber(strval($cell->getValue()))){
                     $this->sendMessageTo(strval($cell->getValue()));
                     $this->incrementProgress();
                     $this->reportProgress();
                 }
-                //poll for abortion
-                //TODO!!
-                if(DB::table('sms')->find($this->sms->id)->status === Sms::Aborted){
-                    throw new Exception('Aborted by user.');
-                }          
+               
+                if($this->progressNow <= $this->abortionThreshHold){
+                    if($this->isAborted($this->sms->id, $this->progressNow)){
+                        throw new Exception('Aborted by user.');
+                    }
+                } 
             }
         }
     }
 
+    private function prepareSmsStatusPolling(){
+        $this->setAbortionThreshHold($this->progressMax);
+        $this->setFrequency($this->progressMax);
+    }
+
     private function verifySufficientFunds(){    
-        if($this->fundsProcessor
-            ->hasSufficientFunds($this->sms->user_id, $this->recipients->entries)){
+        if(!($this->fundsProcessor
+            ->hasSufficientFunds($this->sms->user_id, 
+                        $this->recipients->entries))){
             throw new Exception('Insufficient funds.');
         }
     }
@@ -88,11 +109,11 @@ class SendSms implements ShouldQueue
     private function beforeFail(Throwable $e){
         $this->billUser();
         $this->jobStatus->markAsFailed($e->getMessage());
-        if(!$e->getMessage() == 'Aborted by user.'){
+        if($e->getMessage() !== 'Aborted by user.'){
             $this->sms->update(['status' => Sms::Failed]);
         }
         //fire event
-        RolloutComplete::dispatch($this->sms, $this->progressNow);
+        RolloutComplete::dispatch($this->sms, $this->progressNow)->delay(now()->addSeconds(6));
     }
 
     private function sendMessageTo(String $number){
@@ -116,7 +137,9 @@ class SendSms implements ShouldQueue
     }
 
     private function billUser(){
-        $this->fundsProcessor->decrementUserFunds($this->sms->user_id, $this->progressNow);
+        if($this->progressNow > 0){
+            $this->fundsProcessor->decrementUserFunds($this->sms->user_id, $this->progressNow);
+        }
     }
 
 }
