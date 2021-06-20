@@ -49,7 +49,7 @@ class DashboardController extends Controller
                         ->select('sms.*', 'job_statuses.progress_now')
                         ->latest()
                         ->paginate(7);
-           
+
         return view('dashboard.statistics', compact('isAboutToSend', 'history'));
     }
 

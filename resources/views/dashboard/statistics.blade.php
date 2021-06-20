@@ -10,6 +10,8 @@
   <sms-rollout-progress
     user-id="{{Auth::id()}}"
     v-bind:is-about-to-send="{{ json_encode($isAboutToSend) }}"
+    v-bind:aborted = "{{ null !== Session::get('aborted') ? json_encode(Session::get('aborted')) : json_encode(false) }}"
+    v-bind:max-progress = "{{ null !== Session::get('maxProgress') ? json_encode(Session::get('maxProgress')) : -1 }}"
   ></sms-rollout-progress>
 
   @if(isset($history) && count($history)>0)

@@ -21088,11 +21088,8 @@ __webpack_require__.r(__webpack_exports__);
       csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
     };
   },
-  mounted: function mounted() {
-    console.log(this.userId);
-  },
   props: {
-    userId: String
+    userId: Number
   },
   components: {
     Menu: _headlessui_vue__WEBPACK_IMPORTED_MODULE_0__.Menu,
@@ -22159,17 +22156,25 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
-      expectedMax: -1,
       total: undefined,
       current: undefined,
       smsId: undefined,
       smsSender: '',
       smsMessage: '',
       recipientsName: '',
+      expectedMax: this.maxProgress,
       csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
     };
   },
   props: {
+    aborted: {
+      type: Boolean,
+      "default": false
+    },
+    maxProgress: {
+      type: Number,
+      "default": -1
+    },
     userId: String,
     isAboutToSend: Boolean
   },
@@ -22183,7 +22188,7 @@ __webpack_require__.r(__webpack_exports__);
       return style;
     },
     statusValue: function statusValue() {
-      if (this.isSending && !this.isAborted && !this.isCompleted) {
+      if (this.isSending && !this.isCompleted) {
         return 'Sending...';
       } else if (this.isCompleted) {
         return 'Complete.';
@@ -22194,13 +22199,13 @@ __webpack_require__.r(__webpack_exports__);
       return 'Discovering...';
     },
     isSending: function isSending() {
-      return this.smsId != undefined && this.percentage < 100;
+      return this.isDiscovered && this.percentage < 100 && !this.isAborted;
     },
     isAborted: function isAborted() {
-      return this.expectedMax > 0 && this.expectedMax < this.total && this.current === this.expectedMax;
+      return this.expectedMax > 0 && this.percentage < 50 && this.current >= this.expectedMax;
     },
     canAbort: function canAbort() {
-      return !this.isAborted && this.isDiscovered && (this.total >= 10000 ? this.current < 1500 : this.percentage < 15);
+      return !this.aborted && this.isDiscovered && (this.total >= 10000 ? this.current < 1500 : this.percentage < 15);
     },
     isCompleted: function isCompleted() {
       return this.percentage >= 100;
@@ -22227,8 +22232,7 @@ __webpack_require__.r(__webpack_exports__);
         _this.smsSender = e.smsSender;
         _this.smsMessage = e.smsMessage;
         _this.recipientsName = e.smsRecipients;
-      }).listen('RolloutComplete', function (e) {
-        _this.expectedMax = e.sentSmsCount;
+      }).listen('RolloutComplete', function (e) {//this.expectedMax = e.sentSmsCount;
       });
     }
   }
@@ -25742,7 +25746,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* NEED_PATCH */
   )])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])], 512
   /* NEED_PATCH */
-  )), [[vue__WEBPACK_IMPORTED_MODULE_0__.vShow, $options.isSending || $props.isAboutToSend]]);
+  )), [[vue__WEBPACK_IMPORTED_MODULE_0__.vShow, $props.isAboutToSend || $options.isSending || $options.isAborted]]);
 }
 
 /***/ }),

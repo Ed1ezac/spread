@@ -131,14 +131,17 @@ class SMSController extends Controller
         //flag the sms as aborted and 'hope' the Job will pick that up
         $sms = Sms::find($request->id);
         //
-        $status = JobStatus::mine()
-                ->forJob($sms->job_id)
+        $status = JobStatus::mine()->forJob($sms->job_id)
                 ->withStatus(JobStatus::STATUS_EXECUTING)
                 ->where('trackable_id', $sms->id)->first();
         $processed = ($status->progress_now/$status->progress_max);   
         if(($processed < 0.15) && ($status->progress_now < 1500)){
             $sms->update(['status' => Sms::Aborted]);
-            return back()->withErrors('Sms rollout task is stopping..');
+            //pass-to-session
+            $aborted = true;
+            $maxProgress = $status->progress_now;
+            return back()->with('aborted',$aborted)
+                    ->with('maxProgress',$maxProgress)->withErrors('Sms rollout task has been stopped.');
         }else{
             return back()->withErrors('Sorry.. sms rollout can\'t be stopped at this stage.');
         }
