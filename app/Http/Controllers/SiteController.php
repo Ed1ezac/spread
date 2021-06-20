@@ -12,6 +12,10 @@ class SiteController extends Controller
         return view('home');
     }
 
+    public function faqs(){
+        return view('faq');
+    }
+    
     public function terms(){
         return view('terms');
     }
@@ -20,7 +24,7 @@ class SiteController extends Controller
         return view('privacy');
     }
 
-    public function faqs(){
-        return view('faq');
+    public function learnMore(){
+        return view('more-info');
     }
 }

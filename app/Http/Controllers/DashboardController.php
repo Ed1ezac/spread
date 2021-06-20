@@ -41,11 +41,14 @@ class DashboardController extends Controller
             ->count() > 0;
             
             $history = DB::table('sms')
-                            ->where('sms.user_id', Auth::id())
-                            ->join('job_statuses', 'sms.id', '=', 'job_statuses.trackable_id')
-                            ->select('sms.*', 'job_statuses.progress_now')
-                            ->latest()
-                            ->paginate(7);
+                        ->where('sms.user_id', Auth::id())
+                        ->join('job_statuses', function ($join) {
+                            $join->on('sms.id', '=', 'job_statuses.trackable_id')
+                                ->where('job_statuses.queue', 'rollouts');
+                        })
+                        ->select('sms.*', 'job_statuses.progress_now')
+                        ->latest()
+                        ->paginate(7);
            
         return view('dashboard.statistics', compact('isAboutToSend', 'history'));
     }

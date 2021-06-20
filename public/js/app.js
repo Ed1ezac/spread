@@ -22197,7 +22197,7 @@ __webpack_require__.r(__webpack_exports__);
       return this.smsId != undefined && this.percentage < 100;
     },
     isAborted: function isAborted() {
-      return this.expectedMax > 0 && this.current === this.expectedMax;
+      return this.expectedMax > 0 && this.expectedMax < this.total && this.current === this.expectedMax;
     },
     canAbort: function canAbort() {
       return !this.isAborted && this.isDiscovered && (this.total >= 10000 ? this.current < 1500 : this.percentage < 15);
@@ -25534,7 +25534,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 
 var _hoisted_1 = {
-  "class": "shadow-sm overflow-hidden divide-y divide-dashed divide-gray-300 rounded mb-4 mr-4 xl:mr-6 max-w-7xl border-t-4 border-gray-500"
+  "class": "shadow-sm overflow-hidden divide-y divide-dashed divide-gray-300 rounded mb-10 mr-4 xl:mr-6 max-w-7xl border-t-4 border-gray-500"
 };
 var _hoisted_2 = {
   "class": "mb-2 px-4"
@@ -26478,19 +26478,6 @@ app.mount("#app");
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var laravel_echo__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! laravel-echo */ "./node_modules/laravel-echo/dist/echo.js");
 window._ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
-/**
- * We'll load jQuery and the Bootstrap jQuery plugin which provides support
- * for JavaScript based Bootstrap features such as modals and tabs. This
- * code may be modified to fit the specific needs of your application.
- */
-
-/*try {
-    window.Popper = require('popper.js').default;
-    window.$ = window.jQuery = require('jquery');
-
-    require('bootstrap');
-} catch (e) {}*/
-
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
  * to our Laravel back-end. This library automatically handles sending the

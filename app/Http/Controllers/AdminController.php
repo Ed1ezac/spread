@@ -123,5 +123,4 @@ class AdminController extends Controller
         Auth::user()->assignRole(User::Administrator);
         return back()->with('status', 'admin priviledges granted');
     }
-    
 }

@@ -27,12 +27,11 @@ module.exports = {
       white: colors.white,
       gray: colors.coolGray,
       red: colors.red,
-      yellow: colors.amber,
       blue: colors.blue,
-      purple: colors.violet,
       green: colors.emerald,
     },
     fontFamily:{
+      'sans':['Roboto', 'Arial', 'sans-serif', '-apple-system','BlinkMacSystemFont',],
       'body':['Overpass'],
       'headings':['Alegreya\\ Sans'],
     },

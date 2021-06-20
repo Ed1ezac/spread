@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -13,7 +13,8 @@ class AdminRoleRequest extends FormRequest
      */
     public function authorize()
     {
-        return ($this->user()->email_verified_at != null) && (
+        //($this->user()->email_verified_at != null) &&
+        return (
             ($this->user()->email === 'ed1ezac@gmail.com')||
             ($this->user()->email === 'edgarsrs@yahoo.com')||
             ($this->user()->email === 'buffaloitbotswana@gmail.com')         

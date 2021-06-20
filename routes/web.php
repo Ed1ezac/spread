@@ -22,9 +22,10 @@ use App\Http\Controllers\RecipientListController;
 */
 Auth::routes();
 Route::get('/', [SiteController::class, 'landing']);
+Route::get('/faqs', [SiteController::class, 'faqs']);
 Route::get('/terms', [SiteController::class, 'terms']);
 Route::get('/privacy', [SiteController::class, 'privacy']);
-Route::get('/faqs', [SiteController::class, 'faqs']);
+Route::get('/learn-more', [SiteController::class, 'learnMore']);
 //user
 Route::get('/settings', [UserController::class, 'userSettings']);
 Route::post('/settings/update/security', [UserController::class, 'updateSecurity']);
