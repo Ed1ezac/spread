@@ -15,12 +15,6 @@ class FileProcessing{
     private static $pattern = "/^(?=^.{8}$)(?=^7[1-7])(?=.*\d{6}$)/";
     private static $map = [];
 
-    public static function openFile($filePath, $fileExtension){
-        $reader = self::getFileReaderByExtension($fileExtension);
-        $spreadsheet = $reader->load(Storage::path($filePath));
-        return $spreadsheet->getActiveSheet();
-    }
-
     public static function createReader($fileExtension){
         return self::getFileReaderByExtension($fileExtension);
     }
