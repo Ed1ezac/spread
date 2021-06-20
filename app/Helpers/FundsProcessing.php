@@ -17,10 +17,10 @@ class FundsProcessing{
     /**
     * The assumption is that a different user can be authenticated
     * at the point of purchase/deduction so we need to explicitly pass the
-    * ID of the User that should be billed.||this is probably wrong tho...
+    * ID of the User that should be billed.||thats probably wrong tho...
     **/
     public function hasSufficientFunds($userId, $minimum){
-        return Funds::forUserId($userId)->sufficient($minimum)->first() > 0;
+        return Funds::forUserId($userId)->first()->amount > $minimum;
     }
 
     public function incrementUserFunds($userId, $amount){
