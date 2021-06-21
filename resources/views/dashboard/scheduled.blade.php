@@ -1,6 +1,5 @@
 @extends('layouts.dashboard-header')
 
-
 @section('features')
     @if ($errors->any())
         @foreach ($errors->all() as $error)
@@ -24,7 +23,6 @@
                 <div class="mt-32 mb-12">
                     <h3 class="text-3xl text-gray-700">Create a scheduled rollout</h3>
                     <p class="text-gray-500 mt-1">Scheduled message rollouts are created when you choose <span class="font-semibold">send later</span> on the summary page.</p>
-                    
                     <span class="sm:block mt-3">
                         <a href="/create" class="inline-flex items-center tracking-widest px-4 py-2 my-btn shadow-md border-primary-500 bg-primary-500 hover:bg-primary-700 focus:ring-primary-800">
                             <svg class="-ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -16,6 +16,10 @@ use Illuminate\Support\Facades\Validator;
 
 class RecipientListController extends Controller
 {    
+    public function __construct(){
+        $this->middleware('auth');
+    }
+    
     public function createRecipients(){
         return view('dashboard.add-recipients');
     }
@@ -40,7 +44,7 @@ class RecipientListController extends Controller
         $this->dispatchFileProcessingJob($list);
         
         return redirect('/recipients')
-                ->with('status', 'The file has been uploaded and is being processed!');
+                ->with('status', 'The file has been uploaded and is being processed..');
     }
 
     private function validateForm(Request $request){
@@ -95,6 +99,5 @@ class RecipientListController extends Controller
         }catch(Exception $e){
             return back()->withErrors('Oops! The requested file could not be found.');
         }
-    } 
-
+    }
 }

@@ -1,6 +1,6 @@
 <template>
     <div class="ml-4 mt-4 flex flex-wrap">
-    <div class="w-96 pr-2">
+    <div class="w-96 px-2 -mt-3 mb-2">
         <form ref="purchaseForm" action="/funds/buy" method="POST">
             <input type="hidden" name="_token" :value="csrf">
             <!--Details-->
@@ -37,7 +37,7 @@
                         <div class="absolute inset-y-0 flex right-0">
                             <input 
                                 ref="expiryField" 
-                                v-card-expiry v-model="cardExpiry" 
+                                v-card-expiry v-model="cardExpiry"
                                 maxlength="9" required name="expiry"
                                 class="h-full px-1 w-20 my-form-input mt-0 font-bold border-transparent bg-transparent" placeholder="MM/YY">
                             <input 
@@ -62,6 +62,7 @@
                 PURCHASE
             </button>
         </form>
+        <div class="flex justify-center italic text-xs text-gray-500 font-light">accepts &nbsp;<span class="text-gray-600 font-extrabold underline">VISA</span>&nbsp; and &nbsp;<span class="text-gray-600 font-extrabold underline">Mastercard</span>&nbsp;only.</div>
     </div>
     <!--Invoice-->
     <div class="md:ml-14 ml-2">
@@ -115,9 +116,6 @@ export default {
             });
             return this.totalCost = formatter.format(this.quantity * this.unitPrice);
         }
-    },
-    mounted(){
-         console.log(this.validationErrors)
     },
     methods:{
         restrictQuantity(){

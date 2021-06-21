@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use App\Traits\RecordsFundsEvents;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Traits\RecordsFundsEvents;
 
 class Funds extends Model
 {

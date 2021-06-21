@@ -10,15 +10,24 @@ class FileProcessing{
     /**
      * DOCUMENTATION @:
      * https://phpspreadsheet.readthedocs.io/en/latest/
-     * 
      **/
     //Bw Number regex pattern
     private static $pattern = "/^(?=^.{8}$)(?=^7[1-7])(?=.*\d{6}$)/";
+    private static $map = [];
 
-    public static function openFile($filePath, $fileExtension){
-        $reader = self::getFileReaderByExtension($fileExtension);
-        $spreadsheet = $reader->load(Storage::path($filePath));
-        return $spreadsheet->getActiveSheet();
+    public static function createReader($fileExtension){
+        return self::getFileReaderByExtension($fileExtension);
+    }
+
+    public static function getMaxRowSnapShot($reader, $filePath){
+        $spreadsheet = self::loadFile($reader, $filePath);
+        $numMaxRows = $spreadsheet->getActiveSheet()->getHighestDataRow();
+        $spreadsheet = null;//dump-it
+        return $numMaxRows;
+    }
+
+    public static function loadFile($reader, $filePath){
+        return $reader->load(Storage::path($filePath)); 
     }
 
     private static function getFileReaderByExtension(String $extension){

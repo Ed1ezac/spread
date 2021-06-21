@@ -4,9 +4,11 @@ namespace App\Jobs;
 
 use Throwable;
 use Exception;
+use App\Traits\Trackable;
 use App\Models\RecipientList;
 use Illuminate\Bus\Queueable;
 use App\Helpers\FileProcessing;
+use App\Helpers\FileChunkReadFilter;
 use App\Events\FileProcessingComplete;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Storage;
@@ -44,25 +46,34 @@ class ProcessDataFile implements ShouldQueue
     }
 
     private function processFile(){
-        $worksheet = FileProcessing::openFile(
-                $this->recipientList->file_path,
-                $this->recipientList->file_extension
-            );
+        $chunkFilter = new FileChunkReadFilter();
+        $reader = FileProcessing::createReader($this->recipientList->file_extension);
+        $maxRows = FileProcessing::getMaxRowSnapShot($reader, $this->recipientList->file_path);
+        $reader->setReadFilter($chunkFilter);
         
-        foreach ($worksheet->getRowIterator() as $row) {
-            $cellIterator = $row->getCellIterator();
-            $cellIterator->setIterateOnlyExistingCells(true);//only cells with data
-            foreach ($cellIterator as $cell) {
-                if(FileProcessing::isValidBwNumber(strval($cell->getValue()))){
-                    $this->validEntryCount++;
-                }
-            }
+        for($startRow = 1; $startRow <= $maxRows; $startRow += FileChunkReadFilter::chunkSize) {
+            $chunkFilter->setRows($startRow);
+            $spreadsheet = FileProcessing::loadFile($reader, $this->recipientList->file_path);
+            //validate entries
+            $this->validateCells($spreadsheet->getActiveSheet());
         }
 
         if($this->validEntryCount < 5){
             throw new Exception("Low or invalid entries..");
         }else{
             $this->recipientList->update(['entries' => $this->validEntryCount]);
+        }
+    }
+
+    private function validateCells($worksheet){
+        foreach ($worksheet->getRowIterator() as $row) {
+            $cellIterator = $row->getCellIterator();
+            $cellIterator->setIterateOnlyExistingCells(true);//only cells with data
+            foreach ($cellIterator as $cell){
+                if(FileProcessing::isValidBwNumber(strval($cell->getValue()))){
+                    $this->validEntryCount++;
+                }
+            }
         }
     }
 

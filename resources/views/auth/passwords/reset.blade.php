@@ -19,13 +19,13 @@
                         <label for="password" class="my-form-label">
                         Password
                         </label>
-                        <password-field></password-field>
+                        <password-field name="password"></password-field>
                     </div>
                     <div>
                         <label for="password" class="my-form-label">
                         Confirm Password
                         </label>
-                        <password-field></password-field>
+                        <password-field name="password_confirmation"></password-field>
                     </div>
                     
                     <div>

@@ -6,7 +6,7 @@
     Add funds, request Refund
 -->
 @if (isset($funds) && $funds->amount > 0)
-    <div class="flex justify-between items-start">
+    <div class="flex flex-wrap justify-between items-start">
         <div class="w-80">
             <div class="bg-white shadow-sm rounded p-4 divide-y divide-gray-100">
                 <div class="flex">
@@ -22,7 +22,7 @@
                 </div>
             </div>
         </div>
-        <a href="/funds/add" class="inline-flex items-center tracking-widest px-4 py-2 shadow-md my-btn border-primary-500 bg-primary-500 hover:bg-primary-700 focus:ring-primary-800">
+        <a href="/funds/add" class="inline-flex mt-2 sm:mt-0 items-center tracking-widest px-4 py-2 shadow-md my-btn border-primary-500 bg-primary-500 hover:bg-primary-700 focus:ring-primary-800">
             <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
@@ -31,7 +31,7 @@
     </div>
 
     @if(isset($history) && count($history)>0)
-    <div class="mr-4 xl:mr-6 mt-8 xl:mt-10">
+    <div class="mr-4 xl:mr-6 mt-8 xl:mt-10 mb-8">
         <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                 <div class="max-w-7xl shadow overflow-hidden border-b border-gray-200 sm:rounded">
@@ -83,6 +83,7 @@
                     @endforeach
                     </tbody>
                 </table>
+                <div class="px-4 py-2">{{ $history->links() }}</div>
                 </div>
             </div>
         </div>

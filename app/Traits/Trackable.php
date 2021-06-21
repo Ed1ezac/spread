@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Jobs;
+namespace App\Traits;
 
 use App\Models\JobStatus;
 

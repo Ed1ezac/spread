@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SMSController;
 use App\Http\Controllers\SiteController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\FundsController;
 use App\Http\Controllers\ReserveController;
@@ -19,10 +20,16 @@ use App\Http\Controllers\RecipientListController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('/', [SiteController::class, 'landing']);
-
 Auth::routes();
+Route::get('/', [SiteController::class, 'landing']);
+Route::get('/faqs', [SiteController::class, 'faqs']);
+Route::get('/terms', [SiteController::class, 'terms']);
+Route::get('/privacy', [SiteController::class, 'privacy']);
+Route::get('/learn-more', [SiteController::class, 'learnMore']);
+//user
+Route::get('/settings', [UserController::class, 'userSettings']);
+Route::post('/settings/update/security', [UserController::class, 'updateSecurity']);
+Route::post('/settings/update/personal-info', [UserController::class, 'updatePersonalInfo']);
 //sms
 Route::get('/drafts', [DashboardController::class, 'drafts']);
 Route::get('/create', [DashboardController::class, 'create']);
@@ -54,8 +61,11 @@ Route::get('/statistics/view/sms/{id}', [SMSController::class, 'viewSms']);
 Route::group(['prefix' =>'admin', 'middleware' =>'admin'], function () {
     //admin privileged
     Route::get('/funds-reserve', [AdminController::class, 'reserve']);
-    Route::get('/reserve/edit', [AdminController::class, 'editReserve']);
-    Route::get('/rollout-tasks', [AdminController::class, 'tasks']);
+    Route::get('/funds-reserve/create', [AdminController::class, 'makeReserve']);
+    Route::get('/funds-reserve/edit', [ReserveController::class, 'editReserve']);
+    Route::post('/funds-reserve/create/new', [AdminController::class, 'createReserve']);
+    Route::post('funds-reserve/credit/funds', [ReserveController::class, 'creditReserve']);
+    Route::post('/funds-reserve/deduct/funds', [ReserveController::class, 'deductFromReserve']);
     //sms
     Route::get('/smses', [AdminController::class, 'smses']);   
     //users
@@ -66,6 +76,9 @@ Route::group(['prefix' =>'admin', 'middleware' =>'admin'], function () {
     Route::post('/user/credit/funds', [AdminController::class, 'creditUserFunds']);
     Route::post('/user/add/role', [AdminController::class, 'assignRole']);
     Route::post('/user/remove/role', [AdminController::class, 'removeRole']);
-
+    //tasks
+    Route::get('/commands', [AdminController::class, 'commands']);
+    Route::get('/rollout-tasks', [AdminController::class, 'tasks']);
+    
 });
 Route::get('/user/challenge/admin/get-role', [AdminController::class, 'createFirstSuperAdmin'])->middleware('auth');

@@ -10,14 +10,14 @@
     @endif
     <div>
         <div class="shadow-sm flex-shrink bg-white rounded-md w-96 md:mr-2">
-            <form action="/admin/reserve/credit/funds" method="POST">
+            <form action="/admin/funds-reserve/credit/funds" method="POST">
                 @csrf
                 <div class="px-6 pb-6 space-y-6 divide divide-y-2 divide-gray-100">
                     <div class="mt-4">
                         <div class="pt-4 flex items-center">
                             <div class="w-12 h-12 relative mb-4">
                                 <div class="w-full h-full bg-gray-700 rounded-full overflow-hidden shadow-inner text-center bg-purple table">
-                                    <span class="table-cell text-white font-bold align-middle">R</span>
+                                    <span class="table-cell text-white font-bold align-middle">{{ $reserve->name[0] }}</span>
                                 </div>
                             </div>
                             <div class="ml-4">
@@ -35,7 +35,7 @@
                     </div>
                     <div>
                         <div class="pt-4">
-                            <label for="email" class="my-form-label">
+                            <label for="amount" class="my-form-label">
                             Amount
                             </label>
                             <input type="text" name="amount" value="{{ old('amount') }}" autocomplete="off" required class="w-full 
@@ -47,10 +47,10 @@
                                 @enderror
                         </div>
                     </div>
-                    <input type="hidden" name="userId" value="{{Auth::id()}}"/>
+                    <!-- input type="hidden" name="reserve_id" value="{{$reserve->id}}"/ -->
                 </div>
                 <div class="flex justify-between px-4 py-3 bg-gray-50 sm:px-6">
-                    <button type="submit" formaction="/admin/reserve/deduct/funds" class="inline-flex justify-center py-2 px-4 mr-2 my-btn border-gray-300 text-gray-700 bg-gray-50 hover:border-primary-500 hover:bg-primary-500 focus:ring-primary-800">
+                    <button type="submit" formaction="/admin/funds-reserve/deduct/funds" class="inline-flex justify-center py-2 px-4 mr-2 my-btn border-gray-300 text-gray-700 bg-gray-50 hover:border-primary-500 hover:bg-primary-500 focus:ring-primary-800">
                         <svg class="mr-1 flex-shrink-0 h-5 w-5" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 13l-5 5m0 0l-5-5m5 5V6" />
                         </svg>

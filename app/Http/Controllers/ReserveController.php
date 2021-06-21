@@ -2,30 +2,44 @@
 
 namespace App\Http\Controllers;
 
-use App\Model\Reserve;
-use App\Model\ReserveRecord;
+use App\Models\Reserve;
+use App\Models\ReserveRecord;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\ReserveCreationRequest;
-use App\Http\Requests\ReserveDeductionRequest;
-use App\Http\Requests\ReserveIncrementRequest;
+use App\Http\Requests\Admin\CreditReserveRequest;
+use App\Http\Requests\Admin\DeductReserveRequest;
 
 class ReserveController extends Controller
 {
+    private static $retryAttempts = 50;
     //USE DEDICATED Request
-    /*public function create(ReserveCreationRequest $request){
+    public function create(ReserveCreationRequest $request){
         Reserve::create($request->name);
-    }*/
-    public function deduct(ReserveDeductionRequest $request){
-        //transaction
-        $amount = $request->amount;
+    }
+
+    public function editReserve(){
+        $reserve = Reserve::first();
+        return view('admin.edit-reserve', compact('reserve'));
+    }
+
+    public function creditReserve(CreditReserveRequest $request){
+        $data = $request->validated();
+        $this->increment($data['amount']);
+        return redirect('/admin/funds-reserve')->with('status', 'Reserve has been incremented.');
+    }
+
+    public function deductFromReserve(DeductReserveRequest $request){
+        $data = $request->validated();
+        $this->deduct($data['amount']);
+        return redirect('/admin/funds-reserve')->withErrors('Reserve has been decremented.');
+    }
+
+    public function deduct($amount){
         DB::transaction(function() use ($amount) {
             $reserve = Reserve::find(1);
-            $userFunds = DB::table('funds')->where('user_id', Auth::id())->first();
-            //--
             $reserve->decrement('amount', $amount);
-            $userFunds->increment('amount', $amount);
             //
             $reserve->recordEvent([
                 'reserve_id' => 1, 
@@ -33,12 +47,10 @@ class ReserveController extends Controller
                 'event' => ReserveRecord::Deduction, 
                 'amount' => $amount
             ]);
-        });
+        }, self::$retryAttempts);
     }
 
-    public function increment(ReserveIncrementRequest $request){
-        //transaction
-        $amount = $request->amount;
+    public function increment($amount){
         DB::transaction(function() use ($amount) {
             $reserve = Reserve::find(1);
             $reserve->increment('amount', $amount);
@@ -49,6 +61,6 @@ class ReserveController extends Controller
                 'event' => ReserveRecord::Increment, 
                 'amount' => $amount
             ]);
-        });
+        }, self::$retryAttempts);
     }
 }

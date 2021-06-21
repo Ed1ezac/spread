@@ -27,7 +27,7 @@
                 </svg>
                 <div class="ml-3">
                     <p class="text-sm font-headings uppercase tracking-wider font-bold ">
-                        RECIPIENTS
+                        Recipients
                     </p>
                 </div>
             </a>
@@ -37,7 +37,7 @@
                 </svg>
                 <div class="ml-3">
                     <p class="text-sm font-headings uppercase tracking-wider font-bold">
-                        STATISTICS
+                        Statistics
                     </p>
                 </div>
             </a>

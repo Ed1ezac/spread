@@ -41,11 +41,8 @@ export default {
             csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content')  
         }
     },
-    mounted(){
-        console.log(this.userId)
-    },
     props:{
-        userId: String,
+        userId: Number,
     }, 
     components:{
         Menu, 

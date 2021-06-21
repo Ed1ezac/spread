@@ -14,6 +14,7 @@ class FundsController extends Controller
 
     public function __construct(FundsProcessing $fundsProcessor)
     {
+        $this->middleware('auth');
         $this->fundsProcessor = $fundsProcessor;
     }
 
