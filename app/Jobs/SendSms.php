@@ -6,6 +6,7 @@ use Exception;
 use Throwable;
 use App\Models\Sms;
 use App\Models\Funds;
+use App\Helpers\Orange;
 use App\Traits\Trackable;
 use App\Traits\FlagsAbortion;
 use App\Models\RecipientList;
@@ -26,9 +27,10 @@ class SendSms implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, 
         SerializesModels, Trackable, FlagsAbortion;
-    public $deleteWhenMissingModels = true; 
+    public $deleteWhenMissingModels = true;
 
     public $sms;
+    private $orange;
     private $recipients;
     private $fundsProcessor;
 
@@ -47,6 +49,7 @@ class SendSms implements ShouldQueue
         try{
             $this->verifySufficientFunds();
             $this->jobStatus->markAsExecuting();
+            //$this->prepareOrangeApi();
 
             $this->performRollout();
             
@@ -69,8 +72,7 @@ class SendSms implements ShouldQueue
             $spreadsheet = FileProcessing::loadFile($reader, $this->recipients->file_path);
             //validate entries
             $this->validateAndSendSms($spreadsheet->getActiveSheet());
-        }
-        
+        }  
     }
 
     private function validateAndSendSms($worksheet){
@@ -98,6 +100,31 @@ class SendSms implements ShouldQueue
         $this->setFrequency($this->progressMax);
     }
 
+    private function prepareOrangeApi(){
+        $config = array(
+            'clientId' => env('ORANGE_CLIENT_ID'),
+            'clientSecret' => env('ORANGE_CLIENT_SECRET'),
+        );
+        if($this->hasRequestedToken()){
+            $this->orange = new Orange($config);
+        }else{
+            //fail --- retry later
+        }
+    }
+
+    private function hasRequestedToken(){
+        $trials = 30;
+        while($trials > 0){
+            $response = $this->orange->getTokenFromConsumerKey();
+            if (empty($response['error'])) {
+                //success
+                break;
+            }
+            $trials--;
+        }
+        return $trials>0;
+    }
+
     private function verifySufficientFunds(){    
         if(!($this->fundsProcessor
             ->hasSufficientFunds($this->sms->user_id, 
@@ -117,9 +144,18 @@ class SendSms implements ShouldQueue
     }
 
     private function sendMessageTo(String $number){
-        //sms API logic here
-        //usleep(10000);//10 millis
-        //sleep(1);
+        /*
+        $this->orange->sendSms(
+            //..the sender
+            'tel:+267'.Orange::API_NUMBER,
+            //..the reciever
+            'tel:+267'.substr($number, -8),
+            //..the message
+            $this->sms->message
+            //..the sender
+            $this->sms->sender
+        );
+        */
     }
 
     private function reportProgress(){ 
@@ -141,5 +177,4 @@ class SendSms implements ShouldQueue
             $this->fundsProcessor->decrementUserFunds($this->sms->user_id, $this->progressNow);
         }
     }
-
 }
