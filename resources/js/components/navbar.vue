@@ -161,13 +161,13 @@
                         </p>
                     </div>
                 </a>
-                <a href="/admin/commands" v-bind:class="currentAdminUrl == 'commands' ? 'bg-primary-400 text-white' : 'text-gray-100 hover:bg-primary-300 hover:text-accent-900'" class="my-sidebar-nav-link">
+                <a href="/admin/files" v-bind:class="currentAdminUrl == 'files' ? 'bg-primary-400 text-white' : 'text-gray-100 hover:bg-primary-300 hover:text-accent-900'" class="my-sidebar-nav-link">
                     <svg class="flex-shrink-0 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" :stroke-width="currentAdminUrl == 'commands' ? 2:1" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" :stroke-width="currentAdminUrl == 'files' ? 2:1" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                     </svg>
                     <div class="ml-3">
                         <p class="text-sm font-headings uppercase tracking-wider font-bold">
-                            Commands
+                            Files
                         </p>
                     </div>
                 </a>

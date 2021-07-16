@@ -15,10 +15,10 @@ class Sms extends Model
      *  as possible entries
      */
     const Draft = 'draft';
-    const Pending = 'pending';
     const Sent = 'sent';
     const Failed = 'failed';
     const Aborted = 'aborted';
+    const Pending = 'pending';
     
     protected $fillable = [
         'sender', 'message', 'status',

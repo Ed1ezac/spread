@@ -22,7 +22,10 @@
                 </div>
             </div>
             <div class="flex mt-1 font-bold px-1 justify-between">
-                <h3 class="text-gray-700 text-xs">{{current}}</h3>
+                <div class="flex">
+                    <h3 class="text-gray-700 text-xs">{{current}}</h3>
+                    <h3 class="text-gray-700 ml-4 text-xs">{{sendingRate + ' sms/sec'}}</h3>
+                </div>
                 <h3 class="text-gray-700 text-xs">{{total}}</h3>
             </div>
         </div>
@@ -76,6 +79,7 @@ export default {
             total: undefined,
             current: undefined,
             smsId: undefined,
+            sendingRate: 0,
             smsSender: '',
             smsMessage: '',
             recipientsName: '',
@@ -147,6 +151,7 @@ export default {
                 this.current = e.current;
                 this.smsSender = e.smsSender;
                 this.smsMessage = e.smsMessage;
+                this.sendingRate = e.sendingRate;
                 this.recipientsName = e.smsRecipients;
             })
             .listen('RolloutComplete', (e) =>{

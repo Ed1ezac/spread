@@ -56,7 +56,7 @@ Route::post('/recipients/item/delete', [RecipientListController::class, 'deleteL
 Route::post('/recipients/add', [RecipientListController::class, 'create'])->name('upload-list');
 //stats
 Route::get('/statistics', [DashboardController::class, 'statistics']);
-Route::get('/statistics/view/sms/{id}', [SMSController::class, 'viewSms']);
+Route::get('/statistics/view/sms/{id?}', [SMSController::class, 'viewSms']);
 
 Route::group(['prefix' =>'admin', 'middleware' =>'admin'], function () {
     //admin privileged
@@ -77,8 +77,8 @@ Route::group(['prefix' =>'admin', 'middleware' =>'admin'], function () {
     Route::post('/user/add/role', [AdminController::class, 'assignRole']);
     Route::post('/user/remove/role', [AdminController::class, 'removeRole']);
     //tasks
-    Route::get('/commands', [AdminController::class, 'commands']);
+    Route::get('/files', [AdminController::class, 'files']);
     Route::get('/rollout-tasks', [AdminController::class, 'tasks']);
-    
+    Route::get('/rollout-tasks/view/task/{id?}', [AdminController::class, 'viewTask']);
 });
 Route::get('/user/challenge/admin/get-role', [AdminController::class, 'createFirstSuperAdmin'])->middleware('auth');

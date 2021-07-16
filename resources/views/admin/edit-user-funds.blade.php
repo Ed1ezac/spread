@@ -35,7 +35,7 @@
                     </div>
                     <div>
                         <div class="pt-4">
-                            <label for="email" class="my-form-label">
+                            <label for="amount" class="my-form-label">
                             Amount
                             </label>
                             <input type="text" name="amount" value="{{ old('amount') }}" autocomplete="off" required class="w-full 

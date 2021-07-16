@@ -40,7 +40,7 @@
               @foreach ($history as $sms)
               <tr>
                 <td class="px-6 py-4 max-w-xs whitespace-nowrap">
-                  <div class="text-sm truncate ">
+                  <div class="text-sm truncate">
                   <a href="{{'/statistics/view/sms/'.$sms->id}}" class="text-gray-500 hover:underline font-medium hover:text-accent-800">{{$sms->message}}</a>
                   </div>
                 </td>

@@ -4,8 +4,10 @@ namespace App\Jobs;
 
 use Exception;
 use Throwable;
+use Carbon\Carbon;
 use App\Models\Sms;
 use App\Models\Funds;
+use App\Helpers\Orange;
 use App\Traits\Trackable;
 use App\Traits\FlagsAbortion;
 use App\Models\RecipientList;
@@ -26,11 +28,15 @@ class SendSms implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, 
         SerializesModels, Trackable, FlagsAbortion;
-    public $deleteWhenMissingModels = true; 
+    public $deleteWhenMissingModels = true;
 
     public $sms;
+    private $orange;
     private $recipients;
+    private $sendingRate;
+    private $startingTime;
     private $fundsProcessor;
+    private $reportFrequency;
 
     public function __construct(Sms $sms, RecipientList $list)
     {
@@ -43,10 +49,12 @@ class SendSms implements ShouldQueue
     {
         $this->startTracking($this, $this->sms);
         $this->setProgressMax($this->recipients->entries);
+        $this->setReportFrequency();
         $this->prepareSmsStatusPolling();
         try{
             $this->verifySufficientFunds();
             $this->jobStatus->markAsExecuting();
+            //$this->prepareOrangeApi();
 
             $this->performRollout();
             
@@ -58,30 +66,40 @@ class SendSms implements ShouldQueue
         }
     }
 
+    private function setReportFrequency(){
+        if($this->progressMax > 100){
+            $temp = 0.01 * $this->progressMax;
+            $this->reportFrequency = intval($temp);
+            $temp = null;
+        }else{
+            $this->reportFrequency = 1;
+        }
+    }
+
     private function performRollout(){
         $chunkFilter = new FileChunkReadFilter();
         $reader = FileProcessing::createReader($this->recipients->file_extension);
         $maxRows = FileProcessing::getMaxRowSnapShot($reader, $this->recipients->file_path);
         $reader->setReadFilter($chunkFilter);
-
+        $this->startingTime = Carbon::now();
         for($startRow = 1; $startRow <= $maxRows; $startRow += FileChunkReadFilter::chunkSize) {
             $chunkFilter->setRows($startRow);
             $spreadsheet = FileProcessing::loadFile($reader, $this->recipients->file_path);
             //validate entries
             $this->validateAndSendSms($spreadsheet->getActiveSheet());
-        }
-        
+        }  
     }
 
     private function validateAndSendSms($worksheet){
         foreach($worksheet->getRowIterator() as $row) {
             $cellIterator = $row->getCellIterator();
-            $cellIterator->setIterateOnlyExistingCells(true);//only cells with data
+            $cellIterator->setIterateOnlyExistingCells(true);
+            //only cells with data
             foreach($cellIterator as $cell) {
                 if(FileProcessing::isValidBwNumber(strval($cell->getValue()))){
                     $this->sendMessageTo(strval($cell->getValue()));
                     $this->incrementProgress();
-                    $this->reportProgress();
+                    $this->reportProgress($this->reportFrequency);
                 }
                
                 if($this->progressNow <= $this->abortionThreshHold){
@@ -96,6 +114,31 @@ class SendSms implements ShouldQueue
     private function prepareSmsStatusPolling(){
         $this->setAbortionThreshHold($this->progressMax);
         $this->setFrequency($this->progressMax);
+    }
+
+    private function prepareOrangeApi(){
+        $config = array(
+            'clientId' => env('ORANGE_CLIENT_ID'),
+            'clientSecret' => env('ORANGE_CLIENT_SECRET'),
+        );
+        if($this->hasRequestedToken()){
+            $this->orange = new Orange($config);
+        }else{
+            //fail --- retry later
+        }
+    }
+
+    private function hasRequestedToken(){
+        $trials = 30;
+        while($trials > 0){
+            $response = $this->orange->getTokenFromConsumerKey();
+            if (empty($response['error'])) {
+                //success
+                break;
+            }
+            $trials--;
+        }
+        return $trials>0;
     }
 
     private function verifySufficientFunds(){    
@@ -117,23 +160,42 @@ class SendSms implements ShouldQueue
     }
 
     private function sendMessageTo(String $number){
-        //sms API logic here
-        //usleep(10000);//10 millis
-        //sleep(1);
+        /*
+        $this->orange->sendSms(
+            //..the sender
+            'tel:+267'.Orange::API_NUMBER,
+            //..the reciever
+            'tel:+267'.substr($number, -8),
+            //..the message
+            $this->sms->message
+            //..the sender
+            $this->sms->sender
+        );
+        */
     }
 
-    private function reportProgress(){ 
-        $jobInfo = [ 
-            'smsId' => $this->sms->id,
-            'userId' => $this->sms->user_id,
-            'total' => $this->progressMax,
-            'current' => $this->progressNow,
-            'smsSender' => $this->sms->sender,
-            'smsMessage' => $this->sms->message,
-            'smsRecipientsName' => $this->recipients->name,
-        ];
-        //dispatch progress event
-        ReportProgress::dispatch($jobInfo);
+    private function reportProgress($every){
+        if($this->progressNow % $every === 0 || $this->progressNow === $this->progressMax){ 
+            $this->calculateCurrentSendingRate();
+            $jobInfo = [ 
+                'smsId' => $this->sms->id,
+                'userId' => $this->sms->user_id,
+                'total' => $this->progressMax,
+                'current' => $this->progressNow,
+                'smsSender' => $this->sms->sender,
+                'smsMessage' => $this->sms->message,
+                'sendingRate' => $this->sendingRate,
+                'smsRecipientsName' => $this->recipients->name,
+            ];
+            //dispatch progress event
+            ReportProgress::dispatch($jobInfo);
+        }
+    }
+
+    private function calculateCurrentSendingRate(){
+        //sent-items/time
+        $rate = ($this->progressNow/$this->startingTime->diffInSeconds());
+        $this->sendingRate = intval($rate);
     }
 
     private function billUser(){
@@ -141,5 +203,4 @@ class SendSms implements ShouldQueue
             $this->fundsProcessor->decrementUserFunds($this->sms->user_id, $this->progressNow);
         }
     }
-
 }
