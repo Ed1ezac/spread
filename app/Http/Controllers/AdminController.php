@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Reserve;
 use App\Models\JobStatus;
 use Illuminate\Http\Request;
+use App\Models\RecipientList;
 use App\Helpers\FundsProcessing;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\DB;
@@ -52,8 +53,14 @@ class AdminController extends Controller
     }
 
     public function smses(){
-        $smses = Sms::paginate(7);
-        return view('admin.smses', compact('smses'));
+        $allSmses = Sms::count();
+        $drafts = Sms::where('status','draft')->count();
+        $sentSmses = Sms::where('status','sent')->count();
+        $failedSmses = Sms::where('status','failed')->count();
+        $abortedSmses = Sms::where('status','aborted')->count();
+        $pendingSmses = Sms::where('status','pending')->count();
+        $smses = Sms::latest()->paginate(7);
+        return view('admin.smses', compact('smses','drafts', 'allSmses','pendingSmses', 'sentSmses', 'failedSmses','abortedSmses'));
     }
 
     public function tasks(){
@@ -121,7 +128,9 @@ class AdminController extends Controller
     }
 
     public function files(){
-        return view('admin.files');
+        $allFiles = RecipientList::get()->count();
+        $files = RecipientList::where('status','processed')->paginate(8);
+        return view('admin.files', compact('files','allFiles'));
     }
 
     //-----------------
