@@ -194,7 +194,7 @@ class SendSms implements ShouldQueue
 
     private function calculateCurrentSendingRate(){
         //sent-items/time
-        $rate = ($this->progressNow/$this->startingTime->diffInSeconds());
+        $rate = ($this->progressNow/$this->startingTime->floatDiffInSeconds());
         $this->sendingRate = intval($rate);
     }
 
