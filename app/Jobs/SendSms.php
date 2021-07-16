@@ -33,6 +33,7 @@ class SendSms implements ShouldQueue
     private $orange;
     private $recipients;
     private $fundsProcessor;
+    private $reportFrequency;
 
     public function __construct(Sms $sms, RecipientList $list)
     {
@@ -45,6 +46,7 @@ class SendSms implements ShouldQueue
     {
         $this->startTracking($this, $this->sms);
         $this->setProgressMax($this->recipients->entries);
+        $this->setReportFrequency();
         $this->prepareSmsStatusPolling();
         try{
             $this->verifySufficientFunds();
@@ -58,6 +60,16 @@ class SendSms implements ShouldQueue
         }catch(Throwable $e){
             $this->beforeFail($e);
             $this->fail($e);
+        }
+    }
+
+    private function setReportFrequency(){
+        if($this->progressMax > 100){
+            $temp = 0.01 * $this->progressMax;
+            $this->reportFrequency = intval($temp);
+            $temp = null;
+        }else{
+            $this->reportFrequency = 1;
         }
     }
 
@@ -83,7 +95,7 @@ class SendSms implements ShouldQueue
                 if(FileProcessing::isValidBwNumber(strval($cell->getValue()))){
                     $this->sendMessageTo(strval($cell->getValue()));
                     $this->incrementProgress();
-                    $this->reportProgress();
+                    $this->reportProgress($this->reportFrequency);
                 }
                
                 if($this->progressNow <= $this->abortionThreshHold){
@@ -158,18 +170,20 @@ class SendSms implements ShouldQueue
         */
     }
 
-    private function reportProgress(){ 
-        $jobInfo = [ 
-            'smsId' => $this->sms->id,
-            'userId' => $this->sms->user_id,
-            'total' => $this->progressMax,
-            'current' => $this->progressNow,
-            'smsSender' => $this->sms->sender,
-            'smsMessage' => $this->sms->message,
-            'smsRecipientsName' => $this->recipients->name,
-        ];
-        //dispatch progress event
-        ReportProgress::dispatch($jobInfo);
+    private function reportProgress($every){
+        if($this->progressNow % $every === 0 || $this->progressNow === $this->progressMax){ 
+            $jobInfo = [ 
+                'smsId' => $this->sms->id,
+                'userId' => $this->sms->user_id,
+                'total' => $this->progressMax,
+                'current' => $this->progressNow,
+                'smsSender' => $this->sms->sender,
+                'smsMessage' => $this->sms->message,
+                'smsRecipientsName' => $this->recipients->name,
+            ];
+            //dispatch progress event
+            ReportProgress::dispatch($jobInfo);
+        }
     }
 
     private function billUser(){
