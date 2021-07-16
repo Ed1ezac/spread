@@ -1,7 +1,7 @@
 @extends('layouts.admin-header')
 
 @section('features')
-    <div>
+    <div class="mb-8">
         @if(isset($history) && count($history)>0)
         <div class="mr-4 xl:mr-6 mt-8 xl:mt-10 mb-8">
             <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">

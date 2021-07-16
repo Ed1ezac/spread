@@ -17,7 +17,7 @@ class ReportProgress implements ShouldBroadcast{
     public $queue = 'reports';
 
     public $userId;
-    public $total, $current;
+    public $total, $current, $sendingRate;
     public $smsId, $smsSender, $smsMessage, $smsRecipients;
 
     public function __construct(array $jobInfo)
@@ -28,6 +28,7 @@ class ReportProgress implements ShouldBroadcast{
         $this->current = $jobInfo['current'];
         $this->smsSender = $jobInfo['smsSender'];
         $this->smsMessage = $jobInfo['smsMessage'];
+        $this->sendingRate = $jobInfo['sendingRate'];
         $this->smsRecipients = $jobInfo['smsRecipientsName'];
     }
 

@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use Exception;
 use Throwable;
+use Carbon\Carbon;
 use App\Models\Sms;
 use App\Models\Funds;
 use App\Helpers\Orange;
@@ -32,6 +33,8 @@ class SendSms implements ShouldQueue
     public $sms;
     private $orange;
     private $recipients;
+    private $sendingRate;
+    private $startingTime;
     private $fundsProcessor;
     private $reportFrequency;
 
@@ -78,7 +81,7 @@ class SendSms implements ShouldQueue
         $reader = FileProcessing::createReader($this->recipients->file_extension);
         $maxRows = FileProcessing::getMaxRowSnapShot($reader, $this->recipients->file_path);
         $reader->setReadFilter($chunkFilter);
-
+        $this->startingTime = Carbon::now();
         for($startRow = 1; $startRow <= $maxRows; $startRow += FileChunkReadFilter::chunkSize) {
             $chunkFilter->setRows($startRow);
             $spreadsheet = FileProcessing::loadFile($reader, $this->recipients->file_path);
@@ -90,7 +93,8 @@ class SendSms implements ShouldQueue
     private function validateAndSendSms($worksheet){
         foreach($worksheet->getRowIterator() as $row) {
             $cellIterator = $row->getCellIterator();
-            $cellIterator->setIterateOnlyExistingCells(true);//only cells with data
+            $cellIterator->setIterateOnlyExistingCells(true);
+            //only cells with data
             foreach($cellIterator as $cell) {
                 if(FileProcessing::isValidBwNumber(strval($cell->getValue()))){
                     $this->sendMessageTo(strval($cell->getValue()));
@@ -172,6 +176,7 @@ class SendSms implements ShouldQueue
 
     private function reportProgress($every){
         if($this->progressNow % $every === 0 || $this->progressNow === $this->progressMax){ 
+            $this->calculateCurrentSendingRate();
             $jobInfo = [ 
                 'smsId' => $this->sms->id,
                 'userId' => $this->sms->user_id,
@@ -179,11 +184,18 @@ class SendSms implements ShouldQueue
                 'current' => $this->progressNow,
                 'smsSender' => $this->sms->sender,
                 'smsMessage' => $this->sms->message,
+                'sendingRate' => $this->sendingRate,
                 'smsRecipientsName' => $this->recipients->name,
             ];
             //dispatch progress event
             ReportProgress::dispatch($jobInfo);
         }
+    }
+
+    private function calculateCurrentSendingRate(){
+        //sent-items/time
+        $rate = ($this->progressNow/$this->startingTime->diffInSeconds());
+        $this->sendingRate = intval($rate);
     }
 
     private function billUser(){
