@@ -58,8 +58,14 @@ class AdminController extends Controller
 
     public function tasks(){
         $history = JobStatus::where('queue', '!=','uploads')->latest()->paginate(8);
-
         return view('admin.tasks', compact('history'));
+    }
+
+    public function viewTask($id){
+        $task = JobStatus::find($id);
+        $user = User::find($task->user_id);
+        $sms = Sms::find($task->trackable_id);
+        return view('admin.view-rollout-task', compact('task', 'user', 'sms'));
     }
 
     public function users(){
@@ -114,8 +120,8 @@ class AdminController extends Controller
             ->with('status', $user->name.' is no longer a '.$data['role'].'.');
     }
 
-    public function commands(){
-        return view('admin.commands');
+    public function files(){
+        return view('admin.files');
     }
 
     //-----------------

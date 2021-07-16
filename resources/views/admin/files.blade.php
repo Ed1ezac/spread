@@ -8,5 +8,5 @@
             @endif
         @endforeach
     @endif
-    <div>Start Queue Workers here.</div>
+    <div>File details Workers here.</div>
 @endsection    

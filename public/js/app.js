@@ -22489,7 +22489,7 @@ var _hoisted_10 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(
   "class": "ml-3"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("p", {
   "class": "text-sm font-headings uppercase tracking-wider font-bold"
-}, " Commands ")], -1
+}, " Files ")], -1
 /* HOISTED */
 );
 
@@ -22563,13 +22563,13 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   , ["stroke-width"])])), _hoisted_8], 2
   /* CLASS */
   ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("a", {
-    href: "/admin/commands",
-    "class": [$props.currentUrl == 'commands' ? 'bg-primary-400 text-white' : 'text-gray-100 hover:bg-primary-300 hover:text-accent-900', "my-sidebar-nav-link"]
+    href: "/admin/files",
+    "class": [$props.currentUrl == 'files' ? 'bg-primary-400 text-white' : 'text-gray-100 hover:bg-primary-300 hover:text-accent-900', "my-sidebar-nav-link"]
   }, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)("svg", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("path", {
     "stroke-linecap": "round",
     "stroke-linejoin": "round",
-    "stroke-width": $props.currentUrl == 'commands' ? 2 : 1,
-    d: "M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+    "stroke-width": $props.currentUrl == 'files' ? 2 : 1,
+    d: "M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
   }, null, 8
   /* PROPS */
   , ["stroke-width"])])), _hoisted_10], 2
@@ -22847,7 +22847,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_MenuButton, {
         type: "button",
-        "class": "relative z-10 flex text-sm focus:outline-none focus:ring-0",
+        "class": "relative z-5 flex text-sm focus:outline-none focus:ring-0",
         id: "options-menu",
         "aria-expanded": "false",
         "aria-haspopup": "true"
@@ -22868,7 +22868,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       }, {
         "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
           return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_MenuItems, {
-            "class": "absolute right-0 w-28 mr-3 origin-bottom-right rounded-sm bg-primary-100 border border-primary-300 shadow-lg outline-none"
+            "class": "absolute z-15 right-0 w-28 mr-3 origin-bottom-right rounded-sm bg-primary-100 border border-primary-300 shadow-lg outline-none"
           }, {
             "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
               return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_MenuItem, null, {
@@ -23698,7 +23698,7 @@ var _hoisted_36 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(
   "class": "ml-3"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("p", {
   "class": "text-sm font-headings uppercase tracking-wider font-bold"
-}, " Commands ")], -1
+}, " Files ")], -1
 /* HOISTED */
 );
 
@@ -24058,13 +24058,13 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   , ["stroke-width"])])), _hoisted_34], 2
   /* CLASS */
   ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("a", {
-    href: "/admin/commands",
-    "class": [$props.currentAdminUrl == 'commands' ? 'bg-primary-400 text-white' : 'text-gray-100 hover:bg-primary-300 hover:text-accent-900', "my-sidebar-nav-link"]
+    href: "/admin/files",
+    "class": [$props.currentAdminUrl == 'files' ? 'bg-primary-400 text-white' : 'text-gray-100 hover:bg-primary-300 hover:text-accent-900', "my-sidebar-nav-link"]
   }, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)("svg", _hoisted_35, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("path", {
     "stroke-linecap": "round",
     "stroke-linejoin": "round",
-    "stroke-width": $props.currentAdminUrl == 'commands' ? 2 : 1,
-    d: "M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+    "stroke-width": $props.currentAdminUrl == 'files' ? 2 : 1,
+    d: "M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
   }, null, 8
   /* PROPS */
   , ["stroke-width"])])), _hoisted_36], 2
