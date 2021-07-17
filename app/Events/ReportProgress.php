@@ -3,18 +3,17 @@
 namespace App\Events;
 
 use App\Models\Sms;
-//use App\Models\User;
 use Illuminate\Broadcasting\Channel;
-use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
-use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
-use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Broadcasting\PresenceChannel;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
-class ReportProgress implements ShouldBroadcast{
+
+class ReportProgress implements ShouldBroadcastNow{
     use Dispatchable, InteractsWithSockets, SerializesModels;
-    public $queue = 'reports';
 
     public $userId;
     public $total, $current, $sendingRate;
