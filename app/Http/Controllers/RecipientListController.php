@@ -38,6 +38,7 @@ class RecipientListController extends Controller
             'entries' => 0,
             'status' => RecipientList::Pending,
             'file_extension' => $request->file('data-file')->extension(),
+            'file_size'=> $request->file('data-file')->getSize(),
             'file_path' => $path,
         ]);
         
@@ -75,7 +76,7 @@ class RecipientListController extends Controller
                 $list->update(['status' => RecipientList::Processed]);
                 FileProcessingComplete::dispatch($list);
             },
-        ])->onQueue('uploads')->delay(now()->addSeconds(6))->dispatch();
+        ])->onQueue('fileprocessing')->delay(now()->addSeconds(6))->dispatch();
     }
 
     public function deleteList(Request $request){

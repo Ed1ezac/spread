@@ -20,6 +20,7 @@ class CreateRecipientListsTable extends Migration
             $table->enum('status', ['processed', 'pending', 'invalid']);
             $table->unsignedBigInteger('user_id');
             $table->string('file_extension');
+            $table->unsignedBigInteger('file_size');
             $table->string('file_path');
             $table->timestamps();
         });
