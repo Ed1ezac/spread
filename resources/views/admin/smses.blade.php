@@ -113,6 +113,7 @@
         
     </div>
     
+    @if(isset($smses) && count($smses)>0)
     <div class="m-2 mb-8 text-sm">
         <div class="mr-4 xl:mr-6 mt-8 xl:mt-10">
             <div class="-my-2 sm:-mx-6 lg:-mx-8">
@@ -196,6 +197,7 @@
             </div>
         </div>
     </div>
+    @endif
 @endsection
 
 @push('page-js')
