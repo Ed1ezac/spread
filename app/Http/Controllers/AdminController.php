@@ -128,9 +128,10 @@ class AdminController extends Controller
     }
 
     public function files(){
+        $files = RecipientList::paginate(8);
         $allFiles = RecipientList::get()->count();
-        $files = RecipientList::where('status','processed')->paginate(8);
-        return view('admin.files', compact('files','allFiles'));
+        $totalSize = RecipientList::sum('file_size'); 
+        return view('admin.files', compact('files','allFiles','totalSize'));
     }
 
     //-----------------
