@@ -122,7 +122,7 @@
                                             @if($file->file_size >= 1048576)
                                                 {{ number_format($file->file_size / 1048576, 2).' MB'}}
                                             @elseif($file->file_size >= 1024)
-                                                {{ number_format($file->file_size / 1024, 2).' B'}}
+                                                {{ number_format($file->file_size / 1024, 2).' KB'}}
                                             @elseif( $file->file_size > 1))
                                                 {{ $file->file_size.' B'}}
                                             @else

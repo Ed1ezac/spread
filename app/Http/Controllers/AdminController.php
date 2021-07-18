@@ -64,7 +64,7 @@ class AdminController extends Controller
     }
 
     public function tasks(){
-        $history = JobStatus::where('queue', '!=','uploads')->latest()->paginate(8);
+        $history = JobStatus::where('queue', '!=','fileprocessing')->latest()->paginate(8);
         return view('admin.tasks', compact('history'));
     }
 
