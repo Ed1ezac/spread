@@ -8,6 +8,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\FundsController;
 use App\Http\Controllers\ReserveController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\SenderNamesController;
 use App\Http\Controllers\RecipientListController;
 
 /*
@@ -30,6 +31,8 @@ Route::get('/learn-more', [SiteController::class, 'learnMore']);
 Route::get('/settings', [UserController::class, 'userSettings']);
 Route::post('/settings/update/security', [UserController::class, 'updateSecurity']);
 Route::post('/settings/update/personal-info', [UserController::class, 'updatePersonalInfo']);
+Route::get('/settings/register/new/sender-name', [SenderNamesController::class, 'registerName']);
+Route::post('/settings/register/new/sender-name', [SenderNamesController::class,'createName'])->name('register-sender-name');
 //sms
 Route::get('/drafts', [DashboardController::class, 'drafts']);
 Route::get('/create', [DashboardController::class, 'create']);
@@ -67,7 +70,11 @@ Route::group(['prefix' =>'admin', 'middleware' =>'admin'], function () {
     Route::post('funds-reserve/credit/funds', [ReserveController::class, 'creditReserve']);
     Route::post('/funds-reserve/deduct/funds', [ReserveController::class, 'deductFromReserve']);
     //sms
-    Route::get('/smses', [AdminController::class, 'smses']);   
+    Route::get('/smses', [AdminController::class, 'smses']);
+    //orange-info
+    Route::get('/orange-info', [AdminController::class, 'orangeInfo']);
+    Route::get('/orange-info/test-sms', [AdminController::class, 'testSms']);
+    Route::post('/send/test-sms', [AdminController::class, 'sendTestSms']);
     //users
     Route::get('/users', [AdminController::class, 'users']);
     Route::get('/users/user/{id?}/edit/funds', [AdminController::class, 'editUserFunds']);
