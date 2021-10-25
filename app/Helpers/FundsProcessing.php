@@ -15,8 +15,8 @@ class FundsProcessing{
     private static $retryDecrementAttempts = 5;
 
     /**
-    * The assumption is that a different user can be authenticated
-    * at the point of purchase/deduction so we need to explicitly pass the
+    * The assumption is that a different user can be malicious
+    * at the purchase/deduction so we need to explicitly pass the
     * ID of the User that should be billed.||thats probably wrong tho...
     **/
     public function hasSufficientFunds($userId, $minimum){
