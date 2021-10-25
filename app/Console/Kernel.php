@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Helpers\TokenPuller;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -24,7 +25,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        //->everyFiveMinutes();
+        $schedule->call(new TokenPuller)
+                ->everyFifteenMinutes()
+                ->between("05:30", "23:30");
     }
 
     /**
