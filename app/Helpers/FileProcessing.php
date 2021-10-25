@@ -12,7 +12,7 @@ class FileProcessing{
      * https://phpspreadsheet.readthedocs.io/en/latest/
      **/
     //Bw Number regex pattern
-    private static $pattern = "/^(?=^.{8}$)(?=^7[1-7])(?=.*\d{6}$)/";
+    private static $pattern = "/^(?=^.{8}$)(?=^7[1-8])(?=.*\d{6}$)/";
     private static $map = [];
 
     public static function createReader($fileExtension){
