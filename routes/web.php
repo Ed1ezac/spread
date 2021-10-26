@@ -27,6 +27,8 @@ Route::get('/faqs', [SiteController::class, 'faqs']);
 Route::get('/terms', [SiteController::class, 'terms']);
 Route::get('/privacy', [SiteController::class, 'privacy']);
 Route::get('/learn-more', [SiteController::class, 'learnMore']);
+
+Route::middleware(['auth'])->group(function () {
 //user
 Route::get('/settings', [UserController::class, 'userSettings']);
 Route::post('/settings/update/security', [UserController::class, 'updateSecurity']);
@@ -60,7 +62,9 @@ Route::post('/recipients/add', [RecipientListController::class, 'create'])->name
 //stats
 Route::get('/statistics', [DashboardController::class, 'statistics']);
 Route::get('/statistics/view/sms/{id?}', [SMSController::class, 'viewSms']);
+});
 
+//----Administration-----
 Route::group(['prefix' =>'admin', 'middleware' =>'admin'], function () {
     //admin privileged
     Route::get('/funds-reserve', [AdminController::class, 'reserve']);
