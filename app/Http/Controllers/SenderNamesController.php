@@ -31,9 +31,35 @@ class SenderNamesController extends Controller
 
     }
 
-    public function updateName(){
-        ///
+    //-------Admin Routes
+    public function getNames(){
+        $senderNames = SenderName::latest()->paginate(7);
+        return view('admin.sender-names', compact('senderNames'));
+    }
 
+    public function senderNameDetails($id){
+        $senderName = SenderName::find($id);
+
+        return view('admin.edit-sender-name', compact('senderName'));
+    }
+
+
+    public function updateStatus(Request $request){
+        //
+        $name = SenderName::find($request->input('sender_name_id'));
+        if($name->status == SenderName::Pending){
+            $name->update(['status' => SenderName::Approved]);
+        }else{
+            $name->update(['status' => SenderName::Pending]); 
+        }
+        return back()->with('status', 'The Sender name has been updated successfully.');
+    }
+
+    public function rejectName(Request $request){
+        $name = SenderName::find($request->input('sender_name_id'));
+        $name->update(['status' => SenderName::Rejected]);
+
+        return back()->withErrors('The Sender name has been rejected!');
     }
 
     public function deleteName(){

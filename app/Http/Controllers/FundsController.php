@@ -29,7 +29,6 @@ class FundsController extends Controller
             return back()->withErrors($validator);
         }
         $this->fundsProcessor->incrementUserFunds(Auth::id(), $request->quantity);
-        
         return redirect('/funds')->with('status', 'Funds purchased successfully.');
     }
 

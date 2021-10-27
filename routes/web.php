@@ -79,6 +79,11 @@ Route::group(['prefix' =>'admin', 'middleware' =>'admin'], function () {
     Route::get('/orange-info', [AdminController::class, 'orangeInfo']);
     Route::get('/orange-info/test-sms', [AdminController::class, 'testSms']);
     Route::post('/send/test-sms', [AdminController::class, 'sendTestSms']);
+    //senderName
+    Route::get('/sender-names', [SenderNamesController::class, 'getNames']);
+    Route::get('/sender-names/{id?}/details', [SenderNamesController::class, 'senderNameDetails']);
+    Route::post('sender-name/edit/status/positive', [SenderNamesController::class, 'updateStatus']);
+    Route::post('sender-name/edit/status/negative', [SenderNamesController::class, 'rejectName']);
     //users
     Route::get('/users', [AdminController::class, 'users']);
     Route::get('/users/user/{id?}/edit/funds', [AdminController::class, 'editUserFunds']);
