@@ -35,6 +35,7 @@ Route::post('/settings/update/security', [UserController::class, 'updateSecurity
 Route::post('/settings/update/personal-info', [UserController::class, 'updatePersonalInfo']);
 Route::get('/settings/register/new/sender-name', [SenderNamesController::class, 'registerName']);
 Route::post('/settings/register/new/sender-name', [SenderNamesController::class,'createName'])->name('register-sender-name');
+Route::post('/settings/delete/sender-name', [SenderNamesController::class, 'deleteName'])->name('delete-sender-name');
 //sms
 Route::get('/drafts', [DashboardController::class, 'drafts']);
 Route::get('/create', [DashboardController::class, 'create']);

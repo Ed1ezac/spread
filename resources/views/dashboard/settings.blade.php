@@ -10,7 +10,7 @@
     @if(isset($user))
         <div class="flex flex-wrap space-y-8">
             <!--personal-->
-            <div class="bg-white shadow-md mt-4 overflow-hidden w-full max-w-md mr-10 rounded-md">
+            <div class="bg-white shadow-md mt-8 overflow-hidden w-full max-w-md mr-10 rounded-md">
                 <h3 class="text-gray-700 text-lg flex justify-center font-medium mx-6 my-2">Personal Info</h3>
                 <form method="POST" action="/settings/update/personal-info">
                     @csrf
@@ -52,64 +52,123 @@
                     </div>
                 </form>
             </div>
+
             <!---Sender name reg--->
-            <div class="bg-white shadow-md mt-4 overflow-hidden w-full max-w-md mr-10 rounded-md">
+            <div class="bg-white shadow-md relative mt-4 overflow-hidden w-full max-w-md mr-10 rounded-md">
                 <h3 class="text-gray-700 text-lg flex justify-center font-medium mx-6 my-2">Sender Names</h3>
-                <p class="text-gray-500 italic text-sm flex justify-center">you can register up to 3 sender names.</p>
-                <form method="POST" action="/settings/create/sender-name">
-                    @csrf
-                    <div class="px-6 py-2 space-y-6 sm:p-6">
-                        <div>
-                            <div class="flex items-start">
+                @if(isset($senderNames) && count($senderNames)>0)
+                <p class="text-gray-500 py-2 italic text-sm flex justify-center">you can register up to 3 sender names.</p>
+                <div class="px-6 py-2 space-y-6 sm:p-6">
+                    @foreach($senderNames as $name)
+                    <div>
+                        <div class="flex justify-between">
+                            <div class="flex">
                                 <div class="flex items-center h-5">
+                                    @if($name->status == 'pending')
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
                                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z" clip-rule="evenodd" />
                                     </svg>
+                                    @elseif($name->status == ' approved')
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-accent-600" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                    </svg>
+                                    @else
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-accent-600" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                    </svg>
+                                    @endif
                                 </div>
-                                <div class="ml-3 text-sm">
-                                    <label for="comments" class="font-medium text-gray-700">CEDA</label>
+                                <div class="ml-3 text-sm font-medium text-gray-700">
+                                    {{$name->sender_name}}
+                                    @if($name->status == 'pending')
                                     <p class="text-gray-500 italic">pending review</p>
+                                    @endif
                                 </div>
                             </div>
-                        </div>
-                        <div>
-                            <div class="flex items-start">
-                                <div class="flex items-center h-5">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-accent-600" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                                    </svg>
-                                </div>
-                                <div class="ml-3 text-sm">
-                                    <label for="comments" class="font-medium text-gray-700">CEDA_INTERNAL</label>
-                                    
-                                </div>
+                            <div class="flex space-x-2 self-center">
+                                <form method="POST" action="{{ route('delete-sender-name') }}">
+                                    @csrf
+                                    <input type="hidden" name="id" value="{{ $name->id }}">
+                                    <button type="submit" class="text-gray-500 hover:text-red-500">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
+                                    </button>
+                                </form>
                             </div>
-                        </div>
-                        <div>
-                            <div class="flex items-start">
-                                <div class="flex items-center h-5">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-accent-600" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                                    </svg>
-                                </div>
-                                <div class="ml-3 text-sm">
-                                    <label for="comments" class="font-medium text-gray-700">Buffalo I.T</label>
-                                    
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            <a href="/settings/register/new/sender-name" class="group relative w-full flex justify-center py-2 px-4 mb-3 my-btn border-transparent bg-primary-500 hover:bg-primary-700 focus:outline-none focus:ring-primary-800">
-                                <span class="absolute left-0 inset-y-0 flex items-center pl-3">
-                                    <svg class="h-5 w-5 group-hover:text-indigo-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" />
-                                    </svg>
-                                </span>
-                                REGISTER NEW
-                            </a>
                         </div>
                     </div>
-                </form>
+                    @endforeach
+                    <div class=""><!-- absolute bottom-4 left-6 right-6 -->
+                    @if (count($senderNames) < 3)
+                    <a href="/settings/register/new/sender-name" class="group relative w-full flex justify-center py-2 px-4 mb-3 my-btn border-transparent bg-primary-500 hover:bg-primary-700 focus:outline-none focus:ring-primary-800">
+                        <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+                            <svg class="h-5 w-5 group-hover:text-indigo-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" />
+                            </svg>
+                        </span>
+                        REGISTER NEW
+                    </a>
+                    @endif
+                </div>
+                </div>
+                
+                @else
+                <div class="pl-6">
+                    <div class="text-gray-700 text-center">
+                        Register a sender name for free!
+                    </div>
+                    <div class="flex justify-between mt-2">
+                        <div class="space-y-6 mt-2">
+                            <div class="flex items-start">
+                                <div class="flex items-center h-5">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-accent-600" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div class="ml-3 text-sm font-medium text-gray-700">
+                                    Completely free of charge
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="flex items-center h-5">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-accent-600" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div class="ml-3 text-sm font-medium text-gray-700">
+                                    Proper brand identity on texts
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="flex items-center h-5">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-accent-600" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div class="ml-3 text-sm font-medium text-gray-700">
+                                    Up to 3 sender names per account
+                                </div>
+                            </div>
+                        </div>
+                        <div class="-mr-3 -mt-3 text-gray-400">
+                            <svg class="h-40 w-40" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="pr-6">
+                        <a href="/settings/register/new/sender-name" class="group relative w-full flex justify-center py-2 px-4 mb-3 my-btn border-transparent bg-primary-500 hover:bg-primary-700 focus:outline-none focus:ring-primary-800">
+                            <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+                                <svg class="h-5 w-5 group-hover:text-indigo-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" />
+                                </svg>
+                            </span>
+                            REGISTER NEW
+                        </a>
+                    </div>
+                </div>
+                @endif
             </div>
             <!-- notif --->
             <div class="bg-gray-50 shadow-md overflow-hidden w-full max-w-md mr-10 rounded-md">

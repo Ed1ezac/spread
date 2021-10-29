@@ -62,8 +62,14 @@ class SenderNamesController extends Controller
         return back()->withErrors('The Sender name has been rejected!');
     }
 
-    public function deleteName(){
+    public function deleteName(Request $request){
+        $name = SenderName::where([
+            ['user_id','=', Auth::id()],
+            ['id','=', $request->input('id')]
+        ])->first();
 
+        $name->delete();
+        return back()->withErrors('Sender Name deleted successfully!');
     }
 
 }
