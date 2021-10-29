@@ -26,7 +26,7 @@ class EmptyField implements Rule
     public function passes($attribute, $value)
     {
         //
-        return empty($value);
+        return !isset($value) || empty($value);
     }
 
     /**
