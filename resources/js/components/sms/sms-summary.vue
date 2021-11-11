@@ -54,7 +54,7 @@
                         ></Datepicker>
                         </div>
                         <div>
-                            <input type="time" :value="time" name="time" min="07:00" max="22:00" class="px-4 h-full text-xs border border-gray-300 rounded text-gray-500 font-semibold focus:border-gray-200 focus:ring-2 focus:ring-offset-0 focus:ring-accent-800"/>
+                            <input type="time" :value="time" name="time" min="07:00" max="19:00" class="px-4 h-full text-xs border border-gray-300 rounded text-gray-500 font-semibold focus:border-gray-200 focus:ring-2 focus:ring-offset-0 focus:ring-accent-800"/>
                         </div>
                     </div>
                 </fieldset>

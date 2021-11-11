@@ -7,7 +7,7 @@ class RateLimiter{
     private $duration = 0;
     private $instances = [];
 
-    public function __construct(int $frequency, int $duration){
+    public function __construct(int $frequency, int $duration = 1){
         $this->frequency = $frequency;
         $this->duration = $duration;
     }

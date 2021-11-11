@@ -17,8 +17,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\CreateSmsRequest;
 use Illuminate\Support\Facades\Validator;
 
-class SMSController extends Controller
-{
+class SMSController extends Controller{
+
     public function __construct(){
         $this->middleware('auth');
     }

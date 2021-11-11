@@ -23,17 +23,15 @@ class Kernel extends ConsoleKernel
      * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
      * @return void
      */
-    protected function schedule(Schedule $schedule)
-    {
-        //->everyFiveMinutes();
+    protected function schedule(Schedule $schedule){
+        //->everyFifteenMinutes()
         $schedule->call(new TokenPuller)
-                ->everyFifteenMinutes()
-                ->between("05:30", "23:30");
+                ->cron('*/20 * * * *')//every other 20 minutes
+                ->between("06:15", "22:05");
     }
 
     /**
      * Register the commands for the application.
-     *
      * @return void
      */
     protected function commands()

@@ -8,7 +8,7 @@ class Orange{
     use CallsOrangeApi;
 
     const BASE_URL = 'https://api.orange.com';
-    const API_NUMBER = '';//our api num. e.g:76563253
+    const API_NUMBER = '75275918';//our api num
     protected $token = ''; 
 
     /** constructor 
@@ -30,8 +30,7 @@ class Orange{
         return $this->token;
     }
 
-    public function setToken($token)
-    {
+    public function setToken($token){
         $this->token = $token;
     }
 

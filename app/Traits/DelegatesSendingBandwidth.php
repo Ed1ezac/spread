@@ -1,0 +1,29 @@
+<?php
+
+namespace App\Traits;
+
+use App\Models\JobStatus;
+
+trait DelegatesSendingBandwidth{
+    protected $FULL_BANDWIDTH = 5;
+    protected $BIG_BANDWIDTH = 3;
+    protected $SMALL_BANDWIDTH = 2;
+
+    protected $bandwidth;
+
+    protected function allocateBandwidth($id){
+        $thisJob = JobStatus::where('job_id', $id)->first();
+        $otherJob = JobStatus::where([
+            ['job_id', '!=', $id],
+            ['status', '=',JobStatus::STATUS_EXECUTING]
+            ])->first();
+        
+        if(isset($otherJob)){
+            $this->bandwidth = $otherJob->progress_max > $thisJob->progress_max ?
+                $this->SMALL_BANDWIDTH : $this->BIG_BANDWIDTH;
+        }else{
+            $this->bandwidth = $this->FULL_BANDWIDTH;
+        }
+    }
+
+}
