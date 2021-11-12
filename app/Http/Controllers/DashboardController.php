@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\Sms;
 use App\Models\User;
+use App\Models\SenderName;
 use App\Models\FundsRecord;
 use Illuminate\Http\Request;
 use App\Models\RecipientList;
@@ -14,14 +15,25 @@ use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
+    private $defaultAppName = 'Spread';
+    
     public function __construct(RecipientList $list)
     {
         $this->middleware('auth');
     }
 
     public function create(){
+        $senderNames = array($this->defaultAppName);
+        $names = SenderName::where('user_id', Auth::id())
+                        ->withStatus(SenderName::Approved)
+                        ->pluck('sender_name');
+        if(isset($names) && count($names)>0){
+            foreach($names as $n){ $senderNames[] = $n;
+            }
+        }
+         
         $recipients = RecipientList::mine()->withStatus(RecipientList::Processed)->get();
-        return view('dashboard.create-sms', compact('recipients'));
+        return view('dashboard.create-sms', compact('recipients', 'senderNames'));
     }
 
     public function scheduled(){

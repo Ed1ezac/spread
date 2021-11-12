@@ -22,6 +22,7 @@ import RolesDropDown from './components/admin/roles-drop-down';
 import NotificationBanner from './components/notif-banner.vue';
 import AdminSidebar from './components/admin/admin-sidebar.vue';
 import FileUploadField from './components/file-upload-field.vue';
+//import SenderNamePicker from './components/sms/sender-name-picker.vue';
 import FilesTableOptions from './components/admin/files-table-options.vue';
 import UsersTableOptions from './components/admin/users-table-options.vue';
 import SmsRolloutProgress from './components/sms/sms-rollout-progress.vue';

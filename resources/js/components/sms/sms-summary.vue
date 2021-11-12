@@ -100,9 +100,9 @@ export default {
             csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),            
         }
     },
-     props:{
+    props:{
         recipients: Array,
-      },
+    },
     methods:{
         toggle(){
             this.sendLater = !this.sendLater;
