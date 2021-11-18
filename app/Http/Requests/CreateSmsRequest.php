@@ -4,11 +4,13 @@ namespace App\Http\Requests;
 
 use Carbon\Carbon;
 use App\Models\RecipientList;
+use App\Traits\VerifiesSmsInfo;
+use App\Traits\EnsuresRolloutCompliance;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreateSmsRequest extends FormRequest
 {
-    use EnsuresRolloutCompliance;
+    use EnsuresRolloutCompliance, VerifiesSmsInfo;
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -27,8 +29,8 @@ class CreateSmsRequest extends FormRequest
     public function rules()
     {
         return [
-            'sender' => ['required','max:16'],
-            'message' => ['required', 'max:140'],
+            'sender' => ['required','max:11'],
+            'message' => ['required', 'max:160'],
             'recipient-list-id'=>['required', 'numeric'],
         ];
     }
@@ -37,28 +39,35 @@ class CreateSmsRequest extends FormRequest
     {
         $validator->after(function ($validator) {
             $request = request();
-            if ($this->insufficientFunds()) {
+            $correctRecipients = $this->isUsersRecipientListId($request->input('recipient-list-id'));
+            if (!$this->isUsersSenderName($request->input('sender'))) {
+                $validator->errors()->add('Sender','Invalid sender, please select sender name again');
+            }
+            if (!$correctRecipients) {
+                $validator->errors()->add('Recipients','Invalid recipients, please select a recipient list again');
+            }
+            if ($correctRecipients && $this->insufficientFunds()) {
                 $validator->errors()->add('funds','You have insufficient funds');
             }
             if($this->dateIsTooFar()){
                 $validator->errors()->add('period','Sending day must be within 14 days from today.');
             }
             if(!$this->isWithinTimeBounds()){
-                $validator->errors()->add('time','Sending time must be between 0700 and 2130.');
+                $validator->errors()->add('time','Sending time must be between 0700 and 2130 hrs.');
             }
-            if($this->rolloutWillCompleteInTime(RecipientList::find($request->input('recipient-list-id'))->entries)){
+            if($correctRecipients && !$this->rolloutWillCompleteInTime($request->only('recipient-list-id','sending_time','day','time'))){
                 $validator->errors()->add('completion-time',
-                'This rollout will not complete with allowed times (7am to 2130pm) due to the rollout queue or large size of recipients.');
+                'Unfortunately the rollout won\'t complete within the allowed time (7am to 9:30pm).');
             }
             if($this->userHasExecutingJob()){
                 $validator->errors()->add('concurrency','Users are allowed only one rollout at a time.');
             }
-            if($this->userHasCloselyQueuedJobs($request->input('sending_time') == 'later')){
+            if($this->userHasCloselyQueuedJobs($request->input('sending_time') == 'later', ($request->input('day').''.$request->input('time')))){
                 $validator->errors()->add('concurrency','Too many closely scheduled rollouts, separate by 2 hours at least.');
             }
             if(!$this->isVacant()){
                 $vacancyTime = $this->estimatedTimeTillVacant();
-                if(Carbon::now()->subMinutes($vacancyTime) > 1){
+                if(Carbon::now()->diffInMinutes($vacancyTime) > 1){
                     $request->merge(['vacant-in', $vacancyTime]);
                 }
             }

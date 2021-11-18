@@ -4,6 +4,8 @@ namespace App\Traits;
 
 use Carbon\Carbon;
 use App\Models\JobStatus;
+use App\Models\RecipientList;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 trait EnsuresRolloutCompliance{
@@ -23,7 +25,7 @@ trait EnsuresRolloutCompliance{
         $estimate = $this->sumOfQueuedEntries();
         //2sms/second is worst case rate
         $estimate /= $this->MIN_RATE;
-        return Carbon::now()->addSeconds(intval($remaining));
+        return Carbon::now()->addSeconds(intval($estimate));
     }
 
     protected function isWithinTimeBounds()
@@ -42,16 +44,14 @@ trait EnsuresRolloutCompliance{
         ])->count() > 0;
     }
 
-    protected function userHasCloselyQueuedJobs($sendsLater){
+    protected function userHasCloselyQueuedJobs($sendsLater, $date){
         $hasJob = false;
         if($sendsLater){
-            $targetDateTime = Carbon::createFromFormat('d.m.Y H:i',
-                    $request->input('day').''.$request->input('time')
-                );
+            $targetDateTime = Carbon::createFromFormat('d.m.Y H:i', $date);
             
             $jobs = DB::table('jobs')->where([
-                ['available_at', '>=', $targetDateTime->subHours(2)->timestamp],
-                ['available_at', '<=', $targetDateTime->addHours(2)->timestamp]
+                ['available_at', '>=', $targetDateTime->copy()->subHours(2)->timestamp],
+                ['available_at', '<=', $targetDateTime->copy()->addHours(2)->timestamp]
             ])->get();
             //decode their payloads and sum recipients
             foreach($jobs as $job){
@@ -66,11 +66,14 @@ trait EnsuresRolloutCompliance{
         return $hasJob;
     }
 
-    protected function rolloutWillCompleteInTime($numRecipients)
+    protected function rolloutWillCompleteInTime(array $request)
     {
+        $numRecipients = RecipientList::find($request['recipient-list-id'])->entries;
+        $sendsLater = $request['sending_time'] == 'later';
+        $date = $sendsLater ? $request['day'].''.$request['time'] : "";
         //check if the queued entries + requesting entry will execute in time
         //// by summing the recipient lists, dividing by min rate;
-        $sum = $this->sumOfQueuedEntries();
+        $sum = $this->sumOfQueuedEntries($sendsLater, $date);
         $sum += $numRecipients;
         $seconds = intval($sum / $this->MIN_RATE);
 
@@ -80,7 +83,7 @@ trait EnsuresRolloutCompliance{
         return $accumulatedTime->lessThan($endTime);
     }
 
-    private function sumOfQueuedEntries()
+    private function sumOfQueuedEntries($sendsLater, $date)
     {
         $sum = 0;
         $executingSmsIds = array();
@@ -90,11 +93,8 @@ trait EnsuresRolloutCompliance{
             array_push($executingSmsIds, $job->trackable_id);
             $sum += ($job->progress_max - $job->progress_now);
         }
-        //get all queued jobs
-        $jobs = DB::table('jobs')->where([
-            ['available_at', '>=', Carbon::createFromTime(7,0,0)->timestamp],
-            ['available_at', '<=', Carbon::createFromTime(21,30,0)->timestamp]
-        ])->get();
+        //get all queued jobs for today, if sendsLater than today, get queued jobs for that day
+        $jobs = $this->jobsForDay($sendsLater, $date);
         //decode their payloads and sum recipients
         foreach($jobs as $job){
             $payload = json_decode($job->payload);
@@ -106,6 +106,24 @@ trait EnsuresRolloutCompliance{
             }
         }
         return $sum;
+    }
+
+    private function jobsForDay($sendsLater, $date){
+        $dt = (isset($date) && !empty($date)) ? 
+            Carbon::createFromFormat('d.m.Y H:i', $date) :
+            Carbon::now();
+        if($sendsLater && !$dt->isToday()){
+            return DB::table('jobs')->where([
+                ['available_at', '>=', Carbon::create($dt->year, $dt->month, $dt->day, 7,0,0)->timestamp],
+                ['available_at', '<=', Carbon::create($dt->year, $dt->month, $dt->day, 21,30,0)->timestamp]
+            ])->get();
+        }else{
+            return DB::table('jobs')->where([
+                //older than a day jobs wont be accounted for
+                ['available_at', '>=', Carbon::createFromTime(7,0,0)->timestamp],
+                ['available_at', '<=', Carbon::createFromTime(21,30,0)->timestamp]
+            ])->get();
+        }
     }
 
 }
