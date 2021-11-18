@@ -56,11 +56,14 @@
                 </transition>
             </div>
         </Listbox>
-        <!-- v-model="titleText" --->
+       
         <input type="hidden" name="sender" :value="senderName" autocomplete="sender">
         <span v-if="senderError!=''" class="text-xs p-1 bg-red-100 rounded font-normal text-red-400" role="alert">
             <strong>{{ senderError }}</strong>
         </span>
+        <p v-else class="mt-2 text-xs text-gray-500">
+            Do you need a different sender name? <a href="/settings/register/new/sender-name" class="text-accent-800 underline font-semibold hover:text-accent-500">create one</a>
+        </p>
     </div>
 </template>
     
@@ -80,14 +83,54 @@ export default {
             senderName: ref(this.senderNames[0]),
         }
     },
+    mounted() {
+        if (localStorage.sender) {
+            for(var i=0; i< this.senderNames.length; i++){
+                if(this.senderNames[i] == localStorage.sender){
+                    this.senderName = ref(this.senderNames[i]);
+                    this.emitSenderNameChange( this.senderName);
+                }
+                if(i == this.senderNames.length-1 && this.senderName != localStorage.sender){
+                    this.senderName = ref(this.senderNames[0]);
+                    this.emitSenderNameChange( this.senderName);
+                }
+            }
+        }else{
+           this.senderName = ref(this.senderNames[0]);
+           this.emitSenderNameChange( this.senderName);
+        }
+    },
     props:{
-        senderError:String,
+        senderError: String,
         senderNames: Array,
+        hasCleared: Boolean
     },
     watch:{
-        senderName: function(newVal, oldVal){
-            if(newVal != oldVal){
-                this.$emit('sender-name-change', newVal);
+        senderName:{ 
+            handler: function(newVal, oldVal){
+                if(newVal != oldVal){
+                    this.emitSenderNameChange(newVal);
+                }
+            }
+        },
+        hasCleared:{
+            handler: function(newVal, oldVal){
+                if(newVal && !oldVal){ 
+                    this.clearCurrentSenderNameSelection(newVal);
+                }
+            }
+        },
+    },
+    methods:{
+        emitSenderNameChange(newName){
+            this.$emit('sender-name-change', newName);
+            localStorage.sender = this.senderName;
+        },
+        clearCurrentSenderNameSelection(doClear){
+            if(doClear){
+                this.senderName = ref(this.senderNames[0]);
+                this.emitSenderNameChange(this.senderName);
+                this.$emit('sender-name-reset');
             }
         }
     },

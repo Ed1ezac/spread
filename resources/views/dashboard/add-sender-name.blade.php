@@ -15,6 +15,9 @@
                     <strong>{{ $message }}</strong>
                 </span>
                 @enderror
+                <p class="mt-2 text-xs text-gray-500">
+                    Maximum is 11 characters (including spaces).
+                </p>
             </div>
             <!--Reason-->
             <div>

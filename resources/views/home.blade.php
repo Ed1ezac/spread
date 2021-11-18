@@ -207,7 +207,7 @@
           <h3 class="text-gray-50 text-xl font-extrabold">Contact us<h3>
           <div class="text-white mt-3">P.O Box 288, Gabane</div>
           <div class="text-white mt-1">(+267) 75 275 918/ 76 067 957 </div>
-          <div class="text-white mt-1">ed1ezac@gmail.com</div>
+          <div class="text-white mt-1">buffaloitbotswana@gmail.com</div>
         </div>
       </div>
       <div class="flex pt-2 justify-between">
