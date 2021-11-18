@@ -46,9 +46,9 @@ Route::post('/create/confirm', [SMSController::class, 'createAndQueue']);
 Route::post('/create/save-as-draft', [SMSController::class, 'saveDraft']);
 Route::post('/drafts/item/delete', [SMSController::class, 'deleteDraft']);
 Route::post('/sms/rollout/abort', [SMSController::class, 'abortRollout']);
-Route::get('/create/summary/{recipientsId?}', [SMSController::class, 'summary']);
 Route::post('/scheduled/sms/abort', [SMSController::class, 'abortScheduledRollout']);
 Route::get('/scheduled/sms/{id?}/update', [SMSController::class, 'updateScheduledSms']);
+Route::get('/create/sms/for/{recipientsId?}/summary/', [SMSController::class, 'summary']);
 Route::post('/scheduled/sms/send-now', [SMSController::class, 'processScheduledRolloutNow']);
 //funds
 Route::get('/funds/add', [FundsController::class, 'pay'])->middleware('auth');
