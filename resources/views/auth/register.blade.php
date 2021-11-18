@@ -1,12 +1,12 @@
 @extends('layouts.landing-header')
 
-@stack('page-css')
+@push('page-css')
 <style>
     .extra-data {
         display:none;
     }
 </style>
-@endstack
+@endpush
 
 @section('content')
 <section class="pt-20 pb-10">

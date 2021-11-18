@@ -21,14 +21,14 @@ use App\Http\Controllers\RecipientListController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Auth::routes();
+Auth::routes(['verify'=>true]);
 Route::get('/', [SiteController::class, 'landing']);
 Route::get('/faqs', [SiteController::class, 'faqs']);
 Route::get('/terms', [SiteController::class, 'terms']);
 Route::get('/privacy', [SiteController::class, 'privacy']);
 Route::get('/learn-more', [SiteController::class, 'learnMore']);
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
 //user
 Route::get('/settings', [UserController::class, 'userSettings']);
 Route::post('/settings/update/security', [UserController::class, 'updateSecurity']);
