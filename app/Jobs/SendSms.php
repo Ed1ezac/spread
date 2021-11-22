@@ -8,7 +8,10 @@ use Carbon\Carbon;
 use App\Models\Sms;
 use App\Models\Funds;
 use App\Helpers\Orange;
+use App\Traits\SendsMail;
 use App\Traits\Trackable;
+use App\Mail\RolloutBegun;
+use App\Mail\RolloutFailed;
 use App\Helpers\RateLimiter;
 use App\Traits\FlagsAbortion;
 use App\Models\RecipientList;
@@ -26,12 +29,13 @@ use App\Traits\DelegatesSendingBandwidth;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
+use App\Mail\RolloutComplete as CompletionEmail;
 
 class SendSms implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, 
         SerializesModels, DelegatesSendingBandwidth,
-        Trackable, FlagsAbortion;
+        Trackable, FlagsAbortion, SendsMail;
     public $deleteWhenMissingModels = true;
 
     public $sms;
@@ -61,11 +65,13 @@ class SendSms implements ShouldQueue
             $this->jobStatus->markAsExecuting();
             $this->allocateSendingBandwidth();;
             $this->prepareOrangeApi();
+            $this->sendEmail(new RolloutBegun($this->sms));
 
             $this->performRollout();
             
             $this->billUser();
             $this->jobStatus->markAsFinished();
+            $this->sendEmail(new CompletionEmail($this->sms));
         }catch(Throwable $e){
             $this->beforeFail($e);
             $this->fail($e);
@@ -207,6 +213,7 @@ class SendSms implements ShouldQueue
         if($e->getMessage() !== 'Aborted by user.'){
             $this->sms->update(['status' => Sms::Failed]);
         }
+        $this->sendEmail(new RolloutFailed($this->sms));
         //fire event
         RolloutComplete::dispatch($this->sms, $this->progressNow)->delay(now()->addSeconds(6));
     }

@@ -11,8 +11,7 @@ use Illuminate\Support\Facades\DB;
 class FundsProcessing{
 
     private $reserve, $userFunds;
-    private static $retryIncrementAttempts = 50;
-    private static $retryDecrementAttempts = 5;
+    private static $retryAttempts = 30;
 
     /**
     * The assumption is that a different user can be malicious
@@ -34,7 +33,7 @@ class FundsProcessing{
             $this->recordReserveDeductionEvent($amount);
             $this->postFundsRecord(FundsRecord::Purchase, $amount);
 
-        }, self::$retryIncrementAttempts);
+        }, self::$retryAttempts);
 
     }
 
@@ -46,7 +45,7 @@ class FundsProcessing{
             //
             $this->postFundsRecord(FundsRecord::Deduction, $amount);
 
-        }, self::$retryDecrementAttempts);
+        }, self::$retryAttempts);
     }
 
     private function setReserve(){

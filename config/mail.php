@@ -85,7 +85,12 @@ return [
 
     'from' => [
         'address' => env('MAIL_FROM_ADDRESS', 'mailbot@spread.co.bw'),
-        'name' => env('MAIL_FROM_NAME', 'Example'),
+        'name' => env('MAIL_FROM_NAME', 'Spread | Bulk Sms Service'),
+    ],
+
+    'reply_to' => [
+        'address' => 'support@spread.co.bw',
+        'name' => 'Spread Support Team'
     ],
 
     /*
