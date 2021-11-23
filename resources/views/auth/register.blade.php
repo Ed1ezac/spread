@@ -1,5 +1,13 @@
 @extends('layouts.landing-header')
 
+@push('page-css')
+<style>
+    .extra-data {
+        display:none;
+    }
+</style>
+@endpush
+
 @section('content')
 <section class="pt-20 pb-10">
     <div class="flex justify-center 2xl:mt-14">
@@ -19,6 +27,10 @@
                                 <strong>{{ $message }}</strong>
                             </span>
                             @enderror
+                    </div>
+                    <div class="extra-data">
+                        <label for="birthday">Birthday</label>
+                        <input type="text" name="birthday" id="birthday" value="" />
                     </div>
                     <div>
                         <label for="user_name" class="my-form-label">

@@ -32,8 +32,8 @@ module.exports = {
     },
     fontFamily:{
       'sans':['Roboto', 'Arial', 'sans-serif', '-apple-system','BlinkMacSystemFont',],
-      'body':['Overpass'],
-      'headings':['Alegreya\\ Sans'],
+      'body':['Overpass','Roboto', 'Arial','-apple-system'],
+      'headings':['Alegreya\\ Sans','Roboto', 'Arial','-apple-system'],
     },
     extend: {},
   },

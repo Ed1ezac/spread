@@ -1,7 +1,7 @@
 <template>
     <div class="flex mt-2 mb-4 flex-wrap px-4">
         <!--form-->
-        <div class="shadow-sm flex-shrink bg-white rounded-md w-120 md:mr-2">
+        <div class="shadow-sm flex-shrink bg-white rounded-md w-120 mb-4 md:mr-12">
           <div class="flex justify-end relative mr-4 mt-2 -mb-4">
             <span class="sr-only">Erase</span>
             <button @click="erase" class="rounded text-gray-600 hover:text-red-500">
@@ -14,15 +14,13 @@
             <input type="hidden" name="_token" :value="csrf">
             <div class="px-6 pb-2 space-y-6 sm:p-6">
                 <!--sender-->
-                <div>
-                  <label for="sender" class="my-form-label">
-                    Sender
-                  </label>
-                  <input type="text" v-model="titleText" name="sender" id="sender" autocomplete="sender" required class="w-full my-form-input">
-                  <span v-if="senderError!=''" class="text-xs p-1 bg-red-100 rounded font-normal text-red-400" role="alert">
-                      <strong>{{ senderError }}</strong>
-                  </span>
-                </div>
+                <SenderNamePicker
+                  v-on:sender-name-change="onUpdateTittle"
+                  v-on:sender-name-reset="onSenderNameReset"
+                  v-bind:sender-error="senderError"
+                  v-bind:sender-names="senderNames"
+                  v-bind:has-cleared="hasCleared">           
+                </SenderNamePicker>
                 <!--message-->
                 <div>
                   <div class="flex justify-between items-center">
@@ -32,13 +30,13 @@
                     <span class="text-xs text-gray-500" v-text="(max - messageText.length)"></span>
                   </div>
                   <div class="mt-1">
-                    <textarea id="message" v-model="messageText" name="message" maxlength="140" rows="3" class="w-full my-form-input" placeholder="Type your text message here" required></textarea>
+                    <textarea id="message" v-model="messageText" name="message" maxlength="160" rows="3" class="w-full my-form-input" placeholder="Type your text message here" required></textarea>
                     <span v-if="messageError!=''" class="text-xs p-1 bg-red-100 rounded font-normal text-red-400" role="alert">
                       <strong>{{ messageError }}</strong>
                     </span>
                   </div>
                   <p class="mt-2 text-xs text-gray-500">
-                    140 symbols per message (including spaces).
+                    160 symbols per message (including spaces).
                   </p>
                 </div>
                 <!--recipients-->
@@ -78,14 +76,14 @@
                                   {{ listItem.name }}
                                   </span>
                                   <!--checkmark ico--->
-                                  <span v-if="selected" :class=" active ? 'text-white' : 'text-accent-600'" class="absolute inset-y-0 right-0 flex items-center pl-1.5`">
+                                  <span v-if="selected" :class=" active ? 'text-white' : 'text-accent-600'" class="absolute inset-y-0 right-0 mr-2 flex items-center pl-1.5`">
                                     <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
                                       fill="currentColor">
                                       <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
                                         clip-rule="evenodd"/>
                                     </svg>
                                   </span>
-                                  <!---recipints icon--->
+                                  <!---recipients icon--->
                                   <span :class="`${
                                     active ? 'text-white' : 'text-gray-800'
                                   } absolute inset-y-0 left-0 flex items-center pl-1.5`">
@@ -103,7 +101,7 @@
                   </div>
                   <input type="hidden" ref="listInput" :value="messagingListItem.id" name="recipient-list-id"/>
                   <p class="mt-2 text-xs text-gray-500">
-                    Do you need a different recipient list? <a href="/recipients" class="text-accent-800 underline font-semibold hover:text-accent-500">create one</a>
+                    Do you need a different recipient list? <a href="/recipients/add" class="text-accent-800 underline font-semibold hover:text-accent-500">add one</a>
                   </p>
                 </div>
             </div>
@@ -124,9 +122,9 @@
           </form>  
         </div>
         <!--preview-->
-        <div class="px-2 ml-8 2xl:ml-12 hidden md:block w-60 relative">
+        <div class="px-2 2xl:ml-12 hidden md:block w-60 relative">
             <div class="absolute mt-16 ml-7 w-36">
-            <p id="title" class="text-sm truncate font-sans mx-3 text-white cursor-default">{{ titleText }}</p>
+            <p id="title" class="text-sm truncate font-sans mx-3 text-white cursor-default">{{ sender }}</p>
             </div>
             <div v-if="messageText != ''" class="absolute bg-gray-300 mt-28 rounded-r-lg rounded-tl-lg py-1 ml-5 w-7/12">
             <p id="text" class="text-xs font-sans ml-2 text-gray-700 cursor-default">{{ messageText }}</p>
@@ -145,13 +143,15 @@
     ListboxOption,
   } from '@headlessui/vue'
   import { ref } from 'vue'
+  import SenderNamePicker from './sender-name-picker.vue'
     export default {
       data(){ 
           return{
-              max: 140,
-              titleText:'',
+              max: 160,
+              sender:'',
               listId: 0,
               messageText: '',
+              hasCleared: false,
               messagingListItem: ref(this.recipients[0]),
               csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
           }
@@ -161,15 +161,21 @@
           messageError:String,
           graphicUri: String,
           recipients: Array,
+          senderNames: Array,
       },
       methods:{
+        onUpdateTittle: function(newTitle){
+          this.sender = newTitle;
+        },
+        onSenderNameReset(){
+          this.hasCleared = false;
+        },
         erase(){
           localStorage.clear();
-          this.titleText = '';
+          this.hasCleared = true;
           this.messageText = '';
         },
         persistData() {
-          localStorage.sender = this.titleText;
           localStorage.message = this.messageText;
           localStorage.messagingListId = this.messagingListItem.id;
         },
@@ -182,9 +188,6 @@
       },
       mounted() {
         //sessionStorage.test = "hello session";works!
-        if (localStorage.sender) {
-          this.titleText = localStorage.sender;
-        }
         if(localStorage.message){
           this.messageText = localStorage.message;
         }
@@ -204,6 +207,7 @@
         ListboxButton,
         ListboxOptions,
         ListboxOption,
+        SenderNamePicker
       }
     }
 </script>

@@ -190,7 +190,8 @@
           <h3 class="text-gray-50 text-xl font-extrabold">Spread App</h3>
           <p class="mt-3 text-white max-w-sm">The Spread App is a web system that dispatches short 
             messages to multiple mobile phone recipients in one go. 
-            It is powered by the Orange SMS API.</p>
+            It is a 100% fully citizen owned venture which meets all the standards and
+            regulations.</p>
           <!---hr class="text-gray-50 my-2"/>  
           <div class="flex gap-x-4">
             <a href="#" class="text-white hover:text-accent">FB</a>
@@ -205,9 +206,10 @@
         </div>
         <div class="flex-col">
           <h3 class="text-gray-50 text-xl font-extrabold">Contact us<h3>
+          <div class="text-white mt-3">Plot 2133, Goo-Lonake Ward, Gabane</div>
           <div class="text-white mt-3">P.O Box 288, Gabane</div>
           <div class="text-white mt-1">(+267) 75 275 918/ 76 067 957 </div>
-          <div class="text-white mt-1">ed1ezac@gmail.com</div>
+          <div class="text-white mt-1">enquiries@spread.co.bw</div>
         </div>
       </div>
       <div class="flex pt-2 justify-between">

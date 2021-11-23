@@ -7,7 +7,7 @@
             <div class="space-y-8">
                 <!---SMS-->
                 <div class="mt-3">
-                    <input type="tel" name="quantity" v-model="quantity" @input="restrictQuantity" maxlength="8" placeholder="SMS Quantinty" required 
+                    <input type="number" name="quantity" v-model="quantity" @input="restrictQuantity" maxlength="8" placeholder="SMS Quantinty" required 
                     class="w-full font-bold my-form-input"
                     :class="validationErrors.length >0 ?'bg-red-200 border-red-400 focus:ring-red-400':''">
                     <input type="hidden" name="cost" v-model="totalCost"/>
@@ -19,7 +19,7 @@
                 </div>
                 <!--Full Name--->
                 <div>
-                    <input type="text" name="names" id="names" autocomplete="names" placeholder="Card Holder" required class="w-full font-bold my-form-input">
+                    <input type="text" name="names" id="names" autocomplete="names" placeholder="Card Holder Name" required class="w-full font-bold my-form-input">
                 </div>
                 <!---Card Details-->
                 <div class="mt-3">

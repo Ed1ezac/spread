@@ -76,7 +76,7 @@ class RecipientListController extends Controller
                 $list->update(['status' => RecipientList::Processed]);
                 FileProcessingComplete::dispatch($list);
             },
-        ])->onQueue('fileprocessing')->delay(now()->addSeconds(6))->dispatch();
+        ])->onQueue('fileprocessing')->delay(now()->addSeconds(8))->dispatch();
     }
 
     public function deleteList(Request $request){

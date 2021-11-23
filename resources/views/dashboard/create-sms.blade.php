@@ -12,7 +12,8 @@
         sender-error =""
         message-error=""
         graphic-uri = "{{ asset('android-device.svg') }}"
-        v-bind:recipients = "{{ json_encode($recipients) }}">
+        v-bind:recipients = "{{ json_encode($recipients) }}"
+        v-bind:sender-names = "{{ json_encode($senderNames) }}">
     </sms-wizard>
   @else
   <div>

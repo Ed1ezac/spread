@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SenderName;
 use Illuminate\Http\Request;    
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -12,7 +13,8 @@ class UserController extends Controller
     //
     public function userSettings(){
         $user = Auth::user();
-        return view('dashboard.settings', compact('user'));
+        $senderNames = SenderName::where('user_id', $user->id)->get();  
+        return view('dashboard.settings', compact('user', 'senderNames'));
     }
 
     public function updatePersonalInfo(Request $request){

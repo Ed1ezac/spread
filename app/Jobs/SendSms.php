@@ -6,9 +6,14 @@ use Exception;
 use Throwable;
 use Carbon\Carbon;
 use App\Models\Sms;
+use App\Models\User;
 use App\Models\Funds;
 use App\Helpers\Orange;
+use App\Traits\SendsMail;
 use App\Traits\Trackable;
+use App\Mail\RolloutBegun;
+use App\Mail\RolloutFailed;
+use App\Helpers\RateLimiter;
 use App\Traits\FlagsAbortion;
 use App\Models\RecipientList;
 use Illuminate\Bus\Queueable;
@@ -17,29 +22,34 @@ use App\Events\RolloutComplete;
 use App\Helpers\FileProcessing;
 use App\Helpers\FundsProcessing;
 use App\Helpers\FileChunkReadFilter;
+use App\Models\SmsApiToken as Token;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Queue\InteractsWithQueue;
+use App\Traits\DelegatesSendingBandwidth;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
+use App\Mail\RolloutComplete as CompletionEmail;
 
 class SendSms implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, 
-        SerializesModels, Trackable, FlagsAbortion;
+        SerializesModels, DelegatesSendingBandwidth,
+        Trackable, FlagsAbortion, SendsMail;
     public $deleteWhenMissingModels = true;
 
     public $sms;
     private $orange;
-    private $recipients;
+    private $limiter;
+    public $recipients;
     private $sendingRate;
     private $startingTime;
     private $fundsProcessor;
     private $reportFrequency;
 
     public function __construct(Sms $sms, RecipientList $list)
-    {
+    {   
         $this->sms = $sms;
         $this->recipients = $list;   
         $this->fundsProcessor = new FundsProcessing();
@@ -50,30 +60,53 @@ class SendSms implements ShouldQueue
         $this->startTracking($this, $this->sms);
         $this->setProgressMax($this->recipients->entries);
         $this->setReportFrequency();
-        $this->prepareSmsStatusPolling();
+        $this->prepareAbortionStatusPolling();
         try{
             $this->verifySufficientFunds();
             $this->jobStatus->markAsExecuting();
-            //$this->prepareOrangeApi();
+            $this->allocateSendingBandwidth();;
+            $this->prepareOrangeApi();
+            $this->sendEmail(User::find($this->sms->user_id)->email,
+                                 new RolloutBegun($this->sms));
 
             $this->performRollout();
             
             $this->billUser();
             $this->jobStatus->markAsFinished();
+            $this->sendEmail(User::find($this->sms->user_id)->email, 
+                                 new CompletionEmail($this->sms));
         }catch(Throwable $e){
             $this->beforeFail($e);
             $this->fail($e);
         }
     }
 
-    private function setReportFrequency(){
-        if($this->progressMax > 100){
-            $temp = 0.01 * $this->progressMax;
-            $this->reportFrequency = intval($temp);
-            $temp = null;
-        }else{
-            $this->reportFrequency = 1;
+    private function verifySufficientFunds(){    
+        if(!($this->fundsProcessor
+            ->hasSufficientFunds($this->sms->user_id, 
+                        $this->recipients->entries))){
+            throw new Exception('Insufficient funds.');
         }
+    }
+
+    private function setReportFrequency(){
+        $this->reportFrequency = 1;
+    }
+
+    private function prepareAbortionStatusPolling(){
+        $this->setAbortionThreshHold($this->progressMax);
+        $this->setFrequency($this->progressMax);
+    }
+
+    private function prepareOrangeApi(){
+        $token = Token::first();
+        $this->orange = new Orange(array('token'=> $token->value));
+    }
+
+    private function allocateSendingBandwidth(){
+        $this->allocateBandwidth($this->sms->job_id);
+        $this->limiter = new RateLimiter($this->bandwidth, 1);
+        $this->doSafetyPause();
     }
 
     private function performRollout(){
@@ -85,93 +118,57 @@ class SendSms implements ShouldQueue
         for($startRow = 1; $startRow <= $maxRows; $startRow += FileChunkReadFilter::chunkSize) {
             $chunkFilter->setRows($startRow);
             $spreadsheet = FileProcessing::loadFile($reader, $this->recipients->file_path);
-            //validate entries
             $this->validateAndSendSms($spreadsheet->getActiveSheet());
-        }  
+        }
     }
 
     private function validateAndSendSms($worksheet){
         foreach($worksheet->getRowIterator() as $row) {
             $cellIterator = $row->getCellIterator();
             $cellIterator->setIterateOnlyExistingCells(true);
-            //only cells with data
             foreach($cellIterator as $cell) {
+                //rate limit
+                $this->limiter->await();
+                //send sms
                 if(FileProcessing::isValidBwNumber(strval($cell->getValue()))){
                     $this->sendMessageTo(strval($cell->getValue()));
                     $this->incrementProgress();
                     $this->reportProgress($this->reportFrequency);
                 }
-               
-                if($this->progressNow <= $this->abortionThreshHold){
-                    if($this->isAborted($this->sms->id, $this->progressNow)){
-                        throw new Exception('Aborted by user.');
-                    }
-                } 
+                $this->checkForRolloutAbortionAndFail();
+                $this->updateAPIToken();
+                $this->updateSendingBandwidth();
             }
         }
-    }
-
-    private function prepareSmsStatusPolling(){
-        $this->setAbortionThreshHold($this->progressMax);
-        $this->setFrequency($this->progressMax);
-    }
-
-    private function prepareOrangeApi(){
-        $config = array(
-            'clientId' => env('ORANGE_CLIENT_ID'),
-            'clientSecret' => env('ORANGE_CLIENT_SECRET'),
-        );
-        if($this->hasRequestedToken()){
-            $this->orange = new Orange($config);
-        }else{
-            //fail --- retry later
-        }
-    }
-
-    private function hasRequestedToken(){
-        $trials = 30;
-        while($trials > 0){
-            $response = $this->orange->getTokenFromConsumerKey();
-            if (empty($response['error'])) {
-                //success
-                break;
-            }
-            $trials--;
-        }
-        return $trials>0;
-    }
-
-    private function verifySufficientFunds(){    
-        if(!($this->fundsProcessor
-            ->hasSufficientFunds($this->sms->user_id, 
-                        $this->recipients->entries))){
-            throw new Exception('Insufficient funds.');
-        }
-    }
-
-    private function beforeFail(Throwable $e){
-        $this->billUser();
-        $this->jobStatus->markAsFailed($e->getMessage());
-        if($e->getMessage() !== 'Aborted by user.'){
-            $this->sms->update(['status' => Sms::Failed]);
-        }
-        //fire event
-        RolloutComplete::dispatch($this->sms, $this->progressNow)->delay(now()->addSeconds(6));
     }
 
     private function sendMessageTo(String $number){
-        /*
-        $this->orange->sendSms(
-            //..the sender
-            'tel:+267'.Orange::API_NUMBER,
-            //..the reciever
-            'tel:+267'.substr($number, -8),
-            //..the message
-            $this->sms->message
-            //..the sender
-            $this->sms->sender
-        );
-        */
+        if(!env('APP_DEBUG')){
+            $this->orange->sendSms(
+                'tel:+267'.Orange::API_NUMBER,
+                'tel:+267'.substr($number, -8),
+                $this->sms->message,
+                $this->sms->sender
+            );
+        }
+    }
+
+
+    private function checkForRolloutAbortionAndFail(){
+        if($this->progressNow <= $this->abortionThreshHold){
+            if($this->isAborted($this->sms->id, $this->progressNow)){
+                throw new Exception('Aborted by user.');
+            }
+        }
+    }
+
+    private function updateAPIToken(){
+        if($this->progressNow % 3000 === 0){
+            //if we sent 3000 texts
+            //time = 10min/25min past(last retrieval) 
+            //@rate:(5sms/2sms per second) respectively
+            $this->orange->setToken(Token::first()->value);
+        }
     }
 
     private function reportProgress($every){
@@ -184,7 +181,7 @@ class SendSms implements ShouldQueue
                 'current' => $this->progressNow,
                 'smsSender' => $this->sms->sender,
                 'smsMessage' => $this->sms->message,
-                'sendingRate' => $this->sendingRate,
+                'sendingRate' => $this->bandwidth,//sendingRate,
                 'smsRecipientsName' => $this->recipients->name,
             ];
             //dispatch progress event
@@ -202,5 +199,29 @@ class SendSms implements ShouldQueue
         if($this->progressNow > 0){
             $this->fundsProcessor->decrementUserFunds($this->sms->user_id, $this->progressNow);
         }
+    }
+
+    private function beforeFail(Throwable $e){
+        $this->billUser();
+        $this->jobStatus->markAsFailed($e->getMessage());
+        if($e->getMessage() !== 'Aborted by user.'){
+            $this->sms->update(['status' => Sms::Failed]);
+        }
+        $this->sendEmail(User::find($this->sms->user_id)->email, new RolloutFailed($this->sms));
+        //fire event
+        RolloutComplete::dispatch($this->sms, $this->progressNow);
+    }
+
+    private function updateSendingBandwidth(){
+        $currentBandwidth = $this->bandwidth;
+        $this->allocateBandwidth($this->sms->job_id);
+        if($currentBandwidth != $this->bandwidth){
+            $this->limiter->setFrequency($this->bandwidth);
+            $this->doSafetyPause();
+        }
+    }
+
+    private function doSafetyPause(){
+        usleep(mt_rand(1250000, 1500000));
     }
 }

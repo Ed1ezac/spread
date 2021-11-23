@@ -14,17 +14,20 @@ use App\Events\RolloutComplete;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\VerifySmsRequest;
 use App\Http\Requests\CreateSmsRequest;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\ProcessedScheduledImmediateRequest;
 
-class SMSController extends Controller
-{
+class SMSController extends Controller{
+
     public function __construct(){
         $this->middleware('auth');
     }
 
     public function viewSms($id){
         $sms = Sms::find($id);
+
         $recipients = RecipientList::find($sms->recipient_list_id);
         $details = JobStatus::mine()->forJob($sms->job_id)->first();
         return view('dashboard.sms-details', compact('sms','recipients', 'details'));
@@ -41,7 +44,11 @@ class SMSController extends Controller
         $sms->save();
 
         if($sendsNow){
-            return redirect('/statistics')->with('status', 'Sms created, preparing to send...');
+            if($request->input('vacant-in') !== null){
+                return redirect('/statistics')->with('status',
+                 'Sms created and queued. Estimated to send in ' .$request->input('vacant-in'));
+            }else
+                return redirect('/statistics')->with('status', 'Sms created, preparing to send...');
         }else{
             return redirect('/scheduled')->with('status', 'Sms rollout has been scheduled successfully');
         }
@@ -82,7 +89,7 @@ class SMSController extends Controller
         }
     }
 
-    public function verify(Request $request){
+    public function verify(VerifySmsRequest $request){
         //summary page
         return redirect()
             ->action([SMSController::class, 'summary'],
@@ -147,11 +154,11 @@ class SMSController extends Controller
         }
     }
 
-    public function processScheduledRolloutNow(Request $request){
+    public function processScheduledRolloutNow(ProcessedScheduledImmediateRequest $request){
         $sms = Sms::find($request->id);
         DB::table('jobs')
-           ->where('id', $sms->job_id)
-           ->update(['available_at' => Carbon::now()->addSeconds(6)->timestamp]);
+        ->where('id', $sms->job_id)
+        ->update(['available_at' => Carbon::now()->addSeconds(6)->timestamp]);
 
         return redirect('/statistics')->with('status', 'Sms sending...');
     }
@@ -159,8 +166,8 @@ class SMSController extends Controller
     private function validateSms(){
         $request = request();
         return Validator::make($request->all(),[
-            'sender' => ['required','max:16'],
-            'message' => ['required', 'max:140'],
+            'sender' => ['required','min:1','max:11'],
+            'message' => ['required', 'max:160'],
             'recipient-list-id'=>['required', 'numeric'],
         ]);
     }
