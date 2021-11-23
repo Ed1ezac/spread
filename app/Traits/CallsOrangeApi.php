@@ -101,10 +101,10 @@ trait CallsOrangeApi{
                 $errorMessage = $response['message'];
             } elseif (!empty($response['requestError']['serviceException'])) {
                 $errorMessage = $response['requestError']['serviceException']['text']
-                    . ' ' . $response['requestError']['serviceException']['variables'];
+                    . ' ' . $response['requestError']['serviceException']['variables'][0];
             } elseif (!empty($response['requestError']['policyException'])) {
                 $errorMessage = $response['requestError']['policyException']['text']
-                    . ' ' . $response['requestError']['policyException']['variables'];
+                    . ' ' . $response['requestError']['policyException']['variables'][0];
             }
 
             return array('error' => $errorMessage);

@@ -59,6 +59,6 @@
 @endsection
 
  <!--div class="card-body">
-    {{ __('Send Password Reset Link') }}
-    {{ @lang('auth.password) }}
-</!--div -->
+    ' __('Send Password Reset Link') '
+    ' @lang('auth.password') '
+div -->

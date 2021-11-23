@@ -98,4 +98,4 @@ Route::group(['prefix' =>'admin', 'middleware' =>'admin'], function () {
     Route::get('/rollout-tasks', [AdminController::class, 'tasks']);
     Route::get('/rollout-tasks/view/task/{id?}', [AdminController::class, 'viewTask']);
 });
-Route::get('/user/challenge/admin/get-role', [AdminController::class, 'createFirstSuperAdmin'])->middleware('auth');
+Route::get('/user/challenge/admin/get-role', [AdminController::class, 'createFirstSuperAdmin'])->middleware(['auth', 'verified']);
