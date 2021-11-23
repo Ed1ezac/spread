@@ -6,6 +6,7 @@ use Exception;
 use Throwable;
 use Carbon\Carbon;
 use App\Models\Sms;
+use App\Models\User;
 use App\Models\Funds;
 use App\Helpers\Orange;
 use App\Traits\SendsMail;
@@ -65,13 +66,15 @@ class SendSms implements ShouldQueue
             $this->jobStatus->markAsExecuting();
             $this->allocateSendingBandwidth();;
             $this->prepareOrangeApi();
-            $this->sendEmail(new RolloutBegun($this->sms));
+            $this->sendEmail(User::find($this->sms->user_id)->email,
+                                 new RolloutBegun($this->sms));
 
             $this->performRollout();
             
             $this->billUser();
             $this->jobStatus->markAsFinished();
-            $this->sendEmail(new CompletionEmail($this->sms));
+            $this->sendEmail(User::find($this->sms->user_id)->email, 
+                                 new CompletionEmail($this->sms));
         }catch(Throwable $e){
             $this->beforeFail($e);
             $this->fail($e);
@@ -87,15 +90,7 @@ class SendSms implements ShouldQueue
     }
 
     private function setReportFrequency(){
-        $this->reportFrequency = $this->progressMax > 100 
-            ?   intval(0.01 * $this->progressMax) : 1;
-        /*
-            $temp = 0.01 * $this->progressMax;
-            $this->reportFrequency = intval($temp);
-            $temp = null;
-        }else{
-            $this->reportFrequency = 1;
-        }*/
+        $this->reportFrequency = 1;
     }
 
     private function prepareAbortionStatusPolling(){
@@ -140,7 +135,6 @@ class SendSms implements ShouldQueue
                     $this->incrementProgress();
                     $this->reportProgress($this->reportFrequency);
                 }
-               
                 $this->checkForRolloutAbortionAndFail();
                 $this->updateAPIToken();
                 $this->updateSendingBandwidth();
@@ -187,7 +181,7 @@ class SendSms implements ShouldQueue
                 'current' => $this->progressNow,
                 'smsSender' => $this->sms->sender,
                 'smsMessage' => $this->sms->message,
-                'sendingRate' => $this->sendingRate,
+                'sendingRate' => $this->bandwidth,//sendingRate,
                 'smsRecipientsName' => $this->recipients->name,
             ];
             //dispatch progress event
@@ -213,9 +207,9 @@ class SendSms implements ShouldQueue
         if($e->getMessage() !== 'Aborted by user.'){
             $this->sms->update(['status' => Sms::Failed]);
         }
-        $this->sendEmail(new RolloutFailed($this->sms));
+        $this->sendEmail(User::find($this->sms->user_id)->email, new RolloutFailed($this->sms));
         //fire event
-        RolloutComplete::dispatch($this->sms, $this->progressNow)->delay(now()->addSeconds(6));
+        RolloutComplete::dispatch($this->sms, $this->progressNow);
     }
 
     private function updateSendingBandwidth(){
