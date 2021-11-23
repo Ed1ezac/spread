@@ -3,13 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\Funds;
+use App\Traits\SendsMail;
 use Illuminate\Http\Request;
+use App\Mail\PaymentSuccess;
 use App\Helpers\FundsProcessing;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class FundsController extends Controller
 {
+    use SendsMail;
     private $fundsProcessor;
 
     public function __construct(FundsProcessing $fundsProcessor)
@@ -29,6 +32,7 @@ class FundsController extends Controller
             return back()->withErrors($validator);
         }
         $this->fundsProcessor->incrementUserFunds(Auth::id(), $request->quantity);
+        $this->sendEmail($request->user()->email, new PaymentSuccess($request->input('cost'), $request->input('quantity')));
         return redirect('/funds')->with('status', 'Funds purchased successfully.');
     }
 
@@ -41,9 +45,9 @@ class FundsController extends Controller
     private function validateFunds(){
         $request = request();
         return Validator::make($request->all(),[
-            'quantity' => ['required','integer','min:5'],
+            'quantity' => ['required','integer','min:20'],
         ],$messages = [
-            'quantity.min'=> 'The :attribute must be at least 5 sms.',
+            'quantity.min'=> 'The :attribute must be at least 20 sms.',
         ]);
     }
 }
