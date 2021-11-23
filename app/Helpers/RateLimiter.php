@@ -33,6 +33,8 @@ class RateLimiter{
         $this->instances = array_filter($this->instances, function ($a) use ($cutoff) {
             return $a >= $cutoff;
         });
+        //----------
+        $this->instances = array_values($this->instances);
     }
 
     private function isFree(){
