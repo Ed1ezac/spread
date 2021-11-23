@@ -18,7 +18,7 @@ trait DelegatesSendingBandwidth{
             ['status', '=',JobStatus::STATUS_EXECUTING]
             ])->first();
         
-        if(isset($otherJob)){
+        if(isset($otherJob) && !empty($otherJob)){
             $this->bandwidth = $otherJob->progress_max > $thisJob->progress_max ?
                 $this->SMALL_BANDWIDTH : $this->BIG_BANDWIDTH;
         }else{

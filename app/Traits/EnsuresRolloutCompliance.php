@@ -22,7 +22,7 @@ trait EnsuresRolloutCompliance{
     //estimate how long it will take the jobs to finish
     protected function estimatedTimeTillVacant()
     {
-        $estimate = $this->sumOfQueuedEntries();
+        $estimate = $this->sumOfQueuedEntries(false, "");
         //2sms/second is worst case rate
         $estimate /= $this->MIN_RATE;
         return Carbon::now()->addSeconds(intval($estimate));

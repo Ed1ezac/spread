@@ -52,6 +52,9 @@ class CreateSmsRequest extends FormRequest
             if($this->dateIsTooFar()){
                 $validator->errors()->add('period','Sending day must be within 14 days from today.');
             }
+            if($this->dateIsTooEarly()){
+                $validator->errors()->add('period','Sending time is in the past, should be future time.');
+            }
             if(!$this->isWithinTimeBounds()){
                 $validator->errors()->add('time','Sending time must be between 0700 and 2130 hrs.');
             }
@@ -65,13 +68,17 @@ class CreateSmsRequest extends FormRequest
             if($this->userHasCloselyQueuedJobs($request->input('sending_time') == 'later', ($request->input('day').''.$request->input('time')))){
                 $validator->errors()->add('concurrency','Too many closely scheduled rollouts, separate by 2 hours at least.');
             }
-            if(!$this->isVacant()){
-                $vacancyTime = $this->estimatedTimeTillVacant();
-                if(Carbon::now()->diffInMinutes($vacancyTime) > 1){
-                    $request->merge(['vacant-in', $vacancyTime]);
-                }
-            }
+            
         });
+    }
+
+    public function passedValidation(){
+        if(!$this->isVacant()){
+            $vacancyTime = $this->estimatedTimeTillVacant();
+            if(Carbon::now()->diffInMinutes($vacancyTime) > 1){
+                $this->merge(['vacant-in' => Carbon::now()->longAbsoluteDiffForHumans($vacancyTime)]);
+            }
+        }
     }
 
     private function insufficientFunds(){
@@ -85,5 +92,12 @@ class CreateSmsRequest extends FormRequest
         $request = request();
         return ($request->input('sending_time') == 'later') &&
             (Carbon::today()->diffInDays($request->input('day'))>14);
+    }
+
+    private function dateIsTooEarly(){
+        $request = request();
+        return ($request->input('sending_time') == 'later') &&
+            ((Carbon::today()->diffInDays($request->input('day'), false)<1) ||
+            (Carbon::now()->diffInSeconds($request->input('time'), false)<10));
     }
 }
