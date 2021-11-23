@@ -9,14 +9,15 @@
 
     <div>
         <div class="shadow-sm flex-shrink bg-white rounded-md w-96 md:mr-2">
-            <form action="/admin/#" method="POST">
+            <form action="/admin/send/test-sms" method="POST">
+                @csrf
                     <div class="px-6 pb-6 divide-gray-100">
                         <div>
                             <div class="pt-4">
-                                <label for="amount" class="my-form-label">
+                                <label for="recipient" class="my-form-label">
                                 Send to
                                 </label>
-                                <input type="text" name="recipient" value="{{ old('recipient') }}" autocomplete="off" required class="w-full 
+                                <input type="tel" name="recipient" value="{{ old('recipient') }}" autocomplete="off" required class="w-full 
                                     my-form-input @error('recipient') bg-red-200 border-red-400 focus:ring-red-400 @enderror"/>
                                     @error('recipient')
                                     <span class="text-xs p-1 bg-red-100 rounded font-normal text-red-400" role="alert">
@@ -25,10 +26,10 @@
                                     @enderror
                             </div>
                             <div class="pt-4">
-                                <label for="amount" class="my-form-label">
+                                <label for="message" class="my-form-label">
                                 Message
                                 </label>
-                                <textarea value="{{ old('message') }}" name="message" maxlength="140" rows="3" autocomplete="off" required class="w-full 
+                                <textarea value="{{ old('message') }}" name="message" maxlength="160" rows="3" autocomplete="off" required class="w-full 
                                     my-form-input @error('message') bg-red-200 border-red-400 focus:ring-red-400 @enderror"></textarea>
                                     @error('amount')
                                     <span class="text-xs p-1 bg-red-100 rounded font-normal text-red-400" role="alert">

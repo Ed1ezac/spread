@@ -14,6 +14,7 @@ use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\SmsApiToken as Token;
+use App\Http\Requests\Admin\TestSmsRequest;
 use App\Http\Requests\Admin\AdminRoleRequest;
 use App\Http\Requests\Admin\AssignRoleRequest;
 use App\Http\Requests\Admin\RemoveRoleRequest;
@@ -168,11 +169,20 @@ class AdminController extends Controller
         return view('admin.send-sms');
     }
 
-    public function sendTestSms(Request $request){
+    public function sendTestSms(TestSmsRequest $request){
         $orange = new Orange(array('token'=> Token::first()->value));
         //attempt to send text, return response
+        $response = $orange->sendSms(
+                'tel:+267'.Orange::API_NUMBER,
+                'tel:+267'.substr($request->input('recipient'), -8),
+                $request->input('message'),
+            );
 
-        return back()->with('status', 'The sms has been sent successfully');
+        if(isset($response['error'])){
+            return back()->withErrors($response['error']);
+        }else{
+            return back()->with('status', 'The sms has been sent successfully');
+        }
     }
 
     //-----------------
