@@ -33,11 +33,8 @@ class RolloutBegun extends Mailable
      * @return $this
      */
     public function build()
-    {
-        //dd( User::find($this->sms->user_id)->name, $this->sms->message,);
-        
-        return $this->view('emails.rollouts.begun')
-                    ->with([
+    {   
+        return $this->markdown('emails.rollouts.status', [
                         'username' => User::find($this->sms->user_id)->name,
                         'recipientsListName' => $this->recipients->name,
                         'entries' => $this->recipients->entries,

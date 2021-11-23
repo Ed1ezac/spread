@@ -34,8 +34,7 @@ class RolloutFailed extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.rollouts.failed')
-                    ->with([
+        return $this->markdown('emails.rollouts.status', [
                         'username' => User::find($this->sms->user_id)->name,
                         'recipientsListName' => $this->recipients->name,
                         'entries' => $this->recipients->entries,
