@@ -15,12 +15,11 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class RecipientListController extends Controller
-{    
-    public function __construct(){
-        $this->middleware('auth');
-    }
-    
+{   
     public function createRecipients(){
+        if(!Auth::user()->hasRole('client')){
+            return redirect()->back();
+        }
         return view('dashboard.add-recipients');
     }
 

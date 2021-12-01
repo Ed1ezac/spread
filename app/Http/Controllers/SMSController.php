@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\VerifySmsRequest;
 use App\Http\Requests\CreateSmsRequest;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Requests\ProcessedScheduledImmediateRequest;
+use App\Http\Requests\ProcessScheduledImmediateRequest;
 
 class SMSController extends Controller{
 
@@ -154,11 +154,17 @@ class SMSController extends Controller{
         }
     }
 
-    public function processScheduledRolloutNow(ProcessedScheduledImmediateRequest $request){
+    public function processScheduledRolloutNow(ProcessScheduledImmediateRequest $request){
         $sms = Sms::find($request->id);
+        if(!Auth::user()->hasRole('client')){
+            $this->killSMS($sms);
+            return redirect()->back();
+        }
         DB::table('jobs')
-        ->where('id', $sms->job_id)
-        ->update(['available_at' => Carbon::now()->addSeconds(6)->timestamp]);
+        ->where([
+            ['id', '=',$sms->job_id],
+            ['queue', '=', 'rollouts']
+        ])->update(['available_at' => Carbon::now()->addSeconds(6)->timestamp]);
 
         return redirect('/statistics')->with('status', 'Sms sending...');
     }
@@ -204,5 +210,14 @@ class SMSController extends Controller{
             'recipient_list_id' => $request->input('recipient-list-id'),
             'send_at' => $send_at,
         ]);
+    }
+
+    private function killSMS($sms){
+        DB::table('jobs')
+        ->where([
+            ['id', '=',$sms->job_id],
+            ['queue', '=', 'rollouts']
+        ])->delete();
+        $sms->update(['status' => Sms::Failed]);
     }
 }

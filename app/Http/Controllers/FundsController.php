@@ -17,11 +17,13 @@ class FundsController extends Controller
 
     public function __construct(FundsProcessing $fundsProcessor)
     {
-        $this->middleware('auth');
         $this->fundsProcessor = $fundsProcessor;
     }
 
     public function pay(){
+        if(!Auth::user()->hasRole('client')){
+            return redirect()->back();
+        }
         return view('dashboard.add-funds');
     }
 
