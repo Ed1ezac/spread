@@ -2,11 +2,7 @@
 
 
 @section('features')
-  @if ($errors->any())
-    @foreach ($errors->all() as $error)
-    <error-banner error="{{$error}}"></error-banner>
-    @endforeach
-  @endif
+
   <sms-rollout-progress
     user-id="{{Auth::id()}}"
     v-bind:is-about-to-send="{{ json_encode($isAboutToSend) }}"

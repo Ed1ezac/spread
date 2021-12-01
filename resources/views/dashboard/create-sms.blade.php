@@ -1,12 +1,7 @@
 @extends('layouts.dashboard-header')
 
 @section('features')
-        <!-----Todo ---->
-  @if ($errors->any())
-    @foreach ($errors->all() as $error)
-        <error-banner error="{{$error}}"></error-banner>
-    @endforeach
-  @endif
+       
   @if(isset($recipients) && count($recipients)>0)
     <sms-wizard
         sender-error =""
@@ -21,6 +16,7 @@
         <div class="mt-32 mb-12">
             <h3 class="text-3xl text-gray-700">Upload a list to begin</h3>
             <p class="text-gray-500 mt-1">A Recipient List is a file that contains the phone numbers of the people who are going to recieve your bulk sms.</p>
+            @role('client')
             <span class="sm:block mt-3">
                 <a href="/recipients/add" class="inline-flex items-center tracking-widest px-4 py-2 shadow-md my-btn border-primary-500 bg-primary-500 hover:bg-primary-700 focus:ring-primary-800">
                     <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -29,7 +25,7 @@
                     ADD A RECIPIENT LIST 
                 </a>
             </span>
-            
+            @endrole
         </div>
         <div class="hidden sm:block ml-8 mt-8">
             <svg class="transform -rotate-12 z-0 flex-shrink h-72 w-72 text-gray-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">

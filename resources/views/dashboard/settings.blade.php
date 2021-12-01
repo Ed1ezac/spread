@@ -1,11 +1,7 @@
 @extends('layouts.dashboard-header')
 
 @section('features')
-    @if ($errors->any())
-        @foreach ($errors->all() as $error)
-        <error-banner error="{{$error}}"></error-banner>
-        @endforeach
-    @endif
+    
     <div class="pb-12">
     @if(isset($user))
         <div class="flex flex-wrap space-y-8">
@@ -157,6 +153,7 @@
                             </svg>
                         </div>
                     </div>
+                    @role('client')
                     <div class="pr-6">
                         <a href="/settings/register/new/sender-name" class="group relative w-full flex justify-center py-2 px-4 mb-3 my-btn border-transparent bg-primary-500 hover:bg-primary-700 focus:outline-none focus:ring-primary-800">
                             <span class="absolute left-0 inset-y-0 flex items-center pl-3">
@@ -167,6 +164,7 @@
                             REGISTER NEW
                         </a>
                     </div>
+                    @endrole
                 </div>
                 @endif
             </div>
