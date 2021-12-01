@@ -17,7 +17,7 @@ class ProcessScheduledImmediateRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return $this->user()->hasRole('client');
     }
 
     /**

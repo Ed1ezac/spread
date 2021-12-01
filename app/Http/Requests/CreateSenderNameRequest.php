@@ -15,7 +15,7 @@ class CreateSenderNameRequest extends FormRequest
     public function authorize()
     {
         $count = SenderName::where('id', $this->user()->id)->count();
-        return $count <=3;
+        return ($count <=3 && $this->user()->hasRole('client'));
     }
 
     /**
