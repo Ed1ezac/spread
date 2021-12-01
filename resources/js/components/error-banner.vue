@@ -23,8 +23,8 @@
               Learn more
             </a>
           </!--div -->
-          <div class="order-2 flex-shrink-0 sm:order-3 sm:ml-3">
-            <button @click="isVisible = !isVisible" type="button" class="-mr-1 flex p-2 rounded-md hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-white sm:-mr-2">
+          <div v-if="disappears" class="order-2 flex-shrink-0 sm:order-3 sm:ml-3">
+            <button @click="isVisible = !disappears" type="button" class="-mr-1 flex p-2 rounded-md hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-white sm:-mr-2">
               <span class="sr-only">Dismiss</span>
               <!-- Heroicon name: outline/x -->
               <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
@@ -49,6 +49,7 @@
     },
     props:{
       error: String,
+      disappears: Boolean,
     },
     watch: {
       timerCount: {
@@ -58,7 +59,7 @@
             setTimeout(() => {
                 this.timerCount--;
                 if(this.timerCount == 0){
-                  this.isVisible = false;
+                  this.isVisible = !this.disappears;
                 }
             }, 1000);
           }

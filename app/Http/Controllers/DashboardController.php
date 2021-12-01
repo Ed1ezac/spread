@@ -33,18 +33,30 @@ class DashboardController extends Controller
         }
          
         $recipients = RecipientList::mine()->withStatus(RecipientList::Processed)->get();
-        return view('dashboard.create-sms', compact('recipients', 'senderNames'));
+        if(!Auth::user()->hasRole('client')){
+            return view('dashboard.create-sms', compact('recipients', 'senderNames'))
+                ->withErrors("This user account is suspended");
+        }else return view('dashboard.create-sms', compact('recipients', 'senderNames'));
     }
 
     public function scheduled(){
         $scheduled = Sms::mine()->withStatus(Sms::Pending)
             ->orderBy('send_at', 'asc')->get();
-        return view('dashboard.scheduled', compact('scheduled'));
+        if(!Auth::user()->hasRole('client')){
+            return view('dashboard.scheduled', compact('scheduled'))
+            ->withErrors("This user account is suspended"); 
+        }else
+            return view('dashboard.scheduled', compact('scheduled'));
+        
     }
 
     public function recipients(){
         $recipients = RecipientList::mine()->get();
-        return view('dashboard.recipients', compact('recipients'));
+        if(!Auth::user()->hasRole('client')){
+            return view('dashboard.recipients', compact('recipients'))
+            ->withErrors('This user account is suspended'); 
+        }else
+            return view('dashboard.recipients', compact('recipients'));
     }
 
     public function statistics() {
@@ -62,18 +74,32 @@ class DashboardController extends Controller
                         ->latest()
                         ->paginate(7);
 
-        return view('dashboard.statistics', compact('isAboutToSend', 'history'));
+        if(!Auth::user()->hasRole('client')){
+            return view('dashboard.statistics', compact('isAboutToSend', 'history'))
+                ->withErrors('This user account is suspended'); 
+        }else
+            return view('dashboard.statistics', compact('isAboutToSend', 'history'));
     }
 
     public function drafts(){
         $drafts = Sms::mine()->withStatus(Sms::Draft)->orderBy('created_at', 'desc')->get();
-        return view('dashboard.drafts', compact('drafts'));
+
+        if(!Auth::user()->hasRole('client')){
+            return view('dashboard.drafts', compact('drafts'))
+            ->withErrors("This user account is suspended"); 
+        }else
+            return view('dashboard.drafts', compact('drafts'));
     }
 
     public function funds(){
         $funds = Auth::user()->funds;
         $history = FundsRecord::mine()->latest()->paginate(7);
-        return view('dashboard.funds', compact('funds','history'));
+
+        if(!Auth::user()->hasRole('client')){
+            return view('dashboard.funds', compact('funds','history'))
+            ->withErrors('This user account is suspended'); 
+        }else
+            return view('dashboard.funds', compact('funds','history'));
     }
 
 }

@@ -48,7 +48,7 @@
             v-bind:is-auth="{{ json_encode(Auth::check()) }}"></my-navbar>
             <!--- Main Page Content ---> 
             @yield('content')
-            
+        
         </div>
         <!---->
         <script src="{{ asset('js/app.js') }}"></script>

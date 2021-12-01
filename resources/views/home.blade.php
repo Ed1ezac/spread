@@ -37,8 +37,8 @@
                 </div>
                 @endif
                 <div class="mt-3 sm:mt-0 sm:ml-3">
-                  <a href="#" class="w-full flex font-headings tracking-wider font-bold items-center justify-center px-8 py-3 border border-gray-300 text-base rounded-md text-gray-700 hover:text-white hover:bg-primary hover:border-primary md:py-4 md:text-lg md:px-10">
-                    FAQ'S
+                  <a href="/learn-more" class="w-full flex font-headings tracking-wider font-bold items-center justify-center px-8 py-3 border border-gray-300 text-base rounded-md text-gray-700 hover:text-white hover:bg-primary hover:border-primary md:py-4 md:text-lg md:px-10">
+                    LEARN MORE
                   </a>
                 </div>
               </div>
@@ -174,60 +174,16 @@
         </p>
         <div class="flex mt-2 md:mt-0">
           <div class="font-headings font-bold mr-2 border-2 border-primary-200 rounded-md text-primary-800 p-2">
-            COMPANY-1
+            BUFFALO I.T
           </div>
-          <div class="font-headings font-bold border-2 border-primary-200 rounded-md text-primary-800 p-2">
+          <!--div class="font-headings font-bold border-2 border-primary-200 rounded-md text-primary-800 p-2">
             COMPANY-2
-          </div>
+          </!--div-->
         </div>
       </div>
     </div>
   </section>
-  <footer class="bg-gray-800 pb-4">
-    <div class="py-6 sm:py-8 px-8 sm:px-14 lg:mx-auto max-w-7xl divide-y divide-gray-50">
-      <div class="flex mb-12 sm:flex-row flex-col justify-around">
-        <div class="flex-col">
-          <h3 class="text-gray-50 text-xl font-extrabold">Spread App</h3>
-          <p class="mt-3 text-white max-w-sm">The Spread App is a web system that dispatches short 
-            messages to multiple mobile phone recipients in one go. 
-            It is a 100% fully citizen owned venture which meets all the standards and
-            regulations.</p>
-          <!---hr class="text-gray-50 my-2"/>  
-          <div class="flex gap-x-4">
-            <a href="#" class="text-white hover:text-accent">FB</a>
-            <a href="#" class="text-white hover:text-accent">TW</a>
-          </div -->
-        </div>
-        <div class="flex-col">
-          <h3 class="text-gray-50 text-xl font-extrabold">Useful Links<h3>
-          <a href="/faqs" class="mt-3 block text-white hover:text-accent hover:underline">FAQ</a>
-          <a href="/terms" class="mt-1 block text-white hover:text-accent hover:underline">Terms</a>
-          <a href="/privacy" class="mt-1 block text-white hover:text-accent hover:underline">Privacy</a>
-        </div>
-        <div class="flex-col">
-          <h3 class="text-gray-50 text-xl font-extrabold">Contact us<h3>
-          <div class="text-white mt-3">Plot 2133, Goo-Lonake Ward, Gabane</div>
-          <div class="text-white mt-3">P.O Box 288, Gabane</div>
-          <div class="text-white mt-1">(+267) 75 275 918/ 76 067 957 </div>
-          <div class="text-white mt-1">enquiries@spread.co.bw</div>
-        </div>
-      </div>
-      <div class="flex pt-2 justify-between">
-        <div class="text-white">&copy; {{now()->year}} Spread</div>
-        <div class="flex gap-x-1">
-          <div class="inline-flex justify-center items-center rounded-full h-7 w-7" style="background-color: #3B5998;">
-            <a href="#" class="pt-1">
-              <i class="fab fill-current text-white text-xl fa-facebook-f hover:text-primary"></i>
-            </a>
-          </div>
-          <div class="inline-flex justify-center items-center rounded-full h-7 w-7" style="background-color: #55ACEE;">
-            <a href="#" class="pt-1">
-              <i class="fab fill-current text-white text-xl fa-twitter hover:text-primary"></i>
-          </a>  
-        </div>
-      </div>
-    </div>
-  </footer>
+  @include('components.footer')
 @endsection
 @push('page-js')
   <script>

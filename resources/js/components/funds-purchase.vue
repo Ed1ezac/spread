@@ -39,11 +39,11 @@
                                 ref="expiryField" 
                                 v-card-expiry v-model="cardExpiry"
                                 maxlength="9" required name="expiry"
-                                class="h-full px-1 w-20 my-form-input mt-0 font-bold border-transparent bg-transparent" placeholder="MM/YY">
+                                class="h-full px-1 w-20 my-form-input mt-0 font-bold border-transparent bg-transparent focus:ring-accent-800" placeholder="MM/YY">
                             <input 
                                 ref="cvcField" name="cvc"
                                 v-card-cvc v-model="cardCvc" maxlength="3" 
-                                class="h-full w-14 pr-1 my-form-input mt-0 font-bold border-transparent bg-transparent" placeholder="CVC">
+                                class="h-full w-14 pr-1 my-form-input mt-0 font-bold border-transparent bg-transparent focus:ring-accent-800" placeholder="CVC">
                         </div>
                     </div>
                     <div v-if="cardErrors.length > 0">

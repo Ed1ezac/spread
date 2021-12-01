@@ -15,6 +15,7 @@ trait DelegatesSendingBandwidth{
         $thisJob = JobStatus::where('job_id', $id)->first();
         $otherJob = JobStatus::where([
             ['job_id', '!=', $id],
+            ['queue', '=', 'rollouts'],
             ['status', '=',JobStatus::STATUS_EXECUTING]
             ])->first();
         

@@ -15,9 +15,9 @@
                 leave-from-class="transform scale-100 opacity-100"
                 leave-to-class="transform scale-95 opacity-0">
                 <MenuItems class="absolute z-15 right-0 w-28 mr-3 origin-bottom-right rounded-sm bg-primary-100 border border-primary-300 shadow-lg outline-none">
-                    <MenuItem v-slot="{ active }">
-                        <a href="#" :class="active ? 'bg-primary-200 text-gray-900':'text-gray-700'" class="my-popup-menu-link" role="menuitem">Suspend</a>
-                    </MenuItem> 
+                    <!--MenuItem v-slot="{ active }">
+                        <a :href="'/admin/users/user/'+userId+'/suspend'" :class="active ? 'bg-primary-200 text-gray-900':'text-gray-700'" class="my-popup-menu-link" role="menuitem">Suspend</a>
+                    </!--MenuItem --> 
                     <MenuItem v-slot="{ active }">
                         <a :href="'/admin/users/user/'+userId+'/edit/funds'" :class="active ? 'bg-primary-200 text-gray-900':'text-gray-700'" class="my-popup-menu-link" role="menuitem">Edit funds</a>
                     </MenuItem> 
