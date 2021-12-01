@@ -15,7 +15,7 @@
         </div>
         <div class="flex-col">
           <h3 class="text-gray-50 text-xl font-extrabold">Useful Links<h3>
-          <a href="/faqs" class="mt-3 block text-white hover:text-accent hover:underline">Learn More</a>
+          <a href="/learn-more" class="mt-3 block text-white hover:text-accent hover:underline">Learn More</a>
           <a href="/privacy" class="mt-1 block text-white hover:text-accent hover:underline">Privacy Policy</a>
           <a href="/terms" class="mt-1 block text-white hover:text-accent hover:underline">Terms of Service</a>
         </div>
