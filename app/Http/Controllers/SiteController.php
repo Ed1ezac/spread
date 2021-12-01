@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class SiteController extends Controller
@@ -13,6 +14,7 @@ class SiteController extends Controller
     }
 
     public function faqs(){
+        
         return view('faq');
     }
     
@@ -22,6 +24,10 @@ class SiteController extends Controller
 
     public function privacy(){
         return view('privacy');
+    }
+
+    public function refunds(){
+        return view('refunds');
     }
 
     public function learnMore(){

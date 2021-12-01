@@ -7,7 +7,7 @@ use App\Models\Sms;
 use App\Traits\EnsuresRolloutCompliance;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ProcessedScheduledImmediateRequest extends FormRequest
+class ProcessScheduledImmediateRequest extends FormRequest
 {
     use EnsuresRolloutCompliance;
     /**
