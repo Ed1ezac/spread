@@ -79,6 +79,12 @@ class AdminController extends Controller
         return view('admin.view-rollout-task', compact('task', 'user', 'sms'));
     }
 
+    public function killTask(Request $request){
+        $sms = Sms::find($request->id);
+        $sms->update(['status' => Sms::Aborted]);
+        return back()->withErrors('Sms rollout task has been stopped.');
+    }
+
     public function users(){
         $users = User::paginate(8);//with(['funds', 'roles'])->get();
         return view('admin.users', compact('users'));

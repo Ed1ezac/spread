@@ -3,7 +3,6 @@
 @section('features')
 
 <div class="flex flex-wrap">
-
     <div class="shadow-md ml-6 w-96 mb-4 border bg-white border-gray-50 rounded">
         <div class="flex justify-between items-center mx-2">
             <h3 class="my-2 text-sm text-gray-800 font-medium">Rollout Task</h3>
@@ -115,30 +114,46 @@
 
 </div>
 
-<div class="mt-4">
-    <div class="ml-6 flex-shrink bg-white border border-gray-200 rounded-md w-80 md:mr-2">
-        <h3 class="mt-2 ml-4 text-sm text-gray-800 font-medium">Sending User</h3>
-        <div class="px-6 pb-4 space-y-5">
-            <div class="pt-4 flex items-center">
-                <div class="w-12 h-12 relative mb-4">
-                    <div class="w-full h-full bg-gray-700 rounded-full overflow-hidden shadow-inner text-center bg-purple table">
-                        <span class="table-cell text-white font-bold align-middle">{{ $user->initials }}</span>
+<div class="flex flex-wrap">
+    <div class="mt-4">
+        <div class="ml-6 flex-shrink bg-white border border-gray-200 rounded-md w-80 md:mr-2">
+            <h3 class="mt-2 ml-4 text-sm text-gray-800 font-medium">Sending User</h3>
+            <div class="px-6 pb-4 space-y-5">
+                <div class="pt-4 flex items-center">
+                    <div class="w-12 h-12 relative mb-4">
+                        <div class="w-full h-full bg-gray-700 rounded-full overflow-hidden shadow-inner text-center bg-purple table">
+                            <span class="table-cell text-white font-bold align-middle">{{ $user->initials }}</span>
+                        </div>
                     </div>
-                </div>
-                <div class="ml-4">
-                    <div class="text-base font-medium text-gray-900">
-                    {{$user->name}}
-                    </div>
-                    <div class="text-sm text-gray-500">
-                    {{$user->email}}
-                    </div>
-                    <div class="text-xs mt-1 font-bold text-gray-500">
-                    FUNDS: &nbsp <span class="text-gray-800">{{' '.$user->funds->amount}}</span>
+                    <div class="ml-4">
+                        <div class="text-base font-medium text-gray-900">
+                        {{$user->name}}
+                        </div>
+                        <div class="text-sm text-gray-500">
+                        {{$user->email}}
+                        </div>
+                        <div class="text-xs mt-1 font-bold text-gray-500">
+                        FUNDS: &nbsp <span class="text-gray-800">{{' '.$user->funds->amount}}</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    @if($task->status == 'executing' || $task->status == 'retrying')
+        <div class="mt-4 ml-6 ">
+            <form action="/admin/rollout-tasks/abort" method="POST">
+                @csrf
+                <input type="hidden" name="id" value="{{$sms->id}}"/>
+                <div class="rounded-md shadow w-80">
+                    <button type="submit" class="w-full flex font-headings shadow-md tracking-wider font-bold items-center justify-center px-8 py-3 border border-transparent text-base rounded-md text-white bg-primary-500 hover:bg-primary-700 md:py-4 md:text-lg md:px-10">
+                    ABORT ROLLOUT
+                    </button>
+                </div>
+            </form>    
+        </div>
+    @endif
 </div>
 
 @endsection

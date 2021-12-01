@@ -23,8 +23,9 @@ use App\Http\Controllers\RecipientListController;
 */
 Auth::routes(['verify'=>true]);
 Route::get('/', [SiteController::class, 'landing']);
-Route::get('/faqs', [SiteController::class, 'faqs']);
+//Route::get('/faqs', [SiteController::class, 'faqs']);
 Route::get('/terms', [SiteController::class, 'terms']);
+Route::get('/refunds', [SiteController::class, 'refunds']);
 Route::get('/privacy', [SiteController::class, 'privacy']);
 Route::get('/learn-more', [SiteController::class, 'learnMore']);
 
@@ -89,6 +90,7 @@ Route::group(['prefix' =>'admin', 'middleware' =>'admin'], function () {
     Route::get('/users', [AdminController::class, 'users']);
     Route::get('/users/user/{id?}/edit/funds', [AdminController::class, 'editUserFunds']);
     Route::get('/users/user/{id?}/edit/roles', [AdminController::class, 'editUserRoles']);
+    //Route::get('users/user/{id?}/suspend', [AdminController::class, 'suspendUser']);
     Route::post('/user/deduct/funds', [AdminController::class, 'deductUserFunds']);
     Route::post('/user/credit/funds', [AdminController::class, 'creditUserFunds']);
     Route::post('/user/add/role', [AdminController::class, 'assignRole']);
@@ -96,6 +98,7 @@ Route::group(['prefix' =>'admin', 'middleware' =>'admin'], function () {
     //tasks
     Route::get('/files', [AdminController::class, 'files']);
     Route::get('/rollout-tasks', [AdminController::class, 'tasks']);
+    Route::post('/rollout-tasks/abort', [AdminController::class, 'killTask']);
     Route::get('/rollout-tasks/view/task/{id?}', [AdminController::class, 'viewTask']);
 });
 Route::get('/user/challenge/admin/get-role', [AdminController::class, 'createFirstSuperAdmin'])->middleware(['auth', 'verified']);
