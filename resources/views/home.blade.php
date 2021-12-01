@@ -37,8 +37,8 @@
                 </div>
                 @endif
                 <div class="mt-3 sm:mt-0 sm:ml-3">
-                  <a href="#" class="w-full flex font-headings tracking-wider font-bold items-center justify-center px-8 py-3 border border-gray-300 text-base rounded-md text-gray-700 hover:text-white hover:bg-primary hover:border-primary md:py-4 md:text-lg md:px-10">
-                    FAQ'S
+                  <a href="/learn-more" class="w-full flex font-headings tracking-wider font-bold items-center justify-center px-8 py-3 border border-gray-300 text-base rounded-md text-gray-700 hover:text-white hover:bg-primary hover:border-primary md:py-4 md:text-lg md:px-10">
+                    LEARN MORE
                   </a>
                 </div>
               </div>

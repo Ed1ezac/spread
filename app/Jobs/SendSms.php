@@ -144,12 +144,15 @@ class SendSms implements ShouldQueue
 
     private function sendMessageTo(String $number){
         if(!env('APP_DEBUG')){
-            $this->orange->sendSms(
+            $response = $this->orange->sendSms(
                 'tel:+267'.Orange::API_NUMBER,
                 'tel:+267'.substr($number, -8),
                 $this->sms->message,
                 $this->sms->sender
             );
+            if(isset($response['error'])){
+                throw new Exception($response['error']);
+            }
         }
     }
 

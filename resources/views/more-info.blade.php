@@ -6,7 +6,7 @@
 
 @section('content')
 <section class="pt-20 mb-12 px-8 lg:px-20">
-    <div class="text-gray-700 text-2xl font-medium">What is Spread | Bulk SMS Service?</div>
+    <div class="text-gray-700 mt-12 text-2xl font-medium">What is Spread | Bulk SMS Service?</div>
     <p class="text-gray-500 mb-4">
         Spread is a web system that dispatches short message service (SMS) text to multiple recipients 
         in a single automated task.
@@ -28,10 +28,9 @@
         registers a unique Sender name and selects it before sending the SMS.
     </p>
 </section>
-<section class="px-8 lg:px-20">
+<section class="mb-12 px-8 lg:px-20">
     <div class="text-gray-700 text-2xl font-medium">Pre-requisites</div>
     <p class="text-gray-500 mb-4">To send bulk SMS you need to:</p>
-
     <ul class="list-none list-inside mb-4 space-y-3 ml-8">
         <li>
             <div class="flex">
@@ -90,11 +89,9 @@
             </div>
         </li>
     </ul>
-    
-
     <p class="text-gray-500 mb-4"></p>
 </section>
-<section class="px-8 lg:px-20">
+<section class="mb-12 px-8 lg:px-20">
     <div class="text-gray-700 text-2xl font-medium">Recipient Lists</div>
     <p class="text-gray-500 mb-4">
         Spread allows its registered users to upload a file with a list of phone numbers of individuals who would like to receive 
@@ -119,7 +116,7 @@
         </p>
     </em>
 </section>
-<section class="px-8 lg:px-20">
+<section class="mb-12 px-8 lg:px-20">
     <div class="text-gray-700 text-2xl font-medium">Composing The SMS</div>
     <p class="text-gray-500 mb-4">
         The user can compose an SMS on their dashboard on the SMS creation form. The form lets the user select 
@@ -129,7 +126,7 @@
     </p>
     <p class="text-gray-500 mb-4">The user can then save the SMS as a draft for later review or proceed to send it.</p>    
 </section>
-<section class="px-8 lg:px-20">
+<section class="mb-12 px-8 lg:px-20">
     <div class="text-gray-700 text-2xl font-medium">Funds</div>
     <p class="text-gray-500 mb-4">
         Spread works on a pay as you go basis and charges only for what the user spends on the system. 

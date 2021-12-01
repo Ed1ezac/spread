@@ -15,7 +15,10 @@ trait EnsuresRolloutCompliance{
      //check we dont have MAX jobs currently running
     protected function isVacant()
     {
-        $runningJobs = JobStatus::where('status', JobStatus::STATUS_EXECUTING)->count();
+        $runningJobs = JobStatus::where([
+            ['queue', '=', 'rollouts'],
+            ['status','=', JobStatus::STATUS_EXECUTING]
+        ])->count();
         return ($runningJobs < $this->MAX_JOBS);
     }
  
@@ -39,6 +42,7 @@ trait EnsuresRolloutCompliance{
     protected function userHasExecutingJob()
     {
         return JobStatus::where([
+            ['queue', '=', 'rollouts'],
             ['status', '=', JobStatus::STATUS_EXECUTING ],
             ['user_id', '=', Auth::id()]
         ])->count() > 0;
@@ -50,6 +54,7 @@ trait EnsuresRolloutCompliance{
             $targetDateTime = Carbon::createFromFormat('d.m.Y H:i', $date);
             
             $jobs = DB::table('jobs')->where([
+                ['queue', '=', 'rollouts'],
                 ['available_at', '>=', $targetDateTime->copy()->subHours(2)->timestamp],
                 ['available_at', '<=', $targetDateTime->copy()->addHours(2)->timestamp]
             ])->get();
@@ -88,17 +93,25 @@ trait EnsuresRolloutCompliance{
         $sum = 0;
         $executingSmsIds = array();
 
-        $runningJobs = JobStatus::where('status', JobStatus::STATUS_EXECUTING)->get();
+        $runningJobs = JobStatus::where([
+            ['queue', '=', 'rollouts'],
+            ['status', JobStatus::STATUS_EXECUTING]
+        ])->get();
         foreach($runningJobs as $job){
+            if($runningJobs->isEmpty()) break;
             array_push($executingSmsIds, $job->trackable_id);
             $sum += ($job->progress_max - $job->progress_now);
         }
+        
         //get all queued jobs for today, if sendsLater than today, get queued jobs for that day
         $jobs = $this->jobsForDay($sendsLater, $date);
         //decode their payloads and sum recipients
+        
         foreach($jobs as $job){
+            if($jobs->isEmpty()) break;
             $payload = json_decode($job->payload);
             $info = unserialize($payload->data->command);
+           
             if(!empty($executingSmsIds) && in_array($info->sms->id, $executingSmsIds)){
                 continue;
             }else{
@@ -114,12 +127,14 @@ trait EnsuresRolloutCompliance{
             Carbon::now();
         if($sendsLater && !$dt->isToday()){
             return DB::table('jobs')->where([
+                ['queue', '=', 'rollouts'],
                 ['available_at', '>=', Carbon::create($dt->year, $dt->month, $dt->day, 7,0,0)->timestamp],
                 ['available_at', '<=', Carbon::create($dt->year, $dt->month, $dt->day, 21,30,0)->timestamp]
             ])->get();
         }else{
             return DB::table('jobs')->where([
                 //older than a day jobs wont be accounted for
+                ['queue', '=', 'rollouts'],
                 ['available_at', '>=', Carbon::createFromTime(7,0,0)->timestamp],
                 ['available_at', '<=', Carbon::createFromTime(21,30,0)->timestamp]
             ])->get();
