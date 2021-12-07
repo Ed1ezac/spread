@@ -1,6 +1,6 @@
 <footer class="bg-gray-800 pb-4">
     <div class="py-6 sm:py-8 px-8 sm:px-14 lg:mx-auto max-w-7xl divide-y divide-gray-50">
-      <div class="flex mb-12 sm:flex-row flex-col justify-around">
+      <div class="flex mb-12 sm:flex-row flex-col space-y-5 sm:space-y-0 sm:space-x-3 justify-around">
         <div class="flex-col">
           <h3 class="text-gray-50 text-xl font-extrabold">Spread App</h3>
           <p class="mt-3 text-white font-light max-w-sm">The Spread App is a web system that dispatches short 
