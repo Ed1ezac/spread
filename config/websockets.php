@@ -118,18 +118,18 @@ return [
          * certificate chain of issuers. The private key also may be contained
          * in a separate file specified by local_pk.
          */
-        'local_cert' => null,
+        'local_cert' => env('CERT_FILE_PATH',null),
 
         /*
          * Path to local private key file on filesystem in case of separate files for
          * certificate (local_cert) and private key.
          */
-        'local_pk' => null,
+        'local_pk' => env('CERT_PK_PATH',null),
 
         /*
          * Passphrase for your local_cert file.
          */
-        'passphrase' => null,
+        'passphrase' => env('CERT_PW', null),
     ],
 
     /*
