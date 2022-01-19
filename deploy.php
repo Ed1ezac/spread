@@ -13,6 +13,7 @@ set('branch', 'master');
 //[Optional] Allocate tty for git clone. Default value is false.
 set('git_tty', false); 
 set('ssh_multiplexing', false);
+set('keep_releases', 4);
 
 //Shared files/dirs between deploys 
 add('shared_files', []);

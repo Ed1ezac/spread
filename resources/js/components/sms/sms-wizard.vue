@@ -105,8 +105,8 @@
                   </p>
                 </div>
             </div>
-            <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-              <button type="submit" formaction="/create/save-as-draft" class="inline-flex justify-center py-2 px-4 mr-2 my-btn border-gray-300 text-gray-700 bg-gray-50 hover:border-primary-500 hover:bg-primary-500 focus:ring-primary-800">
+            <div class="flex flex-col sm:flex-row space-x-0 sm:space-x-3 space-y-4 sm:space-y-0 justify-end px-4 py-3 bg-gray-50 sm:px-6">
+              <button type="submit" formaction="/create/save-as-draft" class="inline-flex justify-center py-2 px-4 my-btn border-gray-300 text-gray-700 bg-gray-50 hover:border-primary-500 hover:bg-primary-500 focus:ring-primary-800">
                   <svg class="mr-1 flex-shrink-0 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
                   </svg>
