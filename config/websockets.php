@@ -129,7 +129,9 @@ return [
         /*
          * Passphrase for your local_cert file.
          */
-        'passphrase' => env('CERT_PW', null),
+        'passphrase' => null,
+        
+        'verify_peer' => false,
     ],
 
     /*
