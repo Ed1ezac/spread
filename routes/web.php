@@ -79,6 +79,7 @@ Route::group(['prefix' =>'admin', 'middleware' =>'admin'], function () {
     Route::get('/smses', [AdminController::class, 'smses']);
     //orange-info
     Route::get('/orange-info', [AdminController::class, 'orangeInfo']);
+    Route::post('/orange-info/token/refresh', [AdminController::class, 'adminRefreshToken'])->name('token.refresh.manual');
     Route::get('/orange-info/test-sms', [AdminController::class, 'testSms']);
     Route::post('/send/test-sms', [AdminController::class, 'sendTestSms']);
     //senderName

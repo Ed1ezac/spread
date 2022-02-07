@@ -27,8 +27,16 @@
             <p class="my-2 text-sm text-gray-400 font-medium">
                 {{ $token->value }}   
             </p>
-            <div class="text-xs text-gray-700 font-medium">
-            {{ 'Last updated: '.$token->updated_at->diffForHumans() }}
+            <div class="flex justify-between items-center">
+                <div class="text-xs text-gray-700 font-medium">
+                {{ 'Last updated: '.$token->updated_at->diffForHumans() }}
+                </div>
+                <form action="{{ route('token.refresh.manual') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="text-xs font-semibold font-headings text-gray-700 hover:text-accent-800">
+                    Refresh Token
+                    </button>
+                </form>
             </div>
             @else
             <p class="my-2 text-sm text-gray-400 font-medium">
