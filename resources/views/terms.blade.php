@@ -150,7 +150,7 @@
         <div>
             <div class="text-gray-700 text-2xl font-medium">6. Purchases, Payments and Refunds</div>
             <p class="text-gray-500 mb-4">
-                The Spread | Bulk SMS Service works on a pay what for you use basis and does not offer membership plans. This means 
+                The Spread | Bulk SMS Service works on a pay for what you use basis and does not offer membership plans. This means 
                 the user has to pay for the number of SMS’s they intend to send and nothing more. The user can purchase any number 
                 of SMS units which, if unused will remain in their account indefinitely until they use them, request a refund, or 
                 decide to close their account.
