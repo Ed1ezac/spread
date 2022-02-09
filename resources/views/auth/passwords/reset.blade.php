@@ -11,7 +11,7 @@
     @endforeach
 @endif
     <div class="flex justify-center mb-12 sm:mt-14 2xl:mt-20">
-        <div class="bg-white shadow-md overflow-hidden w-full max-w-sm rounded-md">
+        <div class="bg-white shadow-md overflow-hidden w-full max-w-sm rounded-md mx-6 sm:mx-0">
             <h3 class="text-gray-700 text-lg flex justify-center font-medium mx-6 my-2">Reset Password</h3>
             <form  method="POST" action="{{ route('password.update') }}">
                 @csrf

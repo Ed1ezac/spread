@@ -16,7 +16,7 @@
 <section class="pt-20">
     <div class="flex flex-row justify-center">
         <div class="flex flex-col md:col-span-8">
-            <div class="bg-white overflow-hidden rounded-md shadow-md px-2">
+            <div class="bg-white overflow-hidden rounded-md shadow-md px-2 mx-6 sm:mx-0">
             <h3 class="text-gray-700 text-lg flex justify-center font-headings font-medium mx-6 my-3">
             {{ __('Verify Your Email Address') }}
             </h3>

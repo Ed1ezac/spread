@@ -27,7 +27,7 @@ class Kernel extends ConsoleKernel
         //->everyFifteenMinutes()
         $schedule->call(new TokenPuller)
                 ->cron('*/20 * * * *')//every other 20 minutes
-                ->between("06:15", "22:05");
+                ->between("06:15", "22:02");
     }
 
     /**

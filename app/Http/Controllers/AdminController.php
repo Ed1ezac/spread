@@ -9,6 +9,7 @@ use App\Helpers\Orange;
 use App\Models\JobStatus;
 use Illuminate\Http\Request;
 use App\Models\RecipientList;
+use App\Traits\CallsOrangeApi;
 use App\Helpers\FundsProcessing;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\DB;
@@ -23,6 +24,7 @@ use App\Http\Requests\Admin\DeductUserFundsRequest;
 
 class AdminController extends Controller
 {
+    use CallsOrangeApi;
     private $fundsProcessor;
     private $orangConfig;
 
@@ -173,6 +175,22 @@ class AdminController extends Controller
     public function testSms(){
 
         return view('admin.send-sms');
+    }
+
+    public function adminRefreshToken(Request $request){
+        $url = 'https://api.orange.com/oauth/v3/token';
+        $headers = array('Authorization: '. env('ORANGE_AUTH_HEADER'));
+        $args = array('grant_type' => 'client_credentials');
+        $response = $this->callApi($headers, $args, $url, 'POST', 200);
+
+        if (!empty($response['access_token'])) {
+            $currentToken = Token::first();
+            $currentToken->update(['value' => $response['access_token'] ]);
+
+            return back()->with('status', 'Token updated successfully!');
+        }else{
+            return back()->withErrors('Token update failed!');
+        }
     }
 
     public function sendTestSms(TestSmsRequest $request){

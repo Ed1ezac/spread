@@ -3,7 +3,7 @@
 @section('content')
 <section class="pt-20">
     <div class="flex justify-center sm:mt-8 2xl:mt-14">
-    <div class="bg-white shadow-md overflow-hidden w-full max-w-sm rounded-md">
+    <div class="bg-white shadow-md overflow-hidden w-full max-w-sm rounded-md mx-6 sm:mx-0">
             <h3 class="text-gray-700 text-lg flex justify-content-center font-medium mx-6 mt-2 mb-3">Confirm your password to continue</h3>
             <form method="POST" action="{{ route('password.confirm') }}">
                 @csrf
