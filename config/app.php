@@ -27,6 +27,8 @@ return [
     */
 
     'env' => env('APP_ENV', 'production'),
+    
+    'oheader' => env('ORANGE_AUTH_HEADER'),
 
     /*
     |--------------------------------------------------------------------------
@@ -161,6 +163,7 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+        \Eduardokum\LaravelMailAutoEmbed\ServiceProvider::class,
 
         /*
          * Package Service Providers...

@@ -6,10 +6,9 @@ trait CallsOrangeApi{
 
     /**
      * cURL option for whether to verify the peer's certificate or not.
-     *
      * @var bool
      */
-    protected $verifyPeerSSL = true;
+    protected $verifyPeerSSL = true;//env('ORANGE_VERIFY_SSL');
 
     /**
      *  Gets the CURLOPT_SSL_VERIFYPEER value.

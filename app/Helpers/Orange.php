@@ -34,6 +34,13 @@ class Orange{
         $this->token = $token;
     }
 
+    public function requestApiToken(){
+        $url = self::BASE_URL .'/oauth/v3/token';
+        $headers = array('Authorization: '. \Config::get('app.oheader'));
+        $args = array('grant_type' => 'client_credentials');
+        return $this->callApi($headers, $args, $url, 'POST', 200);
+    }
+
     /**
      * Sends SMS.
      * @param  string  $senderAddress The receiver address in this format:

@@ -12,15 +12,14 @@ class TokenPuller{
     private $orange;
 
     public function __invoke(){
+        $token = Token::first();
+        $this->orange = new Orange();
         $this->pullTokenFromOrange();
         $this->pushTokenIntoDatabase();
     }
 
     private function pullTokenFromOrange(){
-        $url = 'https://api.orange.com/oauth/v3/token';
-        $headers = array('Authorization: '. env('ORANGE_AUTH_HEADER'));
-        $args = array('grant_type' => 'client_credentials');
-        $response = $this->callApi($headers, $args, $url, 'POST', 200);
+        $response = $this->orange->requestApiToken();
 
         if (!empty($response['access_token'])) {
             $this->token = $response['access_token'];
