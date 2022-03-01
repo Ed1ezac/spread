@@ -1,10 +1,11 @@
 <template>
     <div>
-        <div class="shadow-sm overflow-visible rounded-sm w-112 border-t-4 mb-2 mr-4 sm:mr-0 border-gray-500">
+        <div class="shadow overflow-visible rounded-sm w-112 border-t-4 mb-2 mr-4 sm:mr-0 border-gray-500">
             <form :action="formAction" method="POST">
             <input type="hidden" name="_token" :value="csrf">
             <div class="relative bg-white px-4 pt-2 pb-3 space-y-4 sm:p-6">
                 <input type="hidden" ref="smsId" name="smsId">
+                <input type="hidden" :value="orderNo" name="order_no">
                 <!---Sender-->
                 <div class="flex">
                     <svg class="flex-shrink-0 h-6 w-6 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -49,9 +50,7 @@
                     </div>
                     <div class="h-8 flex mt-1 ml-2" v-if="sendLater">
                         <div>
-                        <Datepicker 
-                            v-bind:date="date"
-                        ></Datepicker>
+                        <Datepicker v-bind:date="date"></Datepicker>
                         </div>
                         <div>
                             <input type="time" :value="time" name="time" min="07:00" max="19:00" class="px-4 h-full text-xs border border-gray-300 rounded text-gray-500 font-semibold focus:border-gray-200 focus:ring-2 focus:ring-offset-0 focus:ring-accent-800"/>
@@ -102,6 +101,7 @@ export default {
     },
     props:{
         recipients: Array,
+        orderNo: String,
     },
     methods:{
         toggle(){

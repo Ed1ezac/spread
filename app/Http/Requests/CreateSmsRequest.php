@@ -32,6 +32,7 @@ class CreateSmsRequest extends FormRequest
             'sender' => ['required','max:11'],
             'message' => ['required', 'max:160'],
             'recipient-list-id'=>['required', 'numeric'],
+            'order_no' => ['required', 'min:10']
         ];
     }
 
@@ -96,8 +97,14 @@ class CreateSmsRequest extends FormRequest
 
     private function dateIsTooEarly(){
         $request = request();
-        return ($request->input('sending_time') == 'later') &&
-            ((Carbon::today()->diffInDays($request->input('day'), false)<1) ||
-            (Carbon::now()->diffInSeconds($request->input('time'), false)<10));
+        $daysDiff = Carbon::today()->diffInDays($request->input('day'), false);
+        if(($request->input('sending_time') == 'later')){
+            if($daysDiff == 0){
+                return (Carbon::now()->diffInSeconds($request->input('time'), false)<10);
+            }else if($daysDiff<0){
+                return true;
+            }
+        }
+        return false;
     }
 }

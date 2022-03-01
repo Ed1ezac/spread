@@ -121,7 +121,7 @@ export default {
             localStorage.messagingListId = this.sms.recipient_list_id;
             localStorage.sendingDate = day;
             localStorage.sendingTime = time;
-            window.location.href = "create/summary/"+this.sms.recipient_list_id;
+            window.location.href = "create/sms/for/"+this.sms.recipient_list_id+"/summary";
         },
         gotoStatistics: function(){
             window.location.href = "/statistics"

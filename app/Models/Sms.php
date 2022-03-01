@@ -21,7 +21,7 @@ class Sms extends Model
     const Pending = 'pending';
     
     protected $fillable = [
-        'sender', 'message', 'status',
+        'sender', 'message', 'status', 'order_no',
         'recipient_list_id', 'user_id', 'send_at',
     ];
 

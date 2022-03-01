@@ -7,7 +7,8 @@ use Carbon\Carbon;
 use App\Models\Sms;
 use App\Models\Funds;
 use App\Jobs\SendSms;
-use App\Models\JobStatus;   
+use App\Models\JobStatus;
+use Illuminate\Support\Str;   
 use Illuminate\Http\Request;
 use App\Models\RecipientList;
 use App\Events\RolloutComplete;
@@ -100,7 +101,8 @@ class SMSController extends Controller{
         $funds = Auth::user()->funds;
         $recipientsCount = RecipientList::find($recipientsId)->entries;
         $recipients = RecipientList::mine()->get();
-        return view('dashboard.sms-summary', compact('recipients', 'recipientsCount', 'funds'));
+        $orderNo = '#SP00' . Str::random(7);
+        return view('dashboard.sms-summary', compact('recipients', 'recipientsCount', 'funds', 'orderNo'));
     }
 
     public function update(CreateSmsRequest $request){
@@ -137,7 +139,6 @@ class SMSController extends Controller{
     public function abortRollout(Request $request){
         //flag the sms as aborted and 'hope' the Job will pick that up
         $sms = Sms::find($request->id);
-        //
         $status = JobStatus::mine()->forJob($sms->job_id)
                 ->withStatus(JobStatus::STATUS_EXECUTING)
                 ->where('trackable_id', $sms->id)->first();
@@ -194,6 +195,7 @@ class SMSController extends Controller{
         return Sms::create([
             'sender' => $request->input('sender'),
             'message' => $request->input('message'),
+            'order_no' => $request->input('order_no'),
             'status' => Sms::Pending,
             'recipient_list_id'=> $request->input('recipient-list-id'),
             'send_at' => $send_at,
