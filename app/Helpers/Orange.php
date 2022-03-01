@@ -20,9 +20,6 @@ class Orange{
         if (array_key_exists('token', $config)) {
             $this->token = $config['token'];
         }
-        // if (array_key_exists('verifyPeerSSL', $config)) {
-        //     $this->verifyPeerSSL = $config['verifyPeerSSL'];
-        // } else {
     }
 
     public function getToken()
