@@ -11,7 +11,7 @@ class HandleEnquiriesEmail{
     {
         // Handle the incoming email
         //$email->reply(new EnquiryReceived);
-        $email->forward('ed1ezac@gmail.com');
+        $email->forward('buffaloitbotswana@gmail.com');
     }
 
 }

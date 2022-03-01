@@ -11,7 +11,7 @@ class HandleSupportEmail{
     {
         // Handle the incoming email
         //$email->reply(new SupportEmailReceived);
-        $email->forward('ed1ezac@gmail.com');
+        $email->forward('buffaloitbotswana@gmail.com');
     }
 
 }
