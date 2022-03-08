@@ -40,6 +40,10 @@ trait Trackable{
         $this->progressNow = $value;
     }
 
+    public function isNthAttempt(){
+        return $this->jobStatus->attempts > 0 && 
+            $this->progressNow < $this->progressMax;
+    }
     //should be private
     protected function update(array $data)
     {

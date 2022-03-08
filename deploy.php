@@ -23,7 +23,7 @@ add('shared_dirs', []);
 add('writable_dirs', []);
 
 //Hosts
-host('68.183.58.74')
+host('167.99.239.29')
     ->user('deployer')
     ->identityFile('~/.ssh/deployerkey')
     ->forwardAgent(false)

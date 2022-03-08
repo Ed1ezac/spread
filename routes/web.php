@@ -54,7 +54,7 @@ Route::post('/scheduled/sms/send-now', [SMSController::class, 'processScheduledR
 //funds
 Route::get('/funds/add', [FundsController::class, 'pay'])->middleware('auth');
 Route::get('/funds', [DashboardController::class, 'funds']);
-Route::post('/funds/buy', [FundsController::class, 'buyFunds']);
+//Route::post('/funds/buy', [FundsController::class, 'buyFunds']);
 //recipients
 Route::get('/recipients', [DashboardController::class, 'recipients']);
 Route::get('/recipients/add', [RecipientListController::class, 'createRecipients']);

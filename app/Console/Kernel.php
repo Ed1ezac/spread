@@ -28,6 +28,8 @@ class Kernel extends ConsoleKernel
         $schedule->call(new TokenPuller)
                 ->cron('*/20 * * * *')//every other 20 minutes
                 ->between("06:15", "22:02");
+        
+        $schedule->command('mailbox:clean')->daily();
     }
 
     /**

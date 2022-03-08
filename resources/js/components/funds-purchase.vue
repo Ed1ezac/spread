@@ -7,7 +7,7 @@
             <div class="space-y-8">
                 <!---SMS-->
                 <div class="mt-3">
-                    <input type="number" name="quantity" v-model="quantity" @input="restrictQuantity" maxlength="8" placeholder="SMS Quantinty" required 
+                    <input type="text" name="quantity" v-model="quantity" @input="restrictQuantity" maxlength="8" placeholder="SMS Quantinty" required 
                     class="w-full font-bold my-form-input"
                     :class="validationErrors.length >0 ?'bg-red-200 border-red-400 focus:ring-red-400':''">
                     <input type="hidden" name="cost" v-model="totalCost"/>
@@ -69,7 +69,10 @@
         <div class="shadow-sm border border-gray-300 overflow-hidden w-64 rounded-md">
             <div class="p-2 bg-white">
                 <div class="flex-col ml-2">
-                    <h5 class="text-base text-gray-400 font-medium">Purchasing</h5>
+                    <div class="flex justify-between">
+                        <h5 class="text-sm text-gray-400 font-medium">Order No.</h5>
+                        <p class="text-gray-400 font-headings text-base font-bold">#000X122234</p>
+                    </div>
                     <div class="divide-y divide-y-8 divide-gray-300">
                         <div class="flex-col">
                             <p class="text-gray-600 text-right text-3xl font-bold">{{ (quantity == '' || quantity === 0) ? 0 : quantity  }}<span class="text-gray-800 text-sm font-headings font-extrabold">sms</span></p>

@@ -178,10 +178,8 @@ class AdminController extends Controller
     }
 
     public function adminRefreshToken(Request $request){
-        $url = 'https://api.orange.com/oauth/v3/token';
-        $headers = array('Authorization: '. env('ORANGE_AUTH_HEADER'));
-        $args = array('grant_type' => 'client_credentials');
-        $response = $this->callApi($headers, $args, $url, 'POST', 200);
+        $orange = new Orange();
+        $response = $orange->requestApiToken();
 
         if (!empty($response['access_token'])) {
             $currentToken = Token::first();
@@ -189,7 +187,7 @@ class AdminController extends Controller
 
             return back()->with('status', 'Token updated successfully!');
         }else{
-            return back()->withErrors('Token update failed!');
+            return back()->withErrors('Fail!: '. $response['access_token']);
         }
     }
 

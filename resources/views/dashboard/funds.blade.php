@@ -15,7 +15,7 @@
                     </div>
                     <div class="flex-col ml-4">
                         <h3 class="text-xs text-gray-500 font-medium">Balance</h3>
-                        <p class="text-gray-800 text-2xl font-bold">{{ $funds->amount}}<span class="text-gray-500 text-xs font-bold">sms</span></p>
+                        <p class="text-gray-800 text-2xl font-bold">{{ $funds->amount}}<span class="text-gray-500 text-xs font-bold"> sms</span></p>
                     </div>
                 </div>
             </div>

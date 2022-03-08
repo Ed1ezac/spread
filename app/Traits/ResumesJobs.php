@@ -5,12 +5,12 @@ namespace App\Traits;
 use App\Models\JobStatus;
 
 trait ResumesJobs{
-    protected $progress;
+    protected $prevProgress;
     //if a job had previously failed but had some progress
     //it should begin from where it failed/stopped, not from scratch
     protected function hasPreviousProgress($job_id){
-        $this->progress = Jobstatus::find($job_id)->progress;
-        return isset($this->progress) && $this->progress > 0;
+        $this->prevProgress = Jobstatus::find($job_id)->progress_now;
+        return isset($this->prevProgress) && ($this->prevProgress > 0);
     }
 
 }

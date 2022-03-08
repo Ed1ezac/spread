@@ -20,9 +20,6 @@ class Orange{
         if (array_key_exists('token', $config)) {
             $this->token = $config['token'];
         }
-        // if (array_key_exists('verifyPeerSSL', $config)) {
-        //     $this->verifyPeerSSL = $config['verifyPeerSSL'];
-        // } else {
     }
 
     public function getToken()
@@ -32,6 +29,13 @@ class Orange{
 
     public function setToken($token){
         $this->token = $token;
+    }
+
+    public function requestApiToken(){
+        $url = self::BASE_URL .'/oauth/v3/token';
+        $headers = array('Authorization: '. \Config::get('app.oheader'));
+        $args = array('grant_type' => 'client_credentials');
+        return $this->callApi($headers, $args, $url, 'POST', 200);
     }
 
     /**

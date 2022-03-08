@@ -17,6 +17,7 @@ class CreateSmsTable extends Migration
             $table->id();
             $table->string('sender', 20);
             $table->text('message');
+            $table->string('order_no')->nullable();
             $table->enum('status', ['draft', 'pending', 'sent', 'aborted','failed']);
             $table->foreignId('recipient_list_id')->nullable();
             $table->foreignId('user_id');
