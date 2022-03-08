@@ -114,8 +114,9 @@ class SendSms implements ShouldQueue
         $reader = FileProcessing::createReader($this->recipients->file_extension);
         $maxRows = FileProcessing::getMaxRowSnapShot($reader, $this->recipients->file_path);
         $reader->setReadFilter($chunkFilter);
+        $startRow = firstOrResume();        
         $this->startingTime = Carbon::now();
-        for($startRow = 1; $startRow <= $maxRows; $startRow += FileChunkReadFilter::chunkSize) {
+        for($startRow; $startRow <= $maxRows; $startRow += FileChunkReadFilter::chunkSize) {
             $chunkFilter->setRows($startRow);
             $spreadsheet = FileProcessing::loadFile($reader, $this->recipients->file_path);
             $this->validateAndSendSms($spreadsheet->getActiveSheet());
@@ -150,11 +151,19 @@ class SendSms implements ShouldQueue
                 $this->sms->message,
                 $this->sms->sender
             );
-            /*if(isset($response['error'])){
+            if(isset($response['error'])){
                 throw new Exception($response['error']);
-            }*/
+            }
         }
         
+    }
+
+    private function firstOrResume(){
+        if($this->isNthAttempt() && 
+            $this->hasPreviousProgress($this->sms->job_id)){
+            return $this->prevProgress;
+        }
+        return 1;
     }
 
     private function checkForRolloutAbortionAndFail(){
@@ -200,7 +209,14 @@ class SendSms implements ShouldQueue
 
     private function billUser(){
         if($this->progressNow > 0){
-            $this->fundsProcessor->decrementUserFunds($this->sms->user_id, $this->progressNow);
+            $bill = $this->progressNow;
+            if(isset($this->prevProgress)){
+                if($this->prevProgress > 0)
+                    $bill = $this->progressNow - $this->prevProgress;
+            }else{
+                $this->fundsProcessor->decrementUserFunds($this->sms->user_id, $bill);
+            }
+            
         }
     }
 
