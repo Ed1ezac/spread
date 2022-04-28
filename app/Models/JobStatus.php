@@ -14,7 +14,7 @@ class JobStatus extends Model
     const STATUS_RETRYING = 'retrying';
 
     protected $fillable = [
-        'job_id', 'user_id', 'trackable_id', 'status', 'queue', 'attempts', 'progress_now', 
+        'job_id', 'user_id', 'trackable_id', 'uuid', 'status', 'queue', 'attempts', 'progress_now', 
         'progress_max', 'fail_error', 'started_at', 'finished_at'
     ];
 

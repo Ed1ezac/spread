@@ -16,6 +16,7 @@ trait Trackable{
             'user_id' => $model->user_id,
             'trackable_id' => $model->id,
             'queue' => $job->queue,
+            'uuid' => $job->uuid(),
             'attempts' => $job->attempts(),
         ]);
     }
