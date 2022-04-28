@@ -39,17 +39,20 @@ Route::post('/settings/register/new/sender-name', [SenderNamesController::class,
 Route::post('/settings/delete/sender-name', [SenderNamesController::class, 'deleteName'])->name('delete-sender-name');
 //sms
 Route::get('/drafts', [DashboardController::class, 'drafts']);
-Route::get('/create', [DashboardController::class, 'create']);
-Route::post('/create/verify', [SMSController::class, 'verify']);
-Route::post('/create/sms/update', [SMSController::class, 'update']);
+Route::get('/drafts/item/edit', [SMSController::class, 'editDraft']);
+Route::post('/drafts/item/delete', [SMSController::class, 'deleteDraft']);
+Route::post('/create/save-as-draft', [SMSController::class, 'saveDraft']);
+//create
+Route::get('/create', [SMSController::class, 'index']);
+Route::get('/create/sms/summary', [SMSController::class, 'summary']);
+//schedu
 Route::get('/scheduled', [DashboardController::class, 'scheduled']);
 Route::post('/create/confirm', [SMSController::class, 'createAndQueue']);
-Route::post('/create/save-as-draft', [SMSController::class, 'saveDraft']);
-Route::post('/drafts/item/delete', [SMSController::class, 'deleteDraft']);
 Route::post('/sms/rollout/abort', [SMSController::class, 'abortRollout']);
 Route::post('/scheduled/sms/abort', [SMSController::class, 'abortScheduledRollout']);
-Route::get('/scheduled/sms/{id?}/update', [SMSController::class, 'updateScheduledSms']);
-Route::get('/create/sms/for/{recipientsId?}/summary/', [SMSController::class, 'summary']);
+Route::get('/scheduled/sms/edit/summary', [SMSController::class, 'editScheduledSms']);
+Route::get('/scheduled/sms/edit/create', [SMSController::class, 'editScheduledSmsStep1']);
+Route::post('/scheduled/sms/update', [SMSController::class, 'updateScheduledSms']);
 Route::post('/scheduled/sms/send-now', [SMSController::class, 'processScheduledRolloutNow']);
 //funds
 Route::get('/funds/add', [FundsController::class, 'pay'])->middleware('auth');

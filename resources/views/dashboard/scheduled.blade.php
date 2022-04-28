@@ -6,6 +6,7 @@
         <div class="flex flex-wrap">
         @foreach ($scheduled as $sms)
             <scheduled-sms
+                send-at="{{$sms->send_at}}"
                 v-bind:recipients="{{ json_encode(\App\Models\RecipientList::find($sms->recipient_list_id)) }}"
                 v-bind:sms="{{ json_encode($sms) }}"
             >
