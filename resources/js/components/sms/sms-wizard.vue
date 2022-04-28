@@ -10,8 +10,13 @@
               </svg>
             </button>
           </div>
-          <form ref="smsform" action="/create/verify" method="POST">
+          <form ref="smsform" :action="sms.id ? '/scheduled/sms/edit/summary':'/create/sms/summary'" method="GET">
             <input type="hidden" name="_token" :value="csrf">
+            <input v-if="sms.id && sms.status == 'pending'" type="hidden" name="id" :value="sms.id">
+            <input v-if="sms.status" type="hidden" name="status" :value="sms.status">
+            <input v-if="sms.user_id" type="hidden" name="user_id" :value="sms.user_id">
+            <input v-if="sms.order_no" type="hidden" name="order_no" :value="sms.order_no">
+            <input v-if="sendAt != ''" type="hidden" name="send_at" :value="sendAt">
             <div class="px-6 pb-2 space-y-6 sm:p-6">
                 <!--sender-->
                 <SenderNamePicker
@@ -19,7 +24,8 @@
                   v-on:sender-name-reset="onSenderNameReset"
                   v-bind:sender-error="senderError"
                   v-bind:sender-names="senderNames"
-                  v-bind:has-cleared="hasCleared">           
+                  v-bind:has-cleared="hasCleared"
+                  v-bind:current="sms.sender">           
                 </SenderNamePicker>
                 <!--message-->
                 <div>
@@ -36,7 +42,7 @@
                     </span>
                   </div>
                   <p class="mt-2 text-xs text-gray-500">
-                    160 symbols per message (including spaces).
+                    160 characters per message (including spaces).
                   </p>
                 </div>
                 <!--recipients-->
@@ -62,7 +68,7 @@
                           leave-active-class="transition ease-in duration-100"
                           leave-from-class="opacity-100"
                           leave-to-class="opacity-0">
-                          <div v-if="open" class="absolute mt-1 w-full rounded-md bg-white shadow-lg">
+                          <div v-if="open" class="absolute mt-1 w-full z-10 rounded-md bg-white shadow-lg">
                             <ListboxOptions static class="max-h-60 rounded-md py-1 text-base leading-6 
                               shadow-sm border border-gray-200 overflow-auto focus:outline-none sm:text-sm sm:leading-5">
                               <ListboxOption
@@ -99,7 +105,7 @@
                       </div>
                     </Listbox>
                   </div>
-                  <input type="hidden" ref="listInput" :value="messagingListItem.id" name="recipient-list-id"/>
+                  <input type="hidden" ref="listInput" :value="messagingListItem.id" name="recipient_list_id"/>
                   <p class="mt-2 text-xs text-gray-500">
                     Do you need a different recipient list? <a href="/recipients/add" class="text-accent-800 underline font-semibold hover:text-accent-500">add one</a>
                   </p>
@@ -122,7 +128,7 @@
           </form>  
         </div>
         <!--preview-->
-        <div class="px-2 2xl:ml-12 hidden md:block w-60 relative">
+        <div class="px-2 2xl:ml-12 hidden md:block w-60 z-0 relative">
             <div class="absolute mt-16 ml-7 w-36">
             <p id="title" class="text-sm truncate font-sans mx-3 text-white cursor-default">{{ sender }}</p>
             </div>
@@ -147,13 +153,13 @@
     export default {
       data(){ 
           return{
-              max: 160,
-              sender:'',
-              listId: 0,
-              messageText: '',
-              hasCleared: false,
-              messagingListItem: ref(this.recipients[0]),
-              csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            max: 160,
+            sender:'',
+            listId: 0,
+            messageText: '',
+            hasCleared: false,
+            messagingListItem: ref(this.recipients[0]),
+            csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
           }
       },
       props:{
@@ -162,6 +168,11 @@
           graphicUri: String,
           recipients: Array,
           senderNames: Array,
+          sms: Object,
+          sendAt: {
+            type: String,
+            default: ''
+          }
       },
       methods:{
         onUpdateTittle: function(newTitle){
@@ -171,29 +182,21 @@
           this.hasCleared = false;
         },
         erase(){
-          localStorage.clear();
+          sessionStorage.clear();
           this.hasCleared = true;
           this.messageText = '';
         },
-        persistData() {
-          localStorage.message = this.messageText;
-          localStorage.messagingListId = this.messagingListItem.id;
-        },
         submitForm(){
-          this.persistData();
-          //append value to: name:messaging-list-id
-          //this.$refs.listInput.value = this.messagingListItem.id;
           this.$refs.smsform.submit();
         },
       },
       mounted() {
-        //sessionStorage.test = "hello session";works!
-        if(localStorage.message){
-          this.messageText = localStorage.message;
+        if(this.sms.message){
+          this.messageText = this.sms.message;
         }
-        if(localStorage.messagingListId){
+        if(this.sms.recipient_list_id){
             for(var i=0; i< this.recipients.length; i++){
-              if(this.recipients[i].id == localStorage.messagingListId){
+              if(this.recipients[i].id == this.sms.recipient_list_id){
                 this.messagingListItem = ref(this.recipients[i]);
               }
             }
@@ -211,8 +214,9 @@
       }
     }
 </script>
+
 <style>
  .w-120{
     width: 30rem;
- }
+  }
 </style>

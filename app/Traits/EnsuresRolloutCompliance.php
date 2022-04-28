@@ -48,23 +48,27 @@ trait EnsuresRolloutCompliance{
         ])->count() > 0;
     }
 
-    protected function userHasCloselyQueuedJobs($sendsLater, $date){
+    protected function userHasCloselyQueuedJobs($sendsLater, $date, $jobId = -1){
         $hasJob = false;
         if($sendsLater){
             $targetDateTime = Carbon::createFromFormat('d.m.Y H:i', $date);
             
             $jobs = DB::table('jobs')->where([
                 ['queue', '=', 'rollouts'],
-                ['available_at', '>=', $targetDateTime->copy()->subHours(2)->timestamp],
-                ['available_at', '<=', $targetDateTime->copy()->addHours(2)->timestamp]
+                ['available_at', '>=', $targetDateTime->copy()->subMinutes(30)->timestamp],
+                ['available_at', '<=', $targetDateTime->copy()->addMinutes(30)->timestamp]
             ])->get();
             //decode their payloads and sum recipients
             foreach($jobs as $job){
                 $payload = json_decode($job->payload);
                 $info = unserialize($payload->data->command);
                 if($info->sms->user_id == $this->user()->id){
-                    $hasJob = true;
-                    break;
+                    if($jobId > 0 && $jobId == $info->sms->job_id){
+                        continue;
+                    }else{
+                        $hasJob = true;
+                        break;
+                    }
                 }
             }
         }
@@ -73,7 +77,7 @@ trait EnsuresRolloutCompliance{
 
     protected function rolloutWillCompleteInTime(array $request)
     {
-        $numRecipients = RecipientList::find($request['recipient-list-id'])->entries;
+        $numRecipients = RecipientList::find($request['recipient_list_id'])->entries;
         $sendsLater = $request['sending_time'] == 'later';
         $date = $sendsLater ? $request['day'].''.$request['time'] : "";
         //check if the queued entries + requesting entry will execute in time

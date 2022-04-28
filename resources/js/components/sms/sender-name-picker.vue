@@ -84,13 +84,13 @@ export default {
         }
     },
     mounted() {
-        if (localStorage.sender) {
+        if (this.current) {
             for(var i=0; i< this.senderNames.length; i++){
-                if(this.senderNames[i] == localStorage.sender){
+                if(this.senderNames[i] == this.current){
                     this.senderName = ref(this.senderNames[i]);
                     this.emitSenderNameChange( this.senderName);
                 }
-                if(i == this.senderNames.length-1 && this.senderName != localStorage.sender){
+                if(i == this.senderNames.length-1 && this.senderName != this.current){
                     this.senderName = ref(this.senderNames[0]);
                     this.emitSenderNameChange( this.senderName);
                 }
@@ -103,7 +103,8 @@ export default {
     props:{
         senderError: String,
         senderNames: Array,
-        hasCleared: Boolean
+        hasCleared: Boolean,
+        current: String
     },
     watch:{
         senderName:{ 
@@ -124,7 +125,7 @@ export default {
     methods:{
         emitSenderNameChange(newName){
             this.$emit('sender-name-change', newName);
-            localStorage.sender = this.senderName;
+            //localStorage.sender = this.senderName;
         },
         clearCurrentSenderNameSelection(doClear){
             if(doClear){

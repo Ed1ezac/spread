@@ -1,7 +1,11 @@
 <template>
     <div>
-        <p v-if="!ready" class="text-gray-600 ml-2 self-center"><span class="font-bold">{{hour}}</span> hr <span class="font-bold">{{min}}</span> min <span class="font-bold">{{sec}}</span> sec</p>
-        <p v-else class="text-gray-600 ml-2 self-center"><span class="font-bold">Sending...</span></p>
+        <p v-if="!ready" class="text-gray-600 ml-2 self-center">
+          <span v-if="day > 0"><span class="font-bold">{{day}}</span> days </span>
+          <span v-if="hour > 0"><span class="font-bold">{{hour}}</span> hr </span>
+          <span v-if="min > 0"><span class="font-bold">{{min}}</span> min </span>
+          <span class="font-bold">{{sec}}</span> sec</p>
+        <p v-else class="text-gray-600 ml-2 self-center"><span class="font-bold">Queued...</span></p>
     </div>
 </template>
 
@@ -26,11 +30,12 @@ export default {
   },
   computed:{
     day(){
-        let d = Math.trunc((this.endDate - this.now)/1000/(86400));
-        //console.log("Dif: "+(this.endDate - this.now)/1000/(3600*24));
+        let hrs = Math.trunc((this.endDate - this.now) / 1000 / 3600);
+        return Math.trunc(hrs/24);
     },
     hour(){
         let h = Math.trunc((this.endDate - this.now) / 1000 / 3600);
+        h = Math.trunc(h%24)
         return h>9?h:'0'+h;
     },
     min(){

@@ -28,7 +28,7 @@
                 </svg>
                 <count-down-timer 
                     @time-up-event="changeStatusToSending"
-                    v-bind:end="sms.send_at"
+                    v-bind:end="sendAt"
                 ></count-down-timer>
             </div>
         </div>
@@ -61,12 +61,25 @@
                     </form>
                 </span>
                 <span class="sm:block">
-                    <button @click="gotoSummary()" class="inline-flex justify-center py-2 px-4 my-btn shadow-md bg-primary-500 border-primary-500 hover:bg-primary-700 focus:ring-primary-800">
-                        <svg class="flex-shrink-0 -ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                        </svg>
-                        EDIT
-                    </button>   
+                    <form ref="editform" action="/scheduled/sms/edit/summary" method="GET">
+                        <input type="hidden" name="_token" :value="csrf">
+                        <input type="hidden" name="id" :value="sms.id">
+                        <input type="hidden" name="job_id" :value="sms.job_id">
+                        <input type="hidden" name="status" :value="sms.status">
+                        <input type="hidden" name="sender" :value="sms.sender">
+                        <input type="hidden" name="user_id" :value="sms.user_id">
+                        <input type="hidden" name="send_at" :value="sendAt">
+                        <input type="hidden" name="message" :value="sms.message">
+                        <input type="hidden" name="order_no" :value="sms.order_no">
+                        <input type="hidden" name="recipient_list_id" :value="sms.recipient_list_id">
+
+                        <button type="submit" class="inline-flex justify-center py-2 px-4 my-btn shadow-md bg-primary-500 border-primary-500 hover:bg-primary-700 focus:ring-primary-800">
+                            <svg class="flex-shrink-0 -ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                            EDIT
+                        </button>
+                    </form>       
                 </span>
             </div>  
             <div v-else>
@@ -105,31 +118,17 @@ export default {
         beginRollout: function(){
             this.$refs.beginform.submit();
         },
-        gotoSummary: function(){
-            const dt = new Date(this.sms.send_at);
-            //'YYYY.MM.DD'
-            let date = dt.getDate()<10? "0"+dt.getDate():dt.getDate();
-            let month = dt.getMonth()<10? "0"+dt.getMonth():dt.getMonth();
-            let hour = dt.getHours()<10? "0"+dt.getHours():dt.getHours();
-            let mins = dt.getMinutes()<10? "0"+dt.getMinutes():dt.getMinutes();
-            const day = dt.getFullYear()+"-"+month+"-"+date;
-            const time = hour+":"+mins;
-            //local storage override
-            localStorage.smsId = this.sms.id;
-            localStorage.sender = this.sms.sender;
-            localStorage.message = this.sms.message;
-            localStorage.messagingListId = this.sms.recipient_list_id;
-            localStorage.sendingDate = day;
-            localStorage.sendingTime = time;
-            window.location.href = "create/sms/for/"+this.sms.recipient_list_id+"/summary";
-        },
         gotoStatistics: function(){
             window.location.href = "/statistics"
-        }
+        },
     },
     props:{
         sms: Object,
         recipients: Object,
+        sendAt: {
+            type: String,
+            default: '',
+        },
     },
     
     components:{

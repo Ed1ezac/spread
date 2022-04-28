@@ -31,7 +31,7 @@ class CreateSmsRequest extends FormRequest
         return [
             'sender' => ['required','max:11'],
             'message' => ['required', 'max:160'],
-            'recipient-list-id'=>['required', 'numeric'],
+            'recipient_list_id'=>['required', 'numeric'],
             'order_no' => ['required', 'min:10']
         ];
     }
@@ -40,14 +40,7 @@ class CreateSmsRequest extends FormRequest
     {
         $validator->after(function ($validator) {
             $request = request();
-            $correctRecipients = $this->isUsersRecipientListId($request->input('recipient-list-id'));
-            if (!$this->isUsersSenderName($request->input('sender'))) {
-                $validator->errors()->add('Sender','Invalid sender, please select sender name again');
-            }
-            if (!$correctRecipients) {
-                $validator->errors()->add('Recipients','Invalid recipients, please select a recipient list again');
-            }
-            if ($correctRecipients && $this->insufficientFunds()) {
+            if ($this->insufficientFunds()) {
                 $validator->errors()->add('funds','You have insufficient funds');
             }
             if($this->dateIsTooFar()){
@@ -57,19 +50,20 @@ class CreateSmsRequest extends FormRequest
                 $validator->errors()->add('period','Sending time is in the past, should be future time.');
             }
             if(!$this->isWithinTimeBounds()){
-                $validator->errors()->add('time','Sending time must be between 0700 and 2130 hrs.');
+                $validator->errors()->add('time','Sending time must be between 0700 and 1900 hrs.');
             }
-            if($correctRecipients && !$this->rolloutWillCompleteInTime($request->only('recipient-list-id','sending_time','day','time'))){
+            if(!$this->rolloutWillCompleteInTime($request->only('recipient_list_id','sending_time','day','time'))){
                 $validator->errors()->add('completion-time',
                 'Unfortunately the rollout won\'t complete within the allowed time (7am to 9:30pm).');
             }
             if($this->userHasExecutingJob()){
                 $validator->errors()->add('concurrency','Users are allowed only one rollout at a time.');
             }
-            if($this->userHasCloselyQueuedJobs($request->input('sending_time') == 'later', ($request->input('day').''.$request->input('time')))){
+            if($this->userHasCloselyQueuedJobs(
+                    $request->input('sending_time') == 'later', 
+                    ($request->input('day').''.$request->input('time')))){
                 $validator->errors()->add('concurrency','Too many closely scheduled rollouts, separate by 2 hours at least.');
-            }
-            
+            } 
         });
     }
 
@@ -85,7 +79,7 @@ class CreateSmsRequest extends FormRequest
     private function insufficientFunds(){
         $request = request();
         $funds = $this->user()->funds;
-        $recipientsCount = RecipientList::find($request->input('recipient-list-id'))->entries;
+        $recipientsCount = RecipientList::find($request->input('recipient_list_id'))->entries;
         return $funds->amount < $recipientsCount;
     }
 

@@ -1,5 +1,6 @@
 <template>
-    <div v-show="isAboutToSend || isSending || isAborted" class="shadow-sm overflow-hidden divide-y divide-dashed divide-gray-300 rounded mb-10 mr-4 xl:mr-6 max-w-7xl border-t-4 border-gray-500">
+<!------------isAboutToSend || isSending || isAborted------- --->
+    <div v-show="true" class="shadow-sm overflow-hidden divide-y divide-dashed divide-gray-300 rounded mb-10 mr-4 xl:mr-6 max-w-7xl border-t-4 border-gray-500">
         <div class="mb-2 px-4">
             <div class="flex justify-between my-2">
                 <h3 class="text-sm text-gray-400">{{ statusValue }}</h3>
@@ -116,7 +117,7 @@ export default {
             }else if(this.isAborted){
                 return 'Stopped.'
             }
-            return 'Discovering...';
+            return 'Queueing...';
         },
         isSending(){
             return this.isDiscovered && this.percentage < 100 && !this.isAborted;

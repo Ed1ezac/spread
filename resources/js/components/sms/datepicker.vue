@@ -17,7 +17,7 @@
                 leave-from-class="transform scale-100 opacity-100"
                 leave-to-class="transform scale-50 opacity-0">
                 <div ref="outerWrap">
-                    <PopoverPanel class="absolute w-72 border mt-1 mb-2 border-gray-300 rounded-md origin-left shadow-lg outline-none">
+                    <PopoverPanel class="w-72 z-10 border mt-1 mb-2 border-gray-300 rounded-md origin-top shadow-lg outline-none">
                         <header class="flex justify-around bg-primary-100 rounded-t-md py-2 px-8">
                             <button :title="prevMonthCaption" class="rounded-full p-1 bg-primary-300 hover:bg-primary-400" @click="incrementMonth(-1)" type="button">
                                 <svg class="h-4 w-4 text-primary-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">

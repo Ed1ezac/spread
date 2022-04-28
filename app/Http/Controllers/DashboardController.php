@@ -16,11 +16,6 @@ use Illuminate\Support\Facades\Auth;
 class DashboardController extends Controller
 {
     private $defaultAppName = 'Spread';
-    
-    public function __construct(RecipientList $list)
-    {
-        $this->middleware('auth');
-    }
 
     public function create(){
         $senderNames = array($this->defaultAppName);
@@ -28,8 +23,7 @@ class DashboardController extends Controller
                         ->withStatus(SenderName::Approved)
                         ->pluck('sender_name');
         if(isset($names) && count($names)>0){
-            foreach($names as $n){ $senderNames[] = $n;
-            }
+            foreach($names as $n){ $senderNames[] = $n; }
         }
          
         $recipients = RecipientList::mine()->withStatus(RecipientList::Processed)->get();
@@ -83,7 +77,7 @@ class DashboardController extends Controller
 
     public function drafts(){
         $drafts = Sms::mine()->withStatus(Sms::Draft)->orderBy('created_at', 'desc')->get();
-
+        
         if(!Auth::user()->hasRole('client')){
             return view('dashboard.drafts', compact('drafts'))
             ->withErrors("This user account is suspended"); 

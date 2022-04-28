@@ -11,7 +11,7 @@
                     <svg class="flex-shrink-0 h-6 w-6 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
                     </svg>
-                    <div class="bg-gray-200 ml-2 px-2 p-1 border-gray-400 border-2">
+                    <div class="bg-gray-200 ml-2 px-2 p-1 w-60 border-gray-400 border-2">
                         <p class="font-medium text-sm text-gray-800">{{ sms.message }}</p>
                     </div>
                 </div>
@@ -33,12 +33,17 @@
                 </div>
                 <div class="flex">
                     <span class="sm:block">
-                        <button @click="gotoEdit" class="inline-flex justify-center py-2 px-4 my-btn shadow-md bg-primary-500 border-primary-500 hover:bg-primary-700 focus:ring-primary-800">
-                            <svg class="flex-shrink-0 -ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                            </svg>
-                            EDIT
-                        </button>   
+                        <form ref="editform" action="/drafts/item/edit" method="GET" class="">
+                            <input type="hidden" name="_token" :value="csrf">
+                            <input type="hidden" name="sender" :value="sms.sender">
+                            <input type="hidden" name="message" :value="sms.message">
+                            <button type="submit" class="inline-flex justify-center py-2 px-4 my-btn shadow-md bg-primary-500 border-primary-500 hover:bg-primary-700 focus:ring-primary-800">
+                                <svg class="flex-shrink-0 -ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                </svg>
+                                EDIT
+                            </button>
+                        </form>   
                     </span>
                 </div>  
             </div>
@@ -58,14 +63,6 @@ export default {
     methods:{
         deleteItem: function(){
             this.$refs.deleteform.submit();
-        },
-        gotoEdit: function(){
-            localStorage.clear();
-            //local storage override
-            localStorage.sender = this.sms.sender;
-            localStorage.message = this.sms.message;
-            localStorage.messagingListId = undefined;
-            window.location.href = "create"
         },
     }
 }

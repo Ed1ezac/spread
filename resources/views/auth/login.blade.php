@@ -2,7 +2,7 @@
 
 @section('content')
 <section class="pt-20">
-    <div class="flex justify-center sm:mt-14 2xl:mt-20">
+    <div class="flex justify-center mt-9 mb-9 sm:mt-14 2xl:mt-20">
         <div class="bg-white shadow-md overflow-hidden w-full max-w-sm rounded-md mx-6 sm:mx-0">
             <h3 class="text-gray-700 text-lg flex justify-center font-headings font-medium mx-6 my-2">Welcome!</h3>
             <form method="POST" action="{{ route('login') }}">
@@ -38,7 +38,7 @@
                                 Remember me
                             </label>
                         </div>
-                        <a class="font-semibold font-headings text-gray-700 hover:text-accent-800" href="{{ route('password.request') }}">Forgot your password?</a>
+                        <a class="font-semibold font-headings text-gray-700 hover:text-accent-800" href="{{ route('password.request') }}">Forgot password?</a>
                     </div>
                     <!---button-->
                     <div>
@@ -54,7 +54,9 @@
                 </div>
             </form>
         </div>
+        
     </div>
+    @include('components.footer-small')
 </section>
 @endsection
 

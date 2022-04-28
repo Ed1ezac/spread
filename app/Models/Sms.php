@@ -30,6 +30,14 @@ class Sms extends Model
     ];
 
 
+    public static function empty(){
+        $sms = new Sms();
+        $sms->sender = '';
+        $sms->message = '';
+        $sms->status = '';
+        return $sms;
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -54,6 +62,11 @@ class Sms extends Model
     public function scopeWithStatus($query, $status)
     {
         return $query->where('status', $status);
+    }
+
+    public function scopeWithOrderId($query, $order)
+    {
+        return $query->where('order_no', $order);
     }
 
 }
