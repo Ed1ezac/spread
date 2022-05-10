@@ -39,9 +39,13 @@
                                 leave-from-class="transform scale-100 opacity-100"
                                 leave-to-class="transform scale-95 opacity-0"
                                 >
-                                <MenuItems class="absolute right-0 w-48 mt-2 origin-top-right bg-white border border-gray-200 rounded-md shadow-lg outline-none">
+                                <MenuItems class="absolute right-0 w-52 mt-2 origin-top-right bg-white border border-gray-200 rounded-md shadow-lg outline-none">
                                     <MenuItem>
-                                        <h3 class="py-1 whitespace-normal px-4 text-sm w-40 text-gray-500">{{username}}</h3>
+                                        <div class="flex-col border-b bg-gray-50 border-gray-100">
+                                            <h3 class="pt-1 whitespace-normal px-4 text-sm w-52 text-gray-400">{{username}}</h3>
+                                            <h3 class="whitespace-normal px-4 text-sm w-52 text-gray-400">{{institution}}</h3>
+                                            <p class="whitespace-normal px-4 text-sm font-semibold w-48 text-accent-800">{{funds}}<span class="text-xs font-normal text-gray-400"> sms left</span></p>
+                                        </div>
                                     </MenuItem>
                                     <MenuItem v-if="isAdmin" v-slot="{ active }">
                                         <a href="/admin/funds-reserve" :class="active ? 'bg-gray-100 text-gray-900':'text-gray-700'" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:no-underline" role="menuitem">Admin Area</a>
@@ -247,9 +251,13 @@
                             leave-active-class="transition duration-75 ease-out"
                             leave-from-class="transform scale-100 opacity-100"
                             leave-to-class="transform scale-95 opacity-0">
-                            <MenuItems class="absolute right-0 w-48 mt-2 origin-top-right bg-white border border-gray-200 rounded-md shadow-lg outline-none">
+                            <MenuItems class="absolute right-0 w-52 mt-2 origin-top-right bg-white border border-gray-200 rounded-md shadow-lg outline-none">
                                 <MenuItem>
-                                    <h3 class="py-1 whitespace-normal px-4 text-sm w-40 text-gray-500">{{username}}</h3>
+                                     <div class="flex-col border-b bg-gray-50 border-gray-100">
+                                        <h3 class="pt-1 whitespace-normal px-4 text-sm w-52 text-gray-400">{{username}}</h3>
+                                        <h3 class="whitespace-normal px-4 text-sm w-52 text-gray-400">{{institution}}</h3>
+                                        <p class="whitespace-normal px-4 text-sm font-semibold w-48 text-accent-800">{{funds}}<span class="text-xs font-normal text-gray-400"> sms left</span></p>
+                                    </div>
                                 </MenuItem>
                                 <MenuItem v-if="isAdmin" v-slot="{ active }">
                                     <a href="/admin/funds-reserve" :class="active ? 'bg-gray-100 text-gray-900':'text-gray-700'" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:no-underline" role="menuitem">Admin Area</a>
@@ -292,10 +300,12 @@ import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
                 type: String,
                 default: '',
             },
+            funds: Number,
             isAuth: Boolean,
             logoUri: String,
             logoUriSm:String,
             username: String,
+            institution: String,
             initials: String,
             currentUrl: String,
             loginRoute: String,

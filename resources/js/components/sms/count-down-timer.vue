@@ -1,11 +1,11 @@
 <template>
-    <div>
-        <p v-if="!ready" class="text-gray-600 ml-2 self-center">
+    <div class="flex">
+        <p v-if="!ready" class="text-gray-600 ml-3 self-center">
           <span v-if="day > 0"><span class="font-bold">{{day}}</span> days </span>
           <span v-if="hour > 0"><span class="font-bold">{{hour}}</span> hr </span>
-          <span v-if="min > 0"><span class="font-bold">{{min}}</span> min </span>
+          <span v-if="min > 0 || hour > 0"><span class="font-bold">{{min}}</span> min </span>
           <span class="font-bold">{{sec}}</span> sec</p>
-        <p v-else class="text-gray-600 ml-2 self-center"><span class="font-bold">Queued...</span></p>
+        <p v-else class="text-gray-600 ml-3 self-center"><span class="font-bold">Queued...</span></p>
     </div>
 </template>
 

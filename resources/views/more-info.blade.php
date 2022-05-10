@@ -138,7 +138,7 @@
     <p class="text-gray-500 mb-4">
         Funds are purchased by making an order via telephone or email. A bill of payment is then returned to the user with all the 
         payment methods accepted by the company. The bill is valid for a specific period of time and may be subject to cancellation. 
-        The user can then proceed to pay the amount on the bill and have their accounted credited with the funds. Funds purchased in 
+        The user can then proceed to pay the amount on the bill and have their account credited with the funds. Funds purchased in 
         this manner reflect on the user's account within 3 working days of payment confirmation.
     </p>
     <p class="text-gray-500 mb-4">Payment can be made by: </p>

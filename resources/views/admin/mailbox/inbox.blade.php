@@ -34,7 +34,7 @@
                                     </td>
                                     <td class="px-6 py-4 max-w-xs whitespace-nowrap">
                                         <div class="text-sm truncate">
-                                            <a href="{{'/admin/mailbox/view/'.$sms->id}}" class="text-gray-500 hover:underline font-medium hover:text-accent-800">
+                                            <a href="{{'/admin/mailbox/view/'.$email->id}}" class="text-gray-500 hover:underline font-medium hover:text-accent-800">
                                                 {{$email->message}}
                                             </a>
                                         </div>

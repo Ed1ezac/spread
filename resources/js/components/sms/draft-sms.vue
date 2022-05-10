@@ -1,17 +1,21 @@
 <template>
-    <div class="shadow-sm overflow-hidden rounded mr-6 w-96 mb-4 border-t-4 border-gray-500">
+    <div class="shadow-md overflow-hidden rounded-sm mr-6 w-96 mb-4 border-t-4 border-accent-600">
             <div class="bg-white px-4 pt-2 pb-3 space-y-4 sm:p-6">
                 <div class="flex items-center">
-                    <svg class="flex-shrink-0 h-6 w-6 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                    </svg>
-                    <h3 class="text-base font-bold ml-2 text-gray-600">{{ sms.sender }}</h3>
+                    <div class="flex justify-center bg-primary-200 rounded-full h-8 w-8">
+                        <svg class="flex-shrink-0 h-4 w-4 self-center text-primary-800" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-base font-bold ml-3 text-gray-600">{{ sms.sender }}</h3>
                 </div>
-                <div class="flex h-24">                 
-                    <svg class="flex-shrink-0 h-6 w-6 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-                    </svg>
-                    <div class="bg-gray-200 ml-2 px-2 p-1 w-60 border-gray-400 border-2">
+                <div class="flex h-20">                 
+                    <div class="flex justify-center bg-primary-200 rounded-full h-8 w-8">
+                        <svg class="flex-shrink-0 h-4 w-4 self-center text-primary-800" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                        </svg>
+                    </div>
+                    <div class="bg-gray-200 ml-3 px-2 p-1 w-60 border-gray-400 border-2">
                         <p class="font-medium text-sm text-gray-800">{{ sms.message }}</p>
                     </div>
                 </div>
@@ -20,8 +24,8 @@
                 <div>
                     <span class="sm:block">
                         <button @click="deleteItem()" class="inline-flex justify-center py-2 pl-2 pr-4 my-btn border-gray-300 text-gray-700 bg-gray-100 hover:border-primary hover:bg-primary-500 focus:ring-primary-800">
-                            <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                            <svg class="flex-shrink-0 -ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                             </svg>
                             DELETE
                         </button>
