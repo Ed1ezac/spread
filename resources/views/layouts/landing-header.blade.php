@@ -39,6 +39,18 @@
                     Auth::user()->initials
                     : ''
             ) }}"
+            v-bind:institution="{{
+                json_encode(
+                    Auth::check() ? 
+                        Auth::user()->institution
+                        : ''
+                ) }}"
+            v-bind:funds="{{
+                json_encode(
+                    Auth::check() ? 
+                        Auth::user()->funds->amount
+                        : 0
+                ) }}"
             logo-uri="{{asset('logo.svg')}}" 
             logo-uri-sm="{{asset('logo-small.svg')}}"
             register-route="{{ route('register') }}"

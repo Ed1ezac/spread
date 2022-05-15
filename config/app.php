@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Spread Bulk Sms Service'),
+    'name' => env('APP_NAME', 'Spread|Bulk SMS Service'),
 
     /*
     |--------------------------------------------------------------------------

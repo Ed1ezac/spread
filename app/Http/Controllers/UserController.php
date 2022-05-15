@@ -21,6 +21,7 @@ class UserController extends Controller
         $data = $request->validate([
             'name' => ['required','max:50'],
             'email' => ['required', 'email','max:100', 'unique:users'],
+            'institution' => ['required','max:100'],
         ]);
         $user = Auth::user();
         if($user->email != $data['email']){
@@ -31,7 +32,8 @@ class UserController extends Controller
 
         $user->update([
             'name' => $data['name'],
-            'email' => $data['email']
+            'email' => $data['email'],
+            'institution' => $data['institution']
         ]);
 
         return back()->with('status', 'Your personal info has been updated.');

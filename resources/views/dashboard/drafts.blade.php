@@ -34,10 +34,3 @@
 </div>
 @endif
 @endsection
-@push('page-js')
-    <script>
-        localStorage.removeItem('smsId');
-        localStorage.removeItem('sendingDate');
-        localStorage.removeItem('sendingTime');
-    </script>
-@endpush
