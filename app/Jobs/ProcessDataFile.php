@@ -28,11 +28,11 @@ class ProcessDataFile implements ShouldQueue
     public function __construct(RecipientList $list)
     {
         $this->recipientList = $list;
+        $this->startTracking($this, $this->recipientList);
     }
 
     public function handle()
     {
-        $this->startTracking($this, $this->recipientList);
         try{
             $this->jobStatus->markAsExecuting();
 

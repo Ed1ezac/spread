@@ -13,6 +13,7 @@ use App\Traits\SendsMail;
 use App\Traits\Trackable;
 use App\Mail\RolloutBegun;
 use App\Mail\RolloutFailed;
+use App\Traits\ResumesJobs;
 use App\Helpers\RateLimiter;
 use App\Traits\FlagsAbortion;
 use App\Models\RecipientList;
@@ -36,13 +37,12 @@ class SendSms implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, 
         SerializesModels, DelegatesSendingBandwidth,
-        Trackable, FlagsAbortion, SendsMail;
+        Trackable, FlagsAbortion, SendsMail, ResumesJobs;
     public $deleteWhenMissingModels = true;
 
-    public $sms;
+    public $sms, $recipients;
     private $orange;
     private $limiter;
-    public $recipients;
     private $sendingRate;
     private $startingTime;
     private $fundsProcessor;
@@ -51,46 +51,49 @@ class SendSms implements ShouldQueue
     public function __construct(Sms $sms, RecipientList $list)
     {   
         $this->sms = $sms;
-        $this->recipients = $list;   
-        $this->fundsProcessor = new FundsProcessing();
+        $this->recipients = $list;
+        $this->reportFrequency = 1;
+        $this->startTracking($this, $this->sms, 'rollouts');
+        $this->fundsProcessor = new FundsProcessing();   
+        $this->setProgressMax($this->recipients->entries);     
     }
 
     public function handle()
     {
-        $this->startTracking($this, $this->sms);
-        $this->setProgressMax($this->recipients->entries);
-        $this->setReportFrequency();
-        $this->prepareAbortionStatusPolling();
         try{
+            $this->prepareAbortionStatusPolling();
             $this->verifySufficientFunds();
             $this->jobStatus->markAsExecuting();
-            $this->allocateSendingBandwidth();;
+            $this->allocateSendingBandwidth();
             $this->prepareOrangeApi();
-            $this->sendEmail(User::find($this->sms->user_id)->email,
-                                 new RolloutBegun($this->sms));
-
+            // $this->sendEmail(User::find($this->sms->user_id)->email,
+            //                      new RolloutBegun($this->sms));
+            //-----------------------------
             $this->performRollout();
-            
+            //-----------------------------
             $this->billUser();
             $this->jobStatus->markAsFinished();
-            $this->sendEmail(User::find($this->sms->user_id)->email, 
-                                 new CompletionEmail($this->sms));
+            $this->sms->update(['status' => Sms::Sent]);
+            // $this->sendEmail(User::find($this->sms->user_id)->email, 
+            //                      new CompletionEmail($this->sms));
         }catch(Throwable $e){
             $this->beforeFail($e);
             $this->fail($e);
         }
     }
 
-    private function verifySufficientFunds(){    
-        if(!($this->fundsProcessor
-            ->hasSufficientFunds($this->sms->user_id, 
-                        $this->recipients->entries))){
+    private function verifySufficientFunds(){  
+        $payable = 0;
+        $running = $this->getUserRunningTasks($this->sms->user_id);
+        if(isset($running) && count($running)>0){
+            foreach($running as $task){
+                $payable += $task->progress_max;
+            }
+        }
+        $payable += $this->recipients->entries;
+        if(!($this->fundsProcessor->hasSufficientFunds($this->sms->user_id, $payable))){
             throw new Exception('Insufficient funds.');
         }
-    }
-
-    private function setReportFrequency(){
-        $this->reportFrequency = 1;
     }
 
     private function prepareAbortionStatusPolling(){
@@ -114,7 +117,7 @@ class SendSms implements ShouldQueue
         $reader = FileProcessing::createReader($this->recipients->file_extension);
         $maxRows = FileProcessing::getMaxRowSnapShot($reader, $this->recipients->file_path);
         $reader->setReadFilter($chunkFilter);
-        $startRow = firstOrResume();        
+        $startRow = $this->firstOrResume();        
         $this->startingTime = Carbon::now();
         for($startRow; $startRow <= $maxRows; $startRow += FileChunkReadFilter::chunkSize) {
             $chunkFilter->setRows($startRow);
@@ -159,9 +162,9 @@ class SendSms implements ShouldQueue
     }
 
     private function firstOrResume(){
-        if($this->isNthAttempt() && 
-            $this->hasPreviousProgress($this->sms->job_id)){
-            return $this->prevProgress;
+        if($this->isNthAttempt()){
+            return $this->progressNow > 0 ?
+                $this->progressNow: 1;
         }
         return 1;
     }
@@ -226,7 +229,7 @@ class SendSms implements ShouldQueue
         if($e->getMessage() !== 'Aborted by user.'){
             $this->sms->update(['status' => Sms::Failed]);
         }
-        $this->sendEmail(User::find($this->sms->user_id)->email, new RolloutFailed($this->sms));
+        //$this->sendEmail(User::find($this->sms->user_id)->email, new RolloutFailed($this->sms));
         //fire event
         RolloutComplete::dispatch($this->sms, $this->progressNow);
     }

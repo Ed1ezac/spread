@@ -12,7 +12,7 @@ trait DelegatesSendingBandwidth{
     protected $bandwidth;
 
     protected function allocateBandwidth($id){
-        $thisJob = JobStatus::where('job_id', $id)->first();
+        $thisJob = JobStatus::forJob( $id)->first();
         $otherJob = JobStatus::where([
             ['job_id', '!=', $id],
             ['queue', '=', 'rollouts'],
@@ -20,11 +20,10 @@ trait DelegatesSendingBandwidth{
             ])->first();
         
         if(isset($otherJob) && !empty($otherJob)){
-            $this->bandwidth = $otherJob->progress_max > $thisJob->progress_max ?
+            $this->bandwidth = $thisJob->created_at > $otherJob->created_at  ?
                 $this->SMALL_BANDWIDTH : $this->BIG_BANDWIDTH;
         }else{
             $this->bandwidth = $this->FULL_BANDWIDTH;
         }
     }
-
 }
