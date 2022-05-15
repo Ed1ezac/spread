@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class JobStatus extends Model
 {
@@ -12,6 +13,8 @@ class JobStatus extends Model
     const STATUS_FINISHED = 'finished';
     const STATUS_FAILED = 'failed';
     const STATUS_RETRYING = 'retrying';
+
+    use SoftDeletes;
 
     protected $fillable = [
         'job_id', 'user_id', 'trackable_id', 'uuid', 'status', 'queue', 'attempts', 'progress_now', 
@@ -26,6 +29,18 @@ class JobStatus extends Model
 
     public function scopeMine($query){
         return $query->where('user_id', Auth::id());
+    }
+
+    public function scopeWithId($query, $id){
+        return $query->where('id', $id);
+    }
+
+    public function scopeforModelId($query, $modelId){
+        return $query->where('trackable_id', $modelId);
+    }
+
+    public function scopeOnQueue($query, $queue){
+        return $query->where('queue', $queue);
     }
 
     public function scopeWithStatus($query, $status){

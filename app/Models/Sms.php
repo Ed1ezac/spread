@@ -2,23 +2,22 @@
 
 namespace App\Models;
 
+use App\Models\Funds;
 use App\Models\RecipientList;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Sms extends Model
 {
-    /***
-     * 'status'- enum with ONLY
-     * 'draft', 'pending', 'sent', failed, aborted
-     *  as possible entries
-     */
     const Draft = 'draft';
     const Sent = 'sent';
     const Failed = 'failed';
     const Aborted = 'aborted';
     const Pending = 'pending';
+
+    use softDeletes;
     
     protected $fillable = [
         'sender', 'message', 'status', 'order_no',

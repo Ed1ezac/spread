@@ -59,26 +59,33 @@ class AdminController extends Controller
     }
 
     public function smses(){
-        $allSmses = Sms::count();
-        $drafts = Sms::where('status','draft')->count();
-        $sentSmses = Sms::where('status','sent')->count();
-        $failedSmses = Sms::where('status','failed')->count();
-        $abortedSmses = Sms::where('status','aborted')->count();
-        $pendingSmses = Sms::where('status','pending')->count();
-        $smses = Sms::latest()->paginate(7);
+        $allSmses = Sms::withTrashed()->count();
+        $drafts = Sms::withTrashed()->where('status','draft')->count();
+        $sentSmses = Sms::withTrashed()->where('status','sent')->count();
+        $failedSmses = Sms::withTrashed()->where('status','failed')->count();
+        $abortedSmses = Sms::withTrashed()->where('status','aborted')->count();
+        $pendingSmses = Sms::withTrashed()->where('status','pending')->count();
+        $smses = Sms::withTrashed()->latest()->paginate(7);
         return view('admin.smses', compact('smses','drafts', 'allSmses','pendingSmses', 'sentSmses', 'failedSmses','abortedSmses'));
     }
 
     public function tasks(){
-        $history = JobStatus::where('queue', '!=','fileprocessing')->latest()->paginate(8);
+        $history = JobStatus::withTrashed()
+            ->onQueue('rollouts')
+            ->latest()
+            ->paginate(8);
         return view('admin.tasks', compact('history'));
     }
 
     public function viewTask($id){
-        $task = JobStatus::find($id);
+        $task = JobStatus::withTrashed()->withId($id)->first();
         $user = User::find($task->user_id);
-        $sms = Sms::find($task->trackable_id);
+        $sms = Sms::withTrashed()->withId($task->trackable_id)->first();
         return view('admin.view-rollout-task', compact('task', 'user', 'sms'));
+    }
+
+    public function deleteTask(Request $request){
+        //use ->forceDelete() to delete permanently
     }
 
     public function killTask(Request $request){
