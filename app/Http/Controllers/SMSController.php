@@ -29,8 +29,6 @@ class SMSController extends Controller{
     public function index(Request $request){
         $sms = $this->getSMSFromSession();
         $senderNames = $this->getSenderNames();
-        //$request->session()->put('sms', null);
-        //$request->session()->put('sms_edit', null);
         
         $recipients = RecipientList::mine()->withStatus(RecipientList::Processed)->get();
         if(!Auth::user()->hasRole('client')){
@@ -52,6 +50,11 @@ class SMSController extends Controller{
     }
 
     public function createAndQueue(CreateSmsRequest $request){
+        $order = $this->validateOrderNo($request);
+        if($order->fails()){
+            return redirect('/create')->withErrors('Order number conflict, please try again.');
+        }
+
         $send_at = $this->determineSendingTime();
         $sendsNow = Carbon::now()->diffInMinutes($send_at) < 1;
 
@@ -60,6 +63,7 @@ class SMSController extends Controller{
         $jobId = $this->dispatchSmsRolloutJob($sms);
         $sms->job_id = $jobId;
         $sms->save();
+        $this->updateSmsJobTracker($sms);
         $this->flushSession();
 
         if($sendsNow){
@@ -73,12 +77,17 @@ class SMSController extends Controller{
         }
     }
 
+    private function validateOrderNo(Request $request){
+        return Validator::make($request->all(), [
+            'order_no' => 'unique:sms',
+        ]);
+    }
+
     private function dispatchSmsRolloutJob($sms){
         $recipients = RecipientList::find($sms->recipient_list_id);
         return  Bus::chain([
                     new SendSms($sms, $recipients),
                     function () use ($sms, $recipients) {
-                        $sms->update(['status' => Sms::Sent]);
                         RolloutComplete::dispatch($sms, $recipients->entries);
                     },
                 ])->onQueue('rollouts')
@@ -86,12 +95,35 @@ class SMSController extends Controller{
                 ->dispatch();
     }
 
-    public function viewSms($id){
-        $sms = Sms::find($id);
+    public function deleteSms(Request $request){
+        try{
+            $sms = Sms::mine()->withId($request->input('id'))->first();
+            if(isset($sms)){
+                JobStatus::mine()
+                    ->onQueue('rollouts')
+                    ->forModelId($sms->id)
+                    ->delete();
+                
+                $sms->delete();
+                return redirect('/statistics')
+                    ->withErrors('The Sms and its related rollout information has been deleted.');
+            }
+        }catch(Throwable $t){
+            return back()->withErrors($t->getMessage());
+        }
+    }
 
-        $recipients = RecipientList::find($sms->recipient_list_id);
-        $details = JobStatus::mine()->forJob($sms->job_id)->first();
-        return view('dashboard.sms-details', compact('sms','recipients', 'details'));
+    public function viewSms($id){
+        try{
+            $sms = Sms::mine()->withId($id)->firstOrFail();
+            $recipients = RecipientList::find($sms->recipient_list_id);
+            $details = JobStatus::mine()->forJob($sms->job_id)->first();
+
+            return view('dashboard.sms-details', compact('sms','recipients', 'details'));
+        }catch(Throwable $t){
+            return back()->withErrors($t->getMessage());
+        }
+        
     }
 
     public function resumeRollout(Request $request){
@@ -174,28 +206,17 @@ class SMSController extends Controller{
 
     public function abortRollout(Request $request){
         //flag the sms as aborted, the Job will pick that up
-        $sms = Sms::find($request->id);
-        $status = JobStatus::mine()->forJob($sms->job_id)
-                ->withStatus(JobStatus::STATUS_EXECUTING)
-                ->where('trackable_id', $sms->id)->first();
-        $processed = ($status->progress_now/$status->progress_max);   
-        if(($processed < 0.15) && ($status->progress_now < 1500)){
-            $sms->update(['status' => Sms::Aborted]);
-            //pass-to-session
-            $aborted = true;
-            $maxProgress = $status->progress_now;
-            return back()->with('aborted',$aborted)
-                    ->with('maxProgress',$maxProgress)->withErrors('Sms rollout task has been stopped.');
-        }else{
-            return back()->withErrors('Sorry.. sms rollout can\'t be stopped at this stage.');
-        }
+        $sms = Sms::find($request->id);   
+        $sms->update(['status' => Sms::Aborted]);
+        
+        return back()->withErrors('Sms rollout task has been stopped.'); 
     }
 
     public function processScheduledRolloutNow(ProcessScheduledImmediateRequest $request){
         $sms = Sms::find($request->id);
         if(!Auth::user()->hasRole('client')){
             $this->killSMS($sms);
-            return redirect()->back();
+            return redirect()->back()->withErrors("Account suspended. Action forbidden.");
         }
         DB::table('jobs')
         ->where([
@@ -322,6 +343,15 @@ class SMSController extends Controller{
         //    $sms->message = $temp->message;
         //}
         request()->session()->put('sms_edit', null);
+    }
+
+    private function updateSmsJobTracker($sms){
+        $x = DB::table('jobs')->where('id', $sms->job_id)->first();   
+        $muuid = json_decode($x->payload)->uuid;
+        $tr = JobStatus::mine()->onQueue('rollouts')->forModelId($sms->id)->first();
+        $tr->uuid = $muuid;
+        $tr->job_id = $sms->job_id;
+        $tr->save();
     }
 
 }

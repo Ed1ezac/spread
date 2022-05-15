@@ -66,6 +66,7 @@ Route::post('/recipients/item/delete', [RecipientListController::class, 'deleteL
 Route::post('/recipients/add', [RecipientListController::class, 'create'])->name('upload-list');
 //stats
 Route::get('/statistics', [DashboardController::class, 'statistics']);
+Route::post('statistics/delete/sms', [SMSController::class, 'deleteSms']);
 Route::get('/statistics/view/sms/{id?}', [SMSController::class, 'viewSms']);
 });
 
