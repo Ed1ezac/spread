@@ -19,7 +19,7 @@
             <div class="ml-12 flex">
                 <div class="mt-32 mb-12">
                     <h3 class="text-3xl text-gray-700">Create a scheduled rollout</h3>
-                    <p class="text-gray-500 mt-1">Scheduled message rollouts are created when you choose <span class="font-semibold">send later</span> on the summary page.</p>
+                    <p class="text-gray-500 mt-1">Scheduled message rollouts are created when you choose <span class="font-semibold">Schedule</span> on the summary page.</p>
                     @role('client')
                     <span class="sm:block mt-3">
                         <a href="/create" class="inline-flex items-center tracking-widest px-4 py-2 my-btn shadow-md border-primary-500 bg-primary-500 hover:bg-primary-700 focus:ring-primary-800">
@@ -40,10 +40,3 @@
         </div>
     @endif
 @endsection
-@push('page-js')
-    <script>
-        localStorage.removeItem('smsId');
-        localStorage.removeItem('sendingDate');
-        localStorage.removeItem('sendingTime');
-    </script>
-@endpush

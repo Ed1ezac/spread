@@ -1,7 +1,7 @@
 <template>
     <div class="flex mt-2 mb-4 flex-wrap px-4">
         <!--form-->
-        <div class="shadow-sm flex-shrink bg-white rounded-md w-120 mb-4 md:mr-12">
+        <div class="shadow-md flex-shrink bg-white rounded w-120 mb-4 md:mr-12">
           <div class="flex justify-end relative mr-4 mt-2 -mb-4">
             <span class="sr-only">Erase</span>
             <button @click="erase" class="rounded text-gray-600 hover:text-red-500">

@@ -133,31 +133,6 @@
     
 @endif
 
-<!--Empty view-->
-<!--div class="">
-    <div class="ml-12 flex">
-        <div class="mt-32 mb-12">
-            <h3 class="text-3xl text-gray-700">Add Some Funds</h3>
-            <p class="text-gray-500 mt-1">You need funds in your account before you start sending bulk sms.</p>
-            
-            <span class="sm:block mt-3">
-                <button type="button" class="inline-flex items-center px-4 tracking-wider py-2 border border-gray-300 rounded-sm shadow-md text-sm font-bold text-white bg-gray-700 hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
-                    <svg class="-ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    ADD FUNDS
-                </button>
-            </span>
-            
-        </div>
-        <div class="ml-12 mt-8">
-            <svg class="transform -rotate-45 z-0 flex-shrink h-72 w-72 text-gray-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
-            </svg>
-        </div>
-    </div>
-</!--div -->
-
 <!--div> REFUNDS
     <div class="shadow-sm bg-white rounded-sm max-w-sm sm:block">
         <div class="flex bg-red-400 p-2 items-center">
@@ -188,12 +163,4 @@
         </div>
     </div>
 </!--div -->
-
 @endsection
-@push('page-js')
-    <script>
-        localStorage.removeItem('smsId');
-        localStorage.removeItem('sendingDate');
-        localStorage.removeItem('sendingTime');
-    </script>
-@endpush
