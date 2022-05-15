@@ -56,14 +56,14 @@ class CreateSmsRequest extends FormRequest
                 $validator->errors()->add('completion-time',
                 'Unfortunately the rollout won\'t complete within the allowed time (7am to 9:30pm).');
             }
-            if($this->userHasExecutingJob()){
-                $validator->errors()->add('concurrency','Users are allowed only one rollout at a time.');
+            if($this->userHasTwoExecutingJobs()){
+                $validator->errors()->add('concurrency','Users are allowed two concurrent rollouts at most.');
             }
-            if($this->userHasCloselyQueuedJobs(
-                    $request->input('sending_time') == 'later', 
-                    ($request->input('day').''.$request->input('time')))){
-                $validator->errors()->add('concurrency','Too many closely scheduled rollouts, separate by 2 hours at least.');
-            } 
+            // if($this->userHasCloselyQueuedJobs(
+            //         $request->input('sending_time') == 'later', 
+            //         ($request->input('day').''.$request->input('time')))){
+            //     $validator->errors()->add('concurrency','Too many closely scheduled rollouts, separate by at least 5 minutes.');
+            // } 
         });
     }
 

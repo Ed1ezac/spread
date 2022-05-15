@@ -52,8 +52,8 @@ class ProcessScheduledImmediateRequest extends FormRequest
                 $validator->errors()->add('completion-time',
                 'Unfortunately the rollout won\'t complete within the allowed time (7am to 9:30pm).');
             }
-            if($this->userHasExecutingJob()){
-                $validator->errors()->add('concurrency','Users are allowed only one rollout at a time.');
+            if($this->userHasTwoExecutingJobs()){
+                $validator->errors()->add('concurrency','Users are allowed two rollouts at most.');
             }
         });
     }
