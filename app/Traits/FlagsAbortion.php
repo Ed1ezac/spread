@@ -17,10 +17,10 @@ trait FlagsAbortion{
     }
 
     protected function setAbortionThreshHold($max){
-        //15% of max Or 1500 people.
-        $fifteenPercent = round((0.15 * $max));
-        $fifteenPercent >= 1500 ? 
-            $this->abortionThreshHold = 1500 : $this->abortionThreshHold = $fifteenPercent;
+        //40% of max Or 4000 people.
+        $fortyPercent = round((0.4 * $max));
+        $fortyPercent >= 4000 ? 
+            $this->abortionThreshHold = 4000 : $this->abortionThreshHold = $fortyPercent;
     }
    
     protected function setFrequency($max){
