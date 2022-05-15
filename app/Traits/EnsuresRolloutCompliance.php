@@ -39,13 +39,13 @@ trait EnsuresRolloutCompliance{
         return Carbon::now()->isBetween($startTime,$endTime);
     }
 
-    protected function userHasExecutingJob()
+    protected function userHasTwoExecutingJobs()
     {
         return JobStatus::where([
             ['queue', '=', 'rollouts'],
             ['status', '=', JobStatus::STATUS_EXECUTING ],
             ['user_id', '=', Auth::id()]
-        ])->count() > 0;
+        ])->count() >= 2;
     }
 
     protected function userHasCloselyQueuedJobs($sendsLater, $date, $jobId = -1){
@@ -55,10 +55,10 @@ trait EnsuresRolloutCompliance{
             
             $jobs = DB::table('jobs')->where([
                 ['queue', '=', 'rollouts'],
-                ['available_at', '>=', $targetDateTime->copy()->subMinutes(30)->timestamp],
-                ['available_at', '<=', $targetDateTime->copy()->addMinutes(30)->timestamp]
+                ['available_at', '>=', $targetDateTime->copy()->subMinutes(5)->timestamp],
+                ['available_at', '<=', $targetDateTime->copy()->addMinutes(5)->timestamp]
             ])->get();
-            //decode their payloads and sum recipients
+            //decode their payloads and
             foreach($jobs as $job){
                 $payload = json_decode($job->payload);
                 $info = unserialize($payload->data->command);
