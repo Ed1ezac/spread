@@ -49,6 +49,9 @@ class CreateSmsRequest extends FormRequest
             if($this->dateIsTooEarly()){
                 $validator->errors()->add('period','Sending time is in the past, should be future time.');
             }
+            if($this->hasTwoPendingJobs()){
+                $validator->errors()->add('concurrency','Users are allowed two queued rollouts at most.');
+            }
             if(!$this->isWithinTimeBounds()){
                 $validator->errors()->add('time','Sending time must be between 0700 and 1900 hrs.');
             }
@@ -56,14 +59,6 @@ class CreateSmsRequest extends FormRequest
                 $validator->errors()->add('completion-time',
                 'Unfortunately the rollout won\'t complete within the allowed time (7am to 9:30pm).');
             }
-            if($this->userHasTwoExecutingJobs()){
-                $validator->errors()->add('concurrency','Users are allowed two concurrent rollouts at most.');
-            }
-            // if($this->userHasCloselyQueuedJobs(
-            //         $request->input('sending_time') == 'later', 
-            //         ($request->input('day').''.$request->input('time')))){
-            //     $validator->errors()->add('concurrency','Too many closely scheduled rollouts, separate by at least 5 minutes.');
-            // } 
         });
     }
 

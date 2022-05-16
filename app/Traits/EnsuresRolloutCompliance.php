@@ -48,6 +48,19 @@ trait EnsuresRolloutCompliance{
         ])->count() >= 2;
     }
 
+    protected function hasTwoPendingJobs()
+    {
+        return JobStatus::where([
+            ['queue', '=', 'rollouts'],
+            ['status', '=', JobStatus::STATUS_EXECUTING ],
+            ['user_id', '=', Auth::id()]
+        ])->orWhere([
+            ['queue', '=', 'rollouts'],
+            ['status', '=', JobStatus::STATUS_QUEUED ],
+            ['user_id', '=', Auth::id()]
+        ])->count() >= 2;
+    }
+
     protected function userHasCloselyQueuedJobs($sendsLater, $date, $jobId = -1){
         $hasJob = false;
         if($sendsLater){
