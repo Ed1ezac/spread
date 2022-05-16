@@ -40,8 +40,8 @@ Route::post('/settings/delete/sender-name', [SenderNamesController::class, 'dele
 //sms
 Route::get('/drafts', [DashboardController::class, 'drafts']);
 Route::get('/drafts/item/edit', [SMSController::class, 'editDraft']);
+Route::get('/create/save-as-draft', [SMSController::class, 'saveDraft']);
 Route::post('/drafts/item/delete', [SMSController::class, 'deleteDraft']);
-Route::post('/create/save-as-draft', [SMSController::class, 'saveDraft']);
 //create
 Route::get('/create', [SMSController::class, 'index']);
 Route::get('/create/sms/summary', [SMSController::class, 'summary']);
@@ -55,8 +55,9 @@ Route::get('/scheduled/sms/edit/create', [SMSController::class, 'editScheduledSm
 Route::post('/scheduled/sms/update', [SMSController::class, 'updateScheduledSms']);
 Route::post('/scheduled/sms/send-now', [SMSController::class, 'processScheduledRolloutNow']);
 //funds
-Route::get('/funds/add', [FundsController::class, 'pay'])->middleware('auth');
 Route::get('/funds', [DashboardController::class, 'funds']);
+Route::get('/funds/add', [FundsController::class, 'pay']);
+Route::get('/funds/details', [FundsController::class, 'fundsDetails']);
 //Route::post('/funds/buy', [FundsController::class, 'buyFunds']);
 //recipients
 Route::get('/recipients', [DashboardController::class, 'recipients']);
