@@ -53,6 +53,11 @@ class Sms extends Model
         return $query->where('user_id', Auth::id());
     }
 
+    public function scopeWithUserId($query, $id)
+    {
+        return $query->where('user_id', $id);
+    }
+
     public function scopeWithId($query, $id)
     {
         return $query->where('id', $id);

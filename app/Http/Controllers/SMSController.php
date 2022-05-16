@@ -19,8 +19,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\VerifySmsRequest;
 use App\Http\Requests\CreateSmsRequest;
 use App\Http\Requests\EditDraftRequest;
-use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\UpdateSmsRequest;
+use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\EditScheduledSmsRequest;
 use App\Http\Requests\ProcessScheduledImmediateRequest;
 
@@ -117,7 +117,7 @@ class SMSController extends Controller{
         try{
             $sms = Sms::mine()->withId($id)->firstOrFail();
             $recipients = RecipientList::find($sms->recipient_list_id);
-            $details = JobStatus::mine()->forJob($sms->job_id)->first();
+            $details = JobStatus::mine()->forModelId($id)->first();
 
             return view('dashboard.sms-details', compact('sms','recipients', 'details'));
         }catch(Throwable $t){

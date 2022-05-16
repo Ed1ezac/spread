@@ -35,7 +35,7 @@ class JobStatus extends Model
         return $query->where('id', $id);
     }
 
-    public function scopeforModelId($query, $modelId){
+    public function scopeForModelId($query, $modelId){
         return $query->where('trackable_id', $modelId);
     }
 
