@@ -43,7 +43,7 @@
                             <p class="text-gray-800 text-2xl font-bold">{{ number_format($totalSize / 1048576, 2).' '}}<span class="text-gray-500 text-xs font-medium">MB</span></p>
                             @elseif($totalSize >= 1024)
                             <p class="text-gray-800 text-2xl font-bold">{{ number_format($totalSize / 1024, 2).' '}}<span class="text-gray-500 text-xs font-medium">KB</span></p>
-                            @elseif( $totalSize > 1))
+                            @elseif( $totalSize > 1)
                             <p class="text-gray-800 text-2xl font-bold">{{ $totalSize.' '}}<span class="text-gray-500 text-xs font-medium">B</span></p>
                             @else
                                 0 bytes
@@ -123,7 +123,7 @@
                                                 {{ number_format($file->file_size / 1048576, 2).' MB'}}
                                             @elseif($file->file_size >= 1024)
                                                 {{ number_format($file->file_size / 1024, 2).' KB'}}
-                                            @elseif( $file->file_size > 1))
+                                            @elseif( $file->file_size > 1)
                                                 {{ $file->file_size.' B'}}
                                             @else
                                                 0B

@@ -1,5 +1,5 @@
 <template>
-    <div class="shadow-md overflow-hidden rounded-sm mb-4 mr-6 w-112 border-t-4 border-accent-600">
+    <div class="shadow-md overflow-hidden rounded-sm mb-4 mr-10 w-112 border-t-4 border-accent-600">
         <div class="bg-white px-4 pt-2 pb-3 space-y-4 sm:p-6">
             <div class="flex items-center">
                 <div class="flex justify-center bg-primary-200 rounded-full h-8 w-8">
@@ -7,9 +7,12 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                     </svg>
                 </div>
-                <h3 class="text-base font-bold ml-3 text-gray-600">{{sms.sender}}</h3>
+                <div class="flex w-full items-center justify-between">
+                    <h3 class="text-base font-bold ml-3 text-gray-600">{{ sms.sender }}</h3>
+                    <div class="text-xs font-semibold text-gray-500">{{ sms.order_no }}</div>
+                </div>
             </div>
-            <div class="flex h-20">                 
+            <div class="flex h-24">                 
                 <div class="flex justify-center bg-primary-200 rounded-full h-8 w-8">
                     <svg class="flex-shrink-0 h-4 w-4 self-center text-primary-800" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />

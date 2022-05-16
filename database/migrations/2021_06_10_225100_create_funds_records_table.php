@@ -15,8 +15,10 @@ class CreateFundsRecordsTable extends Migration
     {
         Schema::create('funds_records', function (Blueprint $table) {
             $table->id();
+            $table->string('order_no')->unique();
             $table->foreignId('user_id');
             $table->foreignId('funds_id');
+            $table->bigInteger('originator')->default(-1);
             $table->enum('event',['purchase', 'deduction']);
             $table->integer('amount')->default(0);
             $table->timestamps();

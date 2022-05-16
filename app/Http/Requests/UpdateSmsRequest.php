@@ -57,12 +57,6 @@ class UpdateSmsRequest extends FormRequest
                 $validator->errors()->add('completion-time',
                 'Unfortunately the rollout won\'t complete within the allowed time (7am to 9:30pm).');
             }
-            // if($this->userHasCloselyQueuedJobs(
-            //     $request->input('sending_time') == 'later', 
-            //     ($request->input('day').''.$request->input('time')),
-            //     Sms::find($request->input('id'))->job_id)){
-            //     $validator->errors()->add('concurrency','Too many closely scheduled rollouts, separate by 2 hours at least.');
-            // }
         });
     }
 
