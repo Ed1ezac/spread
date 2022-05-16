@@ -22,8 +22,8 @@ class FundsProcessing{
         return Funds::forUserId($userId)->first()->amount > $minimum;
     }
 
-    public function incrementUserFunds($userId, $amount){
-        DB::transaction(function() use ($userId, $amount) {
+    public function incrementUserFunds($userId, $amount,$ref, $ori = -1){
+        DB::transaction(function() use ($userId, $amount, $ref, $ori) {
             $this->setReserve();
             $this->setUserFunds($userId);
             //--
@@ -31,19 +31,19 @@ class FundsProcessing{
             $this->userFunds->increment('amount', $amount);
             //
             $this->recordReserveDeductionEvent($amount);
-            $this->postFundsRecord(FundsRecord::Purchase, $amount);
+            $this->postFundsRecord(FundsRecord::Purchase, $amount, $ref, $ori);
 
         }, self::$retryAttempts);
 
     }
 
-    public function decrementUserFunds($userId, $amount){
-        DB::transaction(function() use ($userId, $amount) {
+    public function decrementUserFunds($userId, $amount, $ref, $ori = -1){
+        DB::transaction(function() use ($userId, $amount, $ref, $ori) {
             $this->setUserFunds($userId);
             //
             $this->userFunds->decrement('amount', $amount);
             //
-            $this->postFundsRecord(FundsRecord::Deduction, $amount);
+            $this->postFundsRecord(FundsRecord::Deduction, $amount, $ref, $ori);
 
         }, self::$retryAttempts);
     }
@@ -65,11 +65,13 @@ class FundsProcessing{
         ]);
     }
 
-    private function postFundsRecord($event,$amount){
+    private function postFundsRecord($event,$amount, $order, $ori){
         $this->userFunds->stageRecord([
             'funds_id' => $this->userFunds->id,
-            'user_id' => $this->userFunds->user_id,            
+            'user_id' => $this->userFunds->user_id,
+            'order_no' => $order,          
             'event' => $event,
+            'originator' => $ori,
         ]);
         $this->userFunds->setRecordAmount($amount);
     }

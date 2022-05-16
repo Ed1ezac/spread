@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Reserve;
 use App\Helpers\Orange;
 use App\Models\JobStatus;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\RecipientList;
 use App\Traits\CallsOrangeApi;
@@ -15,6 +16,7 @@ use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\SmsApiToken as Token;
+use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\Admin\TestSmsRequest;
 use App\Http\Requests\Admin\AdminRoleRequest;
 use App\Http\Requests\Admin\AssignRoleRequest;
@@ -106,7 +108,9 @@ class AdminController extends Controller
 
     public function creditUserFunds(CreditUserFundsRequest $request){
         $data = $request->validated();
-        $this->fundsProcessor->incrementUserFunds($data['userId'],$data['amount']);
+        $order = $this->uniqueOrderNo();
+        $origin = Auth::id();
+        $this->fundsProcessor->incrementUserFunds($data['userId'],$data['amount'], $order, $origin);
         $user = User::find($data['userId']);
 
         return redirect('/admin/users')
@@ -115,11 +119,28 @@ class AdminController extends Controller
 
     public function deductUserFunds(DeductUserFundsRequest $request){
         $data = $request->validated();
-        $this->fundsProcessor->decrementUserFunds($data['userId'],$data['amount']);
+        $order = $this->uniqueOrderNo();
+        $origin = Auth::id();
+        $this->fundsProcessor->decrementUserFunds($data['userId'],$data['amount'], $order, $origin);
         $user = User::find($data['userId']);
         
         return redirect('/admin/users')
             ->with('status', $user->name.'\'s funds have been reduced by '.$request->amount);
+    }
+
+    private function uniqueOrderNo(){
+        $order = '#SPX' . Str::random(7);
+        while(true){
+            $val = Validator::make(array('order_no' => $order), [
+                'order_no' => 'unique:funds_records',
+            ]);
+            if($val->fails()){
+                $order = '#SPX' . Str::random(7);
+            }else{
+                break;
+            }
+        }
+        return $order;
     }
 
     public function editUserRoles($id){

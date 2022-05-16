@@ -39,13 +39,16 @@
                     <thead class="bg-gray-50">
                         <tr>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-headings font-bold text-gray-500 uppercase tracking-wider">
-                            Activity
+                            Event
                             </th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-headings font-bold text-gray-500 uppercase tracking-wider">
                             Amount
                             </th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-headings font-bold text-gray-500 uppercase tracking-wider">
-                            Time
+                            Ref
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-headings font-bold text-gray-500 uppercase tracking-wider">
+                            Date
                             </th>
                         </tr>
                     </thead>
@@ -66,7 +69,19 @@
                             </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm font-bold text-gray-800">{{$record->amount}}</div>
+                                <div class="text-sm font-bold text-gray-800">{{$record->amount}}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <form action="/funds/details" method="GET">
+                                    
+                                    <input type="hidden" name="order_no" value="{{$record->order_no}}">
+                                    @csrf
+                                    <button type="submit" class="border border-transparent">
+                                        <div class="text-sm font-medium text-gray-500 hover:underline hover:text-accent-600">
+                                        {{ $record->order_no }}
+                                        </div>
+                                    </button>
+                                </form>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 @if($record->created_at->diffInDays() < 1 )
