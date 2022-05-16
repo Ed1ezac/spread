@@ -216,8 +216,11 @@ class SendSms implements ShouldQueue
             if(isset($this->prevProgress)){
                 if($this->prevProgress > 0)
                     $bill = $this->progressNow - $this->prevProgress;
+                    $this->fundsProcessor
+                        ->decrementUserFunds($this->sms->user_id, $bill, $this->sms->order_no);
             }else{
-                $this->fundsProcessor->decrementUserFunds($this->sms->user_id, $bill);
+                $this->fundsProcessor
+                    ->decrementUserFunds($this->sms->user_id, $bill, $this->sms->order_no);
             }
             
         }
