@@ -1,11 +1,13 @@
 @extends('layouts.dashboard-header')
 
 @section('features')
-       
+    
   @if(isset($recipients) && count($recipients)>0)
     <sms-wizard
         sender-error =""
         message-error=""
+        send-at = "{{ isset($send_at)? $send_at : '' }}"
+        v-bind:sms = "{{ json_encode($sms) }}"
         graphic-uri = "{{ asset('android-device.svg') }}"
         v-bind:recipients = "{{ json_encode($recipients) }}"
         v-bind:sender-names = "{{ json_encode($senderNames) }}">

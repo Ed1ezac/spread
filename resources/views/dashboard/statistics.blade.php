@@ -3,12 +3,15 @@
 
 @section('features')
 
-  <sms-rollout-progress
-    user-id="{{Auth::id()}}"
-    v-bind:is-about-to-send="{{ json_encode($isAboutToSend) }}"
-    v-bind:aborted = "{{ null !== Session::get('aborted') ? json_encode(Session::get('aborted')) : json_encode(false) }}"
-    v-bind:max-progress = "{{ null !== Session::get('maxProgress') ? json_encode(Session::get('maxProgress')) : -1 }}"
-  ></sms-rollout-progress>
+  @if(isset($pending) && count($pending)>0)
+    @foreach ($pending as $item)
+      <sms-rollout-progress
+        user-id="{{Auth::id()}}"
+        v-bind:sms="{{json_encode($item)}}"
+        recipients-name="{{App\Models\RecipientList::find($item->recipient_list_id)->name}}"
+      ></sms-rollout-progress>
+    @endforeach
+  @endif
 
   @if(isset($history) && count($history)>0)
   <div class="mr-4 xl:mr-6 xl:mt-10 mb-8">
@@ -28,7 +31,7 @@
                   Sent To
                 </th>
                 <th scope="col" class="px-6 py-3 text-left text-xs font-headings font-bold text-gray-500 uppercase tracking-wider">
-                  Time
+                  Date
                 </th>
               </tr>
             </thead>
@@ -112,10 +115,3 @@
   @endif
   
 @endsection
-@push('page-js')
-  <script>
-      localStorage.removeItem('smsId');
-      localStorage.removeItem('sendingDate');
-      localStorage.removeItem('sendingTime');
-  </script>    
-@endpush

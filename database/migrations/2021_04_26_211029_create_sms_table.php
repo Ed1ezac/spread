@@ -24,6 +24,7 @@ class CreateSmsTable extends Migration
             $table->foreignId('job_id')->nullable();
             $table->timestamp('send_at')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

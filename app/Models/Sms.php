@@ -2,23 +2,22 @@
 
 namespace App\Models;
 
+use App\Models\Funds;
 use App\Models\RecipientList;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Sms extends Model
 {
-    /***
-     * 'status'- enum with ONLY
-     * 'draft', 'pending', 'sent', failed, aborted
-     *  as possible entries
-     */
     const Draft = 'draft';
     const Sent = 'sent';
     const Failed = 'failed';
     const Aborted = 'aborted';
     const Pending = 'pending';
+
+    use softDeletes;
     
     protected $fillable = [
         'sender', 'message', 'status', 'order_no',
@@ -29,6 +28,14 @@ class Sms extends Model
         'send_at' => 'datetime',
     ];
 
+
+    public static function empty(){
+        $sms = new Sms();
+        $sms->sender = '';
+        $sms->message = '';
+        $sms->status = '';
+        return $sms;
+    }
 
     public function user()
     {
@@ -46,6 +53,11 @@ class Sms extends Model
         return $query->where('user_id', Auth::id());
     }
 
+    public function scopeWithUserId($query, $id)
+    {
+        return $query->where('user_id', $id);
+    }
+
     public function scopeWithId($query, $id)
     {
         return $query->where('id', $id);
@@ -54,6 +66,11 @@ class Sms extends Model
     public function scopeWithStatus($query, $status)
     {
         return $query->where('status', $status);
+    }
+
+    public function scopeWithOrderId($query, $order)
+    {
+        return $query->where('order_no', $order);
     }
 
 }

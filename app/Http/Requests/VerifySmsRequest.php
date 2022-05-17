@@ -25,11 +25,22 @@ class VerifySmsRequest extends FormRequest
      */
     public function rules()
     {
+        if(request()->has(['id'])){
+            return [
+                'id' => ['required', 'numeric'],
+                'sender' => ['required','min:1','max:11'],
+                'message' => ['required', 'max:160'],
+                'recipient_list_id'=>['required', 'numeric'],
+                'order_no' => ['required'],
+                'status' => ['required'],
+                'send_at' => ['required'],
+            ];
+        }
         return [
             //
             'sender' => ['required','min:1','max:11'],
             'message' => ['required', 'max:160'],
-            'recipient-list-id'=>['required', 'numeric'],
+            'recipient_list_id'=>['required', 'numeric'],
         ];
     }
     

@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use Throwable;
 use Carbon\Carbon;
 use App\Models\User;
+use App\Models\JobStatus;
 use Illuminate\Http\Request;
 use App\Jobs\ProcessDataFile;
 use App\Models\RecipientList;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Auth;
 use App\Events\FileProcessingComplete;
@@ -41,7 +43,8 @@ class RecipientListController extends Controller
             'file_path' => $path,
         ]);
         
-        $this->dispatchFileProcessingJob($list);
+        $jobId = $this->dispatchFileProcessingJob($list);
+        $this->updateSmsJobTracker($jobId, $list);
         
         return redirect('/recipients')
                 ->with('status', 'The file has been uploaded and is being processed..');
@@ -69,7 +72,7 @@ class RecipientListController extends Controller
     }
 
     private function dispatchFileProcessingJob($list){
-        Bus::chain([
+        return Bus::chain([
             new ProcessDataFile($list),
             function () use ($list) {
                 $list->update(['status' => RecipientList::Processed]);
@@ -99,5 +102,14 @@ class RecipientListController extends Controller
         }catch(Exception $e){
             return back()->withErrors('Oops! The requested file could not be found.');
         }
+    }
+
+    private function updateSmsJobTracker($job_id, $list){
+        $x = DB::table('jobs')->where('id', $job_id)->first();   
+        $muuid = json_decode($x->payload)->uuid;
+        $tr = JobStatus::mine()->onQueue('fileprocessing')->forModelId($list->id)->first();
+        $tr->uuid = $muuid;
+        $tr->job_id = $job_id;
+        $tr->save();
     }
 }

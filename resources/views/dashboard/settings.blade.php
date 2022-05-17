@@ -13,6 +13,18 @@
                     <div class="px-6 py-2 space-y-6 sm:p-6">
                         <div>
                             <label for="name" class="my-form-label">
+                            Institution
+                            </label>
+                            <input type="text" name="institution" id="institution" autocomplete="institution" required value="{{ $errors->any() ? old('institution') : $user->institution }}" class="w-full my-form-input 
+                            @error('institution') bg-red-200 border-red-400 focus:ring-red-400 @enderror"/>
+                                @error('institution')
+                                <span class="text-xs p-1 bg-red-100 rounded font-normal text-red-400" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                        </div>
+                        <div>
+                            <label for="name" class="my-form-label">
                             Full Name
                             </label>
                             <input type="text" name="name" id="name" autocomplete="name" required value="{{ $errors->any() ? old('name') : $user->name }}" class="w-full my-form-input 

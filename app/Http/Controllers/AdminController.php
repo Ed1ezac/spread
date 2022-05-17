@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Reserve;
 use App\Helpers\Orange;
 use App\Models\JobStatus;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\RecipientList;
 use App\Traits\CallsOrangeApi;
@@ -15,6 +16,7 @@ use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\SmsApiToken as Token;
+use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\Admin\TestSmsRequest;
 use App\Http\Requests\Admin\AdminRoleRequest;
 use App\Http\Requests\Admin\AssignRoleRequest;
@@ -59,26 +61,33 @@ class AdminController extends Controller
     }
 
     public function smses(){
-        $allSmses = Sms::count();
-        $drafts = Sms::where('status','draft')->count();
-        $sentSmses = Sms::where('status','sent')->count();
-        $failedSmses = Sms::where('status','failed')->count();
-        $abortedSmses = Sms::where('status','aborted')->count();
-        $pendingSmses = Sms::where('status','pending')->count();
-        $smses = Sms::latest()->paginate(7);
+        $allSmses = Sms::withTrashed()->count();
+        $drafts = Sms::withTrashed()->where('status','draft')->count();
+        $sentSmses = Sms::withTrashed()->where('status','sent')->count();
+        $failedSmses = Sms::withTrashed()->where('status','failed')->count();
+        $abortedSmses = Sms::withTrashed()->where('status','aborted')->count();
+        $pendingSmses = Sms::withTrashed()->where('status','pending')->count();
+        $smses = Sms::withTrashed()->latest()->paginate(7);
         return view('admin.smses', compact('smses','drafts', 'allSmses','pendingSmses', 'sentSmses', 'failedSmses','abortedSmses'));
     }
 
     public function tasks(){
-        $history = JobStatus::where('queue', '!=','fileprocessing')->latest()->paginate(8);
+        $history = JobStatus::withTrashed()
+            ->onQueue('rollouts')
+            ->latest()
+            ->paginate(8);
         return view('admin.tasks', compact('history'));
     }
 
     public function viewTask($id){
-        $task = JobStatus::find($id);
+        $task = JobStatus::withTrashed()->withId($id)->first();
         $user = User::find($task->user_id);
-        $sms = Sms::find($task->trackable_id);
+        $sms = Sms::withTrashed()->withId($task->trackable_id)->first();
         return view('admin.view-rollout-task', compact('task', 'user', 'sms'));
+    }
+
+    public function deleteTask(Request $request){
+        //use ->forceDelete() to delete permanently
     }
 
     public function killTask(Request $request){
@@ -99,7 +108,9 @@ class AdminController extends Controller
 
     public function creditUserFunds(CreditUserFundsRequest $request){
         $data = $request->validated();
-        $this->fundsProcessor->incrementUserFunds($data['userId'],$data['amount']);
+        $order = $this->uniqueOrderNo();
+        $origin = Auth::id();
+        $this->fundsProcessor->incrementUserFunds($data['userId'],$data['amount'], $order, $origin);
         $user = User::find($data['userId']);
 
         return redirect('/admin/users')
@@ -108,11 +119,28 @@ class AdminController extends Controller
 
     public function deductUserFunds(DeductUserFundsRequest $request){
         $data = $request->validated();
-        $this->fundsProcessor->decrementUserFunds($data['userId'],$data['amount']);
+        $order = $this->uniqueOrderNo();
+        $origin = Auth::id();
+        $this->fundsProcessor->decrementUserFunds($data['userId'],$data['amount'], $order, $origin);
         $user = User::find($data['userId']);
         
         return redirect('/admin/users')
             ->with('status', $user->name.'\'s funds have been reduced by '.$request->amount);
+    }
+
+    private function uniqueOrderNo(){
+        $order = '#SPX' . Str::random(7);
+        while(true){
+            $val = Validator::make(array('order_no' => $order), [
+                'order_no' => 'unique:funds_records',
+            ]);
+            if($val->fails()){
+                $order = '#SPX' . Str::random(7);
+            }else{
+                break;
+            }
+        }
+        return $order;
     }
 
     public function editUserRoles($id){

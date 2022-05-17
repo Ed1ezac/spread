@@ -40,7 +40,7 @@ class ProcessScheduledImmediateRequest extends FormRequest
             $sending_day =  str_replace("-", ".",explode(" ", $sms->send_at)[0]);
             $sending_time = explode(" ", $sms->send_at)[1];
             $completionTimeArray = array(
-                    'recipient-list-id' => $sms->recipient_list_id,
+                    'recipient_list_id' => $sms->recipient_list_id,
                     'sending_time' => 'later',
                     'day' =>  Carbon::createFromFormat("Y.m.d", $sending_day)->format('d.m.Y'),
                     'time' => Carbon::createFromFormat("H:i:s", $sending_time)->format('H:i')
@@ -52,8 +52,8 @@ class ProcessScheduledImmediateRequest extends FormRequest
                 $validator->errors()->add('completion-time',
                 'Unfortunately the rollout won\'t complete within the allowed time (7am to 9:30pm).');
             }
-            if($this->userHasExecutingJob()){
-                $validator->errors()->add('concurrency','Users are allowed only one rollout at a time.');
+            if($this->userHasTwoExecutingJobs()){
+                $validator->errors()->add('concurrency','Users are allowed two rollouts at most.');
             }
         });
     }

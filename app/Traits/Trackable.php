@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use App\Models\JobStatus;
+use Illuminate\Support\Facades\DB;
 
 trait Trackable{
     protected $progressNow = 0;
@@ -10,12 +11,12 @@ trait Trackable{
     
     protected $jobStatus;
 
-    protected function startTracking($job, $model){
+    protected function startTracking($job, $model, $queue = 'fileprocessing'){
         $this->jobStatus = JobStatus::create([
-            'job_id' => $model->job_id,
             'user_id' => $model->user_id,
             'trackable_id' => $model->id,
-            'queue' => $job->queue,
+            'queue' => $queue,
+            'status' => JobStatus::STATUS_QUEUED,
             'attempts' => $job->attempts(),
         ]);
     }
@@ -26,10 +27,10 @@ trait Trackable{
         $this->progressMax = $value;
     }
 
-    protected function incrementProgress($offset = 1, $every = 1)
+    protected function incrementProgress($offset = 1)
     {
         $value = $this->progressNow + $offset;
-        $this->setProgressNow($value, $every);
+        $this->setProgressNow($value);
     }
 
     protected function setProgressNow($value, $every = 1)
@@ -41,12 +42,20 @@ trait Trackable{
     }
 
     public function isNthAttempt(){
-        return $this->jobStatus->attempts > 0 && 
+        return $this->jobStatus->attempts > 0 &&
+            $this->progressNow > 0 && 
             $this->progressNow < $this->progressMax;
     }
     //should be private
     protected function update(array $data)
     {
         $this->jobStatus->update($data);
+    }
+
+    protected function getUserRunningTasks($userId){
+        return JobStatus::where('user_id', $userId)
+            ->onQueue('rollouts')
+            ->withStatus(JobStatus::STATUS_EXECUTING)
+            ->get();
     }
 }

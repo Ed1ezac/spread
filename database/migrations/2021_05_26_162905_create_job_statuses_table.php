@@ -18,6 +18,7 @@ class CreateJobStatusesTable extends Migration
             $table->foreignId('job_id')->nullable();
             $table->foreignId('user_id')->nullable();
             $table->foreignId('trackable_id')->nullable();
+            $table->string('uuid')->nullable()->unique();
             $table->string('queue')->index()->nullable();
             $table->integer('attempts')->default(0);
             $table->integer('progress_now')->default(0);
@@ -27,6 +28,7 @@ class CreateJobStatusesTable extends Migration
             $table->timestamp('started_at')->nullable();
             $table->timestamp('finished_at')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Sms;
 use App\Models\Funds;
 use App\Traits\SendsMail;
+use App\Models\FundsRecord;
 use Illuminate\Http\Request;
 use App\Mail\PaymentSuccess;
 use App\Helpers\FundsProcessing;
@@ -25,6 +27,13 @@ class FundsController extends Controller
             return redirect()->back();
         }
         return view('dashboard.add-funds');
+    }
+
+    public function fundsDetails(Request $request){
+        //go straight
+        $record = FundsRecord::mine()->withOrderNo($request->input('order_no'))->first();
+        $sms = Sms::mine()->withOrderId($request->input('order_no'))->first();
+        return view('dashboard.funds-details', compact('record', 'sms'));
     }
 
     public function buyFunds(Request $request){

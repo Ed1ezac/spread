@@ -1,9 +1,9 @@
 <template>
     <div class="w-full max-w-sm px-4">
         <Popover>
-            <PopoverButton ref="popButton" @click="openPanel()" type="button" class="relative flex items-center border border-gray-300 rounded h-8 pl-2 pr-7 text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:border-gray-200 focus:ring-accent-800" id="datepicker-menu" aria-expanded="false" aria-haspopup="true">
+            <PopoverButton ref="popButton" @click="openPanel()" type="button" class="relative flex items-center border border-accent-900 rounded h-8 pl-2 pr-7 text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:border-gray-200 focus:ring-accent-800" id="datepicker-menu" aria-expanded="false" aria-haspopup="true">
                 <span class="sr-only">Open date popup</span>
-                <svg class="flex-shrink-0 h-5 w-5 text-gray-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg class="flex-shrink-0 h-5 w-5 text-accent-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
                 <input :value="day" type="hidden" name="day">
@@ -17,7 +17,7 @@
                 leave-from-class="transform scale-100 opacity-100"
                 leave-to-class="transform scale-50 opacity-0">
                 <div ref="outerWrap">
-                    <PopoverPanel class="absolute w-72 border mt-1 mb-2 border-gray-300 rounded-md origin-left shadow-lg outline-none">
+                    <PopoverPanel class="w-72 z-10 border mt-1 mb-2 border-gray-300 rounded-md origin-top shadow-lg outline-none">
                         <header class="flex justify-around bg-primary-100 rounded-t-md py-2 px-8">
                             <button :title="prevMonthCaption" class="rounded-full p-1 bg-primary-300 hover:bg-primary-400" @click="incrementMonth(-1)" type="button">
                                 <svg class="h-4 w-4 text-primary-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">

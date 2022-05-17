@@ -5,7 +5,11 @@
         the capacity and funds
     --->
     <div class="flex flex-wrap pr-4">
-        <sms-summary v-bind:recipients = "{{ json_encode($recipients) }}" order-no="{{$orderNo}}"></sms-summary>
+        <sms-summary 
+        v-bind:sms = "{{ json_encode($sms, TRUE) }}" 
+        v-bind:recipients = "{{ json_encode($recipients) }}" 
+        send-at="{{ isset($send_at)? $send_at : '' }}"  
+        order-no="{{$orderNo}}"></sms-summary>
         
         <div class="sm:ml-8 ml-2 w-72">
             <div class="ml-2 border-t-2 border-gray-200 p-2">
