@@ -66,16 +66,16 @@ class SendSms implements ShouldQueue
             $this->jobStatus->markAsExecuting();
             $this->allocateSendingBandwidth();
             $this->prepareOrangeApi();
-            // $this->sendEmail(User::find($this->sms->user_id)->email,
-            //                      new RolloutBegun($this->sms));
+            $this->sendEmail(User::find($this->sms->user_id)->email,
+                                 new RolloutBegun($this->sms));
             //-----------------------------
             $this->performRollout();
             //-----------------------------
             $this->billUser();
             $this->jobStatus->markAsFinished();
             $this->sms->update(['status' => Sms::Sent]);
-            // $this->sendEmail(User::find($this->sms->user_id)->email, 
-            //                      new CompletionEmail($this->sms));
+            $this->sendEmail(User::find($this->sms->user_id)->email, 
+                                 new CompletionEmail($this->sms));
         }catch(Throwable $e){
             $this->beforeFail($e);
             $this->fail($e);
@@ -232,7 +232,7 @@ class SendSms implements ShouldQueue
         if($e->getMessage() !== 'Aborted by user.'){
             $this->sms->update(['status' => Sms::Failed]);
         }
-        //$this->sendEmail(User::find($this->sms->user_id)->email, new RolloutFailed($this->sms));
+        $this->sendEmail(User::find($this->sms->user_id)->email, new RolloutFailed($this->sms));
         //fire event
         RolloutComplete::dispatch($this->sms, $this->progressNow);
     }
