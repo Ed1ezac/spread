@@ -30,7 +30,7 @@
                                 @foreach($emails as $email)
                                 <tr>
                                     <td>
-
+                                        <div class="text-sm text-gray-800 tracking-wider">SPREAD</div>
                                     </td>
                                     <td class="px-6 py-4 max-w-xs whitespace-nowrap">
                                         <div class="text-sm truncate">

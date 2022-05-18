@@ -82,12 +82,11 @@ Route::group(['prefix' =>'admin', 'middleware' =>'admin'], function () {
     Route::post('/funds-reserve/deduct/funds', [ReserveController::class, 'deductFromReserve']);
     //sms
     Route::get('/smses', [AdminController::class, 'smses']);
-    //orange-info
-    Route::get('/orange-info', [AdminController::class, 'orangeInfo']);
-    Route::post('/orange-info/token/refresh', [AdminController::class, 'adminRefreshToken'])->name('token.refresh.manual');
-    Route::get('/orange-info/test-sms', [AdminController::class, 'testSms']);
-    Route::post('/send/test-sms', [AdminController::class, 'sendTestSms']);
-    //senderName
+    //queue
+    Route::get('/queue', [AdminController::class, 'queue']);
+    //mailbox(spread)
+    Route::get('/mailbox', [AdminController::class, 'mailbox']);
+    //senders
     Route::get('/sender-names', [SenderNamesController::class, 'getNames']);
     Route::get('/sender-names/{id?}/details', [SenderNamesController::class, 'senderNameDetails']);
     Route::post('sender-name/edit/status/positive', [SenderNamesController::class, 'updateStatus']);
@@ -101,10 +100,16 @@ Route::group(['prefix' =>'admin', 'middleware' =>'admin'], function () {
     Route::post('/user/credit/funds', [AdminController::class, 'creditUserFunds']);
     Route::post('/user/add/role', [AdminController::class, 'assignRole']);
     Route::post('/user/remove/role', [AdminController::class, 'removeRole']);
-    //tasks
+    //Files
     Route::get('/files', [AdminController::class, 'files']);
+    //tasks
     Route::get('/rollout-tasks', [AdminController::class, 'tasks']);
     Route::post('/rollout-tasks/abort', [AdminController::class, 'killTask']);
     Route::get('/rollout-tasks/view/task/{id?}', [AdminController::class, 'viewTask']);
+    //orange-info
+    Route::get('/orange-info', [AdminController::class, 'orangeInfo']);
+    Route::post('/orange-info/token/refresh', [AdminController::class, 'adminRefreshToken'])->name('token.refresh.manual');
+    Route::get('/orange-info/test-sms', [AdminController::class, 'testSms']);
+    Route::post('/send/test-sms', [AdminController::class, 'sendTestSms']);
 });
 Route::get('/user/challenge/admin/get-role', [AdminController::class, 'createFirstSuperAdmin'])->middleware(['auth', 'verified']);

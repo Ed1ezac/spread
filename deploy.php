@@ -25,7 +25,7 @@ add('writable_dirs', []);
 //Hosts
 host('167.99.239.29')
     ->user('deployer')
-    ->identityFile('~/.ssh/deployerkey')
+    ->identityFile('~/.ssh/dep')
     ->forwardAgent(false)
     ->set('deploy_path', '/var/www/html/spread');    
     
@@ -38,5 +38,5 @@ task('build', function () {
 after('deploy:failed', 'deploy:unlock');
 
 //Migrate database before symlink new release.
-before('deploy:symlink', 'artisan:migrate');//fresh
-//after('deploy:symlink', 'artisan:db:seed');
+before('deploy:symlink', 'artisan:migrate:fresh');//fresh
+after('deploy:symlink', 'artisan:db:seed');

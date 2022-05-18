@@ -111,8 +111,7 @@ export default {
             return this.isDiscovered && this.percentage < 100 && !this.aborted;
         },
         canAbort(){
-            return !this.aborted && this.isDiscovered && 
-                (this.total >= 15000 ? this.current < 4000 : this.percentage < 43);
+            return !this.aborted && this.isDiscovered && this.percentage <= 80;
         },
         isCompleted(){
             return this.percentage >= 100;
