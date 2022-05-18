@@ -7,6 +7,7 @@
         @endforeach
     @endif
 
+    
     <div>
         <div class="bg-white shadow p-4">
             <div class="flex justify-between">
