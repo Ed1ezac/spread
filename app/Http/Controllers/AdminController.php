@@ -59,6 +59,30 @@ class AdminController extends Controller
 
         return redirect('/admin/funds-reserve')->with('status', 'Reserve created successfully.');
     }
+    
+    public function queue(){
+        $queue = DB::table('jobs')
+            ->where([
+                ['jobs.queue', '=', 'rollouts'],
+            ])
+            ->join('job_statuses', function ($join) {
+                $join->on('jobs.id', '=', 'job_statuses.job_id')
+                    ->where([
+                        ['job_statuses.queue', '=','rollouts'],
+                        ['job_statuses.status', '=',JobStatus::STATUS_QUEUED],
+                        ['job_statuses.deleted_at', '=', NULL]
+                    ])->orWhere([
+                        ['job_statuses.queue', '=','rollouts'],
+                        ['job_statuses.status', '=',JobStatus::STATUS_EXECUTING],
+                        ['job_statuses.deleted_at', '=', NULL]
+                    ]);
+            })
+            ->select('jobs.*', 'job_statuses.*')
+            ->latest('jobs.created_at')
+            ->paginate(7);
+        
+        return view('admin.queue', compact('queue'));
+    }
 
     public function smses(){
         $allSmses = Sms::withTrashed()->count();
@@ -69,6 +93,29 @@ class AdminController extends Controller
         $pendingSmses = Sms::withTrashed()->where('status','pending')->count();
         $smses = Sms::withTrashed()->latest()->paginate(7);
         return view('admin.smses', compact('smses','drafts', 'allSmses','pendingSmses', 'sentSmses', 'failedSmses','abortedSmses'));
+    }
+
+    public function mailbox(){
+
+        $emails = DB::table('mailbox_inbound_emails')
+            ->latest()
+            ->paginate(7);
+        
+        return view('admin.mailbox.inbox', compact('emails'));
+    }
+
+    public function viewMail($id){
+        //todo
+        return view('admin.mailbox.mail');
+    }
+
+    public function composeMail(){
+        //todo
+        return view('admin.mailbox.compose');
+    }
+
+    public function sendMail(Request $request){
+        //todo
     }
 
     public function tasks(){

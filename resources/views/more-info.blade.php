@@ -6,6 +6,12 @@
 
 @section('content')
 <section class="pt-20 mb-12 px-8 lg:px-20">
+
+    <div class="flex items-baseline mt-12">
+        <h1 class="text-gray-700 text-6xl font-medium">Spread 101</h1>
+        <div class="pl-3 text-gray-400 text-xl">A quick introduction (3 minute read)</div>
+    </div>
+    
     <div class="text-gray-700 mt-12 text-2xl font-medium">What is Spread | Bulk SMS Service?</div>
     <p class="text-gray-500 mb-4">
         Spread is a web system that dispatches short message service (SMS) text to multiple recipients 
@@ -163,8 +169,8 @@
         contains other useful metrics such as the sending rate, the actual SMS being sent and the Recipient List it is being sent to. 
     </p>
     <p class="text-gray-500 mb-4">
-        An SMS rollout can be aborted from the rollout progress widget. An SMS can only be aborted with 15% of the total progress or if 
-        the number of sent SMS is less than 1500 for large rollouts.
+        An SMS rollout can be aborted from the rollout progress widget. An SMS can only be aborted before 45% of the total progress is 
+        reached, or if the number of sent SMS is less than 4000 for large rollouts.
     </p>
 </section>
 <section class="mb-8 px-8 lg:px-20">
