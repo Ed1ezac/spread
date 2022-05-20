@@ -88,7 +88,7 @@
       </div>
     </div>
   </div>
-  @elseif (!($isAboutToSend))
+  @else
   <div>
       <div class="ml-12 flex">
           <div class="mt-32 mb-12">

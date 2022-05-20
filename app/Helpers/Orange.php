@@ -53,7 +53,7 @@ class Orange{
         $senderAddress,
         $receiverAddress,
         $message,
-        $senderName = ''
+        $senderName = 'Spread'
     ) {
         $url = self::BASE_URL . '/smsmessaging/v1/outbound/' . urlencode($senderAddress)
             . '/requests';
@@ -63,28 +63,17 @@ class Orange{
             'Content-Type: application/json'
         );
 
-        if (!empty($senderName)) {
-            $args = array(
-                'outboundSMSMessageRequest' => array(
-                    'address'                   => $receiverAddress,
-                    'senderAddress'             => $senderAddress,
-                    'senderName'                => urlencode($senderName),
-                    'outboundSMSTextMessage'    => array(
-                        'message' => $message
-                    )
+        $args = array(
+            'outboundSMSMessageRequest' => array(
+                'address'                   => $receiverAddress,
+                'senderAddress'             => $senderAddress,
+                'senderName'                => urlencode($senderName),
+                'outboundSMSTextMessage'    => array(
+                    'message' => $message
                 )
-            );
-        } else {
-            $args = array(
-                'outboundSMSMessageRequest' => array(
-                    'address'                   => $receiverAddress,
-                    'senderAddress'             => $senderAddress,
-                    'outboundSMSTextMessage'    => array(
-                        'message' => $message
-                    )
-                )
-            );
-        }
+            )
+        );
+        
 
         return $this->callApi($headers, $args, $url, 'POST', 201, true);
     }
