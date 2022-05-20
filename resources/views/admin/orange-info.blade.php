@@ -62,8 +62,8 @@
                 <div class="mx-2 pt-2 flex justify-between">
                     <div class="text-xs text-gray-500">Country:</div>
                     <div class="ml-12 text-xs text-gray-700 font-medium">
-                        @if(!empty($contract) && array_key_exists('country'))
-                        {{$contract->country}}
+                        @if(!empty($contract) && array_key_exists('country', $contract))
+                        {{$contract[0]['country']}}
                         @else
                         N/A
                         @endif
@@ -72,8 +72,8 @@
                 <div class="mx-2 pt-2 flex justify-between">
                     <div class="text-xs text-gray-500">Service:</div>
                     <div class="ml-12 text-xs text-gray-700 font-medium">
-                        @if(!empty($contract) && array_key_exists('service'))
-                        {{$contract->service}}
+                        @if(!empty($contract) && array_key_exists('service', $contract))
+                        {{$contract[0]['service']}}
                         @else
                         N/A
                         @endif
@@ -82,8 +82,8 @@
                 <div class="mx-2 pt-2 flex justify-between">
                     <div class="text-xs text-gray-500">ContractId:</div>
                     <div class="ml-12 text-xs text-gray-700 font-medium">
-                    @if(!empty($contract) && array_key_exists('contractId'))
-                    {{$contract->contractId}}
+                    @if(!empty($contract) && array_key_exists('contractId', $contract))
+                    {{$contract[0]['contractId']}}
                     @else
                     N/A
                     @endif
@@ -92,8 +92,8 @@
                 <div class="mx-2 pt-2 flex justify-between">
                     <div class="text-xs text-gray-500">Available Units:</div>
                     <div class="ml-12 text-xs text-gray-800 font-bold">
-                        @if(!empty($contract) && array_key_exists('availableUnits'))
-                        {{$contract->service}}
+                        @if(!empty($contract) && array_key_exists('availableUnits', $contract))
+                        {{$contract[0]['service']}}
                         @else
                         N/A
                         @endif
@@ -102,8 +102,8 @@
                 <div class="mx-2 py-1 flex justify-between">
                     <div class="text-xs text-gray-500">Units Expiry:</div>
                     <div class="ml-12 text-xs text-gray-700 font-medium">
-                        @if(!empty($contract) && array_key_exists('expires'))
-                        {{$contract->expires}}
+                        @if(!empty($contract) && array_key_exists('expires', $contract))
+                        {{$contract[0]['expires']}}
                         @else
                         N/A
                         @endif
@@ -120,8 +120,8 @@
                 <div class="mx-2 pt-2 flex justify-between">
                     <div class="text-xs text-gray-500">Usage:</div>
                     <div class="ml-12 text-xs text-gray-700 font-medium">
-                        @if(!empty($statistic) && array_key_exists('usage'))
-                        {{$statistic->usage}}
+                        @if(!empty($statistic) && array_key_exists('usage', $statistic['countryStatistics'][0]))
+                        {{$statistic['countryStatistics'][0]['usage']}}
                         @else
                         N/A
                         @endif
@@ -130,8 +130,8 @@
                 <div class="mx-2 pt-2 flex justify-between">
                     <div class="text-xs text-gray-500">App ID:</div>
                     <div class="ml-12 text-xs text-gray-700 font-medium">
-                        @if(!empty($statistic) && array_key_exists('applicationId'))
-                        {{$statistic->applicationId}}
+                        @if(!empty($statistic) && array_key_exists('applicationId', $statistic['countryStatistics'][0]))
+                        {{$statistic['countryStatistics'][0]applicationId}}
                         @else
                         N/A
                         @endif
