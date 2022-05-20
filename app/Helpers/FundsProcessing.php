@@ -19,7 +19,7 @@ class FundsProcessing{
     * ID of the User that should be billed.||thats probably wrong tho...
     **/
     public function hasSufficientFunds($userId, $minimum){
-        return Funds::forUserId($userId)->first()->amount > $minimum;
+        return Funds::forUserId($userId)->first()->amount >= $minimum;
     }
 
     public function incrementUserFunds($userId, $amount,$ref, $ori = -1){
