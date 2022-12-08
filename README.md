@@ -35,7 +35,7 @@ This project's architecture follows the Laravel framework architecture and direc
 - Install the necessary packages by running `npm i` command
 - Compile the javascript & css by running `npm run dev`
 - Serve the application by using the artisan command `php artisan serve`
-- Navigate to http://localhost:8000 to view it
+- Navigate to http://localhost:8000 on your browser to view it
 - In order to create accounts and log in you will need a database. I uses xampp for that and configured it in the .env file in the project dir
 
 ## Testing
@@ -62,4 +62,4 @@ This system is past the prototyping & development stage and has been deployed to
 
 
 ## License
-This project is under the [GNU General Public License v3.0](https://choosealicense.com/licenses/gpl-3.0/)
+This project is under the [GNU Affero General Public License v3.0](https://choosealicense.com/licenses/agpl-3.0/)
